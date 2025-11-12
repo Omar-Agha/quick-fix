@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers;
 
-
-
-use App\Services\RoomTemplateService;
+use App\Services\BaseCrudService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Inertia\Inertia;
+
 use Inertia\Response;
 
-class RoomTemplateController extends Controller
+abstract class BaseCrudController extends Controller
 {
     public function __construct(
-        private RoomTemplateService $service
+        private BaseCrudService $service
     ) {}
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
 
         $page = $request->get('page', 1);
@@ -29,7 +27,7 @@ class RoomTemplateController extends Controller
 
         $paginated_result = $this->service->getPaginated($page, $perPage);
         $result = [
-            'data' =>$paginated_result->items(),
+            'data' => $paginated_result->items(),
 
             'pagination' => [
                 'current_page' => $paginated_result->currentPage(),
@@ -38,8 +36,9 @@ class RoomTemplateController extends Controller
                 'last_page' => $paginated_result->lastPage(),
             ]
         ];
-        if (request()->wantsJson()) return $result;
-        return Inertia::render('RoomTemplates/Index', $result);
+        // if (request()->wantsJson()) return $result;
+        // return Inertia::render('RoomTemplates/Index', $result);
+        return $this->index_view();
     }
 
     /**
@@ -47,17 +46,15 @@ class RoomTemplateController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'room_type' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'currency' => 'required|string',
-            'amenities' => 'required|array',
-        ]);
+        $data = $request->validate($this->storeRequestRules());
 
-    
+        if (request('id')) {
+            $record = $this->service->update($data['id'], $data);
+        } else {
+            $record = $this->service->create($data);
+        }
 
-        $new_record = $this->service->create($data);
+
         return back()->with('success', 'record created successfully');
     }
 
@@ -66,13 +63,13 @@ class RoomTemplateController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $workout = $this->service->getById($id);
+        $record = $this->service->getById($id);
 
-        if (!$workout) {
+        if (!$record) {
             return response()->json(['message' => 'record not found'], 404);
         }
 
-        return response()->json(['workout' => $workout]);
+        return response()->json(['record' => $record]);
     }
 
     /**
@@ -80,13 +77,7 @@ class RoomTemplateController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'required|string',
-            'numOfRooms' => 'required|integer',
-            'numOfFloors' => 'required|integer',
-        ]);
+        $data = $request->validate($this->updateRequestRules());
 
         $workout = $this->service->update($id, $data);
 
@@ -108,4 +99,8 @@ class RoomTemplateController extends Controller
         }
         return back()->with('success', ['message' => 'record deleted successfully']);
     }
+
+    abstract protected function storeRequestRules(): array;
+    abstract protected function updateRequestRules(): array;
+    abstract protected function index_view(): Response;
 }

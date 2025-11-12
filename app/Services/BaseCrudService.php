@@ -2,67 +2,57 @@
 
 namespace App\Services;
 
-use App\Models\Hotel;
-use App\Models\RoomTemplate;
+
+
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class RoomTemplateService
+abstract class BaseCrudService
 {
-    protected function  base_query(){
-        return RoomTemplate::query();
-     }
+    abstract protected function  get_model(): Model;
     public function getAll(): Collection
     {
-        return $this->base_query()->all();
+        return $this->get_model()->all();
     }
 
     public function getPaginated(int $page = 1, int $perPage = 10): LengthAwarePaginator
     {
-        
-        return $this->base_query()->paginate($perPage, ['*'], 'page', $page);
+
+        return $this->get_model()->paginate($perPage, ['*'], 'page', $page);
     }
 
-    public function getById(int $id): ?RoomTemplate
+    public function getById(int $id): ?Model
     {
-        return $this->base_query()->find($id);
+        return $this->get_model()->find($id);
     }
 
-    public function create(array $data): RoomTemplate
+    public function create(array $data): Model
     {
-        
-        $hotel=Hotel::first();
-        // $new_record = $this->base_query()->create($data);
-        $new_record= new RoomTemplate($data);
-        $new_record->hotel()->associate($hotel);
-        $new_record->save();
+        $new_record = $this->get_model()->create($data);
         return $new_record;
     }
 
-    public function update(int $id, array $data): ?RoomTemplate
+    public function update(int $id, array $data): ?Model
     {
-        $old_record = $this->base_query()->find($id);
-        
+        $old_record = $this->get_model()->find($id);
+
         if (!$old_record) {
             return null;
         }
 
         $old_record->update($data);
         return $old_record;
-        
     }
 
     public function delete(int $id): bool
     {
-        $room_template = $this->base_query()->find($id);
-        
+        $room_template = $this->get_model()->find($id);
+
         if (!$room_template) {
             return false;
         }
 
         return $room_template->delete();
     }
-
-   
 }
-
