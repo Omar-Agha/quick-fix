@@ -2,15 +2,14 @@
 
 namespace App\Services;
 
-
-
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseCrudService
 {
-    abstract protected function  get_model(): Model;
+    abstract protected function get_model(): Model;
+
     public function getAll(): Collection
     {
         return $this->get_model()->all();
@@ -30,6 +29,7 @@ abstract class BaseCrudService
     public function create(array $data): Model
     {
         $new_record = $this->get_model()->create($data);
+
         return $new_record;
     }
 
@@ -37,11 +37,12 @@ abstract class BaseCrudService
     {
         $old_record = $this->get_model()->find($id);
 
-        if (!$old_record) {
+        if (! $old_record) {
             return null;
         }
 
         $old_record->update($data);
+
         return $old_record;
     }
 
@@ -49,7 +50,7 @@ abstract class BaseCrudService
     {
         $room_template = $this->get_model()->find($id);
 
-        if (!$room_template) {
+        if (! $room_template) {
             return false;
         }
 

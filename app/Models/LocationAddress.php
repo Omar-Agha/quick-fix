@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LocationAddress extends Model
 {
-    protected $fillable = ['address_type', 'address', 'full_address'];
+    protected $fillable = ['mobile_user_id', 'address_type', 'address', 'full_address'];
 
     public $casts = [
         'address_type' => AddressType::class,
