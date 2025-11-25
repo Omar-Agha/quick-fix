@@ -8,6 +8,12 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Resources\OrderDto;
 use Illuminate\Support\Facades\Route;
 
+Route::get('time-now', function () {
+    return response()->json([
+        'time' => now()->toDateTimeString(),
+    ]);
+});
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -17,7 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout-other-devices', [AuthController::class, 'logoutFromOtherDevices']);
     Route::get('/user', [AuthController::class, 'user']);
 });
-
 
 
 

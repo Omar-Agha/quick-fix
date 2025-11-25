@@ -1,0 +1,88 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Quick Fix - Mobile App API",
+        "description": "This is the base API documentation.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/all-services": {
+            "get": {
+                "tags": [
+                    "Services"
+                ],
+                "summary": "Get all services",
+                "description": "Return list of services",
+                "operationId": "27a06bf97bf5a8506fb36e9b6b625d9a",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/all-banner-ads": {
+            "get": {
+                "tags": [
+                    "Banner Ads"
+                ],
+                "summary": "Get all banner ads",
+                "description": "Return list of banner ads",
+                "operationId": "8f812050a9e3eed2a7cbb355e9a16ceb",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/all-offers": {
+            "get": {
+                "tags": [
+                    "Offers"
+                ],
+                "summary": "Get all offers",
+                "description": "Return list of offers",
+                "operationId": "2c25cfe63bb5db8358b99a9d6740a4f2",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/all-articles": {
+            "get": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Get all articles",
+                "description": "Return list of articles",
+                "operationId": "811f8b8e4f19df501f9654b4e6804c2f",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Services",
+            "description": "Services"
+        },
+        {
+            "name": "Banner Ads",
+            "description": "Banner Ads"
+        },
+        {
+            "name": "Offers",
+            "description": "Offers"
+        },
+        {
+            "name": "Articles",
+            "description": "Articles"
+        }
+    ]
+}
