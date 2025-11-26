@@ -17,7 +17,7 @@ abstract class BaseCrudController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
 
         $page = $request->get('page', 1);
@@ -36,7 +36,7 @@ abstract class BaseCrudController extends Controller
                 'last_page' => $paginated_result->lastPage(),
             ]
         ];
-        // if (request()->wantsJson()) return $result;
+        if (request()->wantsJson()) return $result;
         // return Inertia::render('RoomTemplates/Index', $result);
         return $this->index_view();
     }

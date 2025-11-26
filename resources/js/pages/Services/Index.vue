@@ -23,7 +23,7 @@ import { Dumbbell, Plus } from 'lucide-vue-next';
 import { computed, onMounted, onUnmounted, Ref, ref } from 'vue';
 import { toast } from 'vue-sonner';
 import { Actions, EntityKey, Service, ServiceActions } from './dtos/data';
-import ExampleCard from './forms/ServiceCard.vue';
+import ServiceCard from './forms/ServiceCard.vue';
 import { columns } from './columns';
 import CreateUpdateServiceForm from './forms/CreateUpdateServiceForm.vue';
 import { getActionEventName } from '@/components/dv-components/common'
@@ -89,6 +89,7 @@ const refreshData = () => {
 
 const fetchData = async (page: number, perPage: number) => {
     const response = await axios.get<PaginationResponse<Service>>(route('services.index'), { params: { page, per_page: perPage } });
+    console.log(response);
 
     return {
         data: response.data.data,
@@ -135,11 +136,11 @@ const deleteRecord = async (record: Service) => {
     if (!confirm(`Are you sure you want to delete "${record.name}"?`)) return;
 
     try {
-        await router.delete(`/examples/${record.id}`);
-        toast.success('Example deleted successfully!');
+        await router.delete(`/services/${record.id}`);
+        toast.success('Service deleted successfully!');
         refreshData(); // Refresh data after successful deletion
     } catch (error) {
-        toast.error('Failed to delete Example');
+        toast.error('Failed to delete service');
     }
 };
 
@@ -148,15 +149,15 @@ const deleteRecord = async (record: Service) => {
 
 <template>
 
-    <Head title="Examples" />
+    <Head title="Services" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <PageHeader title="Examples" description="Manage your example routines and exercises" show-view-toggle
+        <PageHeader title="Services" description="Manage your services and offerings" show-view-toggle
             v-model:selected-view="currentView">
             <template #actions>
                 <Button @click="openCreateDialog">
                     <Plus class="mr-2 h-4 w-4" />
-                    Create Example
+                    Create Service
                 </Button>
 
             </template>
@@ -170,8 +171,8 @@ const deleteRecord = async (record: Service) => {
 
         <!-- Grid View -->
         <div v-else-if="currentView === 'grid'" class="flex-[100%]">
-            <CrudGrid ref="crudGridRef" :data-source="fetchData" :card-component="ExampleCard" item-prop-name="record"
-                empty-message="No examples yet" :empty-icon="Dumbbell" empty-action-text="Create Your First Example"
+            <CrudGrid ref="crudGridRef" :data-source="fetchData" :card-component="ServiceCard" item-prop-name="record"
+                empty-message="No services yet" :empty-icon="Dumbbell" empty-action-text="Create Your First Service"
                 :empty-action="openCreateDialog" @edit="handleEditRecord" @delete="handleDeleteRecord"
                 :entity-actions="Actions" />
         </div>
@@ -181,7 +182,7 @@ const deleteRecord = async (record: Service) => {
         <Dialog v-model:open="isEditDialogOpen">
             <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Edit Example</DialogTitle>
+                    <DialogTitle>Edit Service</DialogTitle>
                 </DialogHeader>
 
                 <CreateUpdateServiceForm v-if="editingRecord" :record="editingRecord" :on-success="handleSaveSuccess"

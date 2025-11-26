@@ -45,4 +45,6 @@
     <body class="font-sans antialiased">
         @inertia
     </body>
+
+    @routes
 </html>

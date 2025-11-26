@@ -9,8 +9,11 @@ export interface Service {
     id: number;
     name: string;
     description?: string;
+    price: number;
+    image?: string;
+    is_active: boolean;
     created_at?: string;
-
+    updated_at?: string;
 }
 
 export interface CreateService {
@@ -26,9 +29,8 @@ export const serviceCreateSchema = toTypedSchema(
         name: z.string().min(1, 'Name is required').max(255),
         description: z.string().optional(),
         price: z.number().min(0, 'Price is required'),
-        image: z.instanceof(File),
+        image: z.instanceof(File, { message: 'Image is required' }),
         is_active: z.boolean().default(true),
-
     }),
 );
 
@@ -50,10 +52,8 @@ export const updateServiceSchema = toTypedSchema(
         name: z.string().min(1, 'Name is required').max(255),
         description: z.string().optional(),
         price: z.number().min(0, 'Price is required'),
-        image: z.instanceof(File),
+        image: z.union([z.instanceof(File), z.string()]).optional(),
         is_active: z.boolean().default(true),
-
-
     }),
 );
 
