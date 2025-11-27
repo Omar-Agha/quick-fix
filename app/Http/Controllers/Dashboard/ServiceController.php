@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\Services\BaseCrudService;
 use App\Services\ServicesService;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Inertia\Response;
@@ -51,8 +52,11 @@ class ServiceController extends BaseCrudController
     protected function setImages($data)
     {
         if (request()->hasFile('image')) {
-            $image = request('image');
+            $image = request()->file('image');
             $image_path = $image->store('images', 'public');
+            if (!$image_path) {
+                throw new Exception("Server error: Failed to upload image");
+            }
             $data['image'] = $image_path;
         }
         return $data;

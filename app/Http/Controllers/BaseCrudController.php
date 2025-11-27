@@ -103,7 +103,11 @@ abstract class BaseCrudController extends Controller
     public function update(Request $request, int $id)
     {
         $data = $request->validate($this->updateRequestRules());
-        $data = $this->setImages($data);
+        try {
+            $data = $this->setImages($data);
+        } catch (\Throwable $th) {
+            return $this->responseError(['message' => $th->getMessage()]);
+        }
 
         $record = $this->service->update($id, $data);
 
