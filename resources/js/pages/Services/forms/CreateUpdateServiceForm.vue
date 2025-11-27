@@ -3,7 +3,7 @@ import { router } from '@inertiajs/vue3';
 import { toTypedSchema } from '@vee-validate/zod';
 import { Upload, X, Image as ImageIcon } from 'lucide-vue-next';
 import { useForm } from 'vee-validate';
-import { computed, ref, watch } from 'vue';
+import { computed, h, ref, watch } from 'vue';
 
 import Button from '@/components/ui/button/Button.vue';
 import { FormField } from '@/components/ui/form';
@@ -17,6 +17,7 @@ import Textarea from '@/components/ui/textarea/Textarea.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import { Service, serviceCreateSchema, updateServiceSchema } from '../dtos/data';
 import { toast } from 'vue-sonner';
+import { objectToFormData, renderErrorList } from '@/lib/utils';
 
 interface Props {
     record: Service | null;
@@ -44,6 +45,7 @@ const form = useForm({
 const imagePreview = ref<string | null>(props.record?.image || null);
 const imageFile = ref<File | null>(null);
 const fileInputRef = ref<HTMLInputElement | null>(null);
+const isSubmitting = ref(false);
 
 // Watch for record changes
 watch(() => props.record, (newRecord) => {
@@ -102,52 +104,37 @@ const removeImage = () => {
     }
 };
 
-const onSubmit = form.handleSubmit(async (values) => {
-    try {
-        const formData = new FormData();
-        formData.append('name', values.name);
-        if (values.description) {
-            formData.append('description', values.description);
-        }
-        formData.append('price', values.price.toString());
-        formData.append('is_active', values.is_active ? '1' : '0');
 
-        if (isUpdating.value && updatedRecordId.value) {
-            formData.append('_method', 'PUT');
-            if (imageFile.value) {
-                formData.append('image', imageFile.value);
-            }
-            router.post(`/services/${updatedRecordId.value}`, formData, {
-                forceFormData: true,
-                onSuccess: () => {
-                    const successMessage = 'Service updated successfully!';
-                    toast.success(successMessage);
-                    props.onSuccess?.();
-                },
-                onError: () => {
-                    toast.error('Failed to update service');
-                },
-            });
-        } else {
-            if (!imageFile.value) {
-                toast.error('Please upload an image');
-                return;
-            }
-            formData.append('image', imageFile.value);
-            router.post('/services', formData, {
-                forceFormData: true,
-                onSuccess: () => {
-                    toast.success('Service created successfully!');
-                    props.onSuccess?.();
-                },
-                onError: () => {
-                    toast.error('Failed to create service');
-                },
-            });
-        }
-    } catch (error) {
-        toast.error(`Failed to ${isCreating.value ? 'create' : 'update'} service`);
+
+const onSubmit = form.handleSubmit(async (values) => {
+    isSubmitting.value = true;
+
+
+    const formData = objectToFormData(values);
+    if (isUpdating) {
+        console.log('update', updatedRecordId.value);
+
+        formData.append('id', updatedRecordId.value?.toString() || '');
     }
+
+    router.post('/services', formData, {
+        forceFormData: true,
+        onSuccess: () => {
+            toast.success('Service created successfully!');
+            props.onSuccess?.();
+        },
+        onError: (ex) => {
+            console.log(ex);
+
+
+            toast.error(renderErrorList(ex));
+        },
+        onFinish: () => {
+            isSubmitting.value = false;
+        },
+    });
+
+
 });
 </script>
 
@@ -267,8 +254,8 @@ const onSubmit = form.handleSubmit(async (values) => {
             <Button type="button" variant="outline" @click="props.onCancel">
                 Cancel
             </Button>
-            <Button type="submit" :disabled="form.isSubmitting">
-                <span v-if="form.isSubmitting">Processing...</span>
+            <Button type="submit" :disabled="isSubmitting">
+                <span v-if="isSubmitting">Processing...</span>
                 <span v-else>{{ isCreating ? 'Create Service' : 'Update Service' }}</span>
             </Button>
         </div>

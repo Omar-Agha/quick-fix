@@ -33,7 +33,8 @@ class ServiceController extends BaseCrudController
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|file|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
         ];
     }
     protected function updateRequestRules(): array
@@ -44,5 +45,14 @@ class ServiceController extends BaseCrudController
             'price' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
+    }
+    protected function setImages($data)
+    {
+        if (request()->hasFile('image')) {
+            $image = request('image');
+            $image_path = $image->store('images', 'public');
+            $data['image'] = $image_path;
+        }
+        return $data;
     }
 }

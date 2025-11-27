@@ -5,7 +5,9 @@ use App\Http\Controllers\Api\MobileUserApiController;
 use App\Http\Controllers\Api\OrderApiController;
 use App\Http\Controllers\Api\ServicesApiController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Dashboard\ServiceController;
 use App\Http\Resources\OrderDto;
+use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -18,9 +20,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
 });
 
-
-
-
+Route::resource('services', ServiceController::class);
+Route::get('gg', function () {
+    return Service::all();
+});
 
 
 Route::get('/all-services', [MobileAppApiController::class, 'getAllServices']);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Service;
 use App\Services\BaseCrudService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -40,36 +41,60 @@ abstract class BaseCrudController extends Controller
         // return Inertia::render('RoomTemplates/Index', $result);
         return $this->index_view();
     }
+    protected function responseSuccess($record, $message)
+    {
+        if (request()->wantsJson()) return response()->json([
+            'message' => $message,
+            'record' => $record
+        ]);
 
+        return back()->with('success', $message);
+    }
+    protected function responseError($errors)
+    {
+        // return back()->with(['message' => 'record not found']);
+        if (request()->wantsJson()) return response()->json($errors);
+
+        return back()->withErrors($errors);
+    }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $data = $request->validate($this->storeRequestRules());
+        if (request('id')) {
+
+            $data = $request->validate($this->updateRequestRules());
+        } else {
+            $data = $request->validate($this->storeRequestRules());
+        }
+        $data = $this->setImages($data);
 
         if (request('id')) {
-            $record = $this->service->update($data['id'], $data);
+            $record = $this->service->update(request('id'), $data);
         } else {
             $record = $this->service->create($data);
         }
+        if (request()->wantsJson()) return response()->json([
+            'message' => 'record created successfully',
+            'record' => $record
+        ]);
 
-
-        return back()->with('success', 'record created successfully');
+        $this->responseSuccess($record, 'record created successfully');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(int $id): JsonResponse
+    public function show(int $id)
     {
         $record = $this->service->getById($id);
 
         if (!$record) {
-            return response()->json(['message' => 'record not found'], 404);
+            $this->responseError(['message' => 'record not found']);
         }
 
-        return response()->json(['record' => $record]);
+        $this->responseSuccess($record, 'record created successfully');
     }
 
     /**
@@ -78,13 +103,14 @@ abstract class BaseCrudController extends Controller
     public function update(Request $request, int $id)
     {
         $data = $request->validate($this->updateRequestRules());
+        $data = $this->setImages($data);
 
-        $workout = $this->service->update($id, $data);
+        $record = $this->service->update($id, $data);
 
-        if (!$workout) {
+        if (!$record) {
             return back()->with(['message' => 'record not found']);
         }
-        return back()->with(['message' => 'record updated successfully']);
+        $this->responseSuccess($record, 'record updated successfully');
     }
 
     /**
@@ -97,10 +123,15 @@ abstract class BaseCrudController extends Controller
         if (!$deleted) {
             return back()->with(['message' => 'record not found']);
         }
-        return back()->with('success', ['message' => 'record deleted successfully']);
+        $this->responseSuccess([], 'record deleted successfully');
     }
 
     abstract protected function storeRequestRules(): array;
     abstract protected function updateRequestRules(): array;
     abstract protected function index_view(): Response;
+
+    protected function setImages($data)
+    {
+        return $data;
+    }
 }

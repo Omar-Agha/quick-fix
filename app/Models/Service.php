@@ -22,6 +22,7 @@ class Service extends Model
 
     public function getImageAttribute($value)
     {
+
         return asset('storage/' . $value);
     }
 }
