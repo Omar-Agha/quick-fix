@@ -34,6 +34,7 @@ class ServiceController extends BaseCrudController
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'image' => 'required|file|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_active' => 'required|boolean',
 
         ];
     }
@@ -44,6 +45,7 @@ class ServiceController extends BaseCrudController
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_active' => 'required|boolean',
         ];
     }
     protected function setImages($data)

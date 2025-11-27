@@ -63,6 +63,9 @@ export function objectToFormData(obj: any, formData = new FormData(), parentKey 
         else if (typeof value === "object" && value !== null) {
             objectToFormData(value, formData, formKey);
         }
+        else if (typeof value === "boolean") {
+            formData.append(formKey, value ? "1" : "0");
+        }
         else if (value !== undefined && value !== null) {
             formData.append(formKey, value as any);
         }
@@ -85,6 +88,7 @@ export function saveRecord(
     onFinish?: () => void,
 ) {
     showLoader?.();
+    console.log(data);
 
     if (isFormData) {
         data = objectToFormData(data);

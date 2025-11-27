@@ -218,7 +218,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         </FormField>
 
         <!-- Active Status Toggle -->
-        <FormField name="is_active" v-slot="{ value, handleChange }">
+        <FormField name="is_active" v-slot="{ componentField }">
             <FormItem class="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div class="space-y-0.5">
                     <FormLabel class="text-base">Active Status</FormLabel>
@@ -227,7 +227,10 @@ const onSubmit = form.handleSubmit(async (values) => {
                     </FormDescription>
                 </div>
                 <FormControl>
-                    <Checkbox :checked="value" @update:checked="handleChange" />
+                    <!-- <Checkbox :checked="value" @update:checked="handleChange" /> -->
+                    <!-- <input type="checkbox" v-bind="componentField" /> -->
+                    <Checkbox :model-value="componentField.modelValue" @update:model-value="componentField.onChange"
+                        @blur="componentField.onBlur" />
                 </FormControl>
             </FormItem>
         </FormField>
