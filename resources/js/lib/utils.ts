@@ -1,7 +1,8 @@
-import { InertiaLinkProps } from '@inertiajs/vue3';
+import { InertiaLinkProps, router } from '@inertiajs/vue3';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { h } from 'vue';
+import { toast } from 'vue-sonner';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -68,4 +69,47 @@ export function objectToFormData(obj: any, formData = new FormData(), parentKey 
     }
 
     return formData;
+}
+
+
+
+export function saveRecord(
+    url: string,
+    data: any,
+    isFormData: boolean,
+    id?: number,
+    showLoader?: () => void,
+    hideLoader?: () => void,
+    onSuccess?: () => void,
+    onError?: (ex: any) => void,
+    onFinish?: () => void,
+) {
+    showLoader?.();
+
+    if (isFormData) {
+        data = objectToFormData(data);
+    }
+
+    if (id) {
+
+        data.append('id', id?.toString() || '');
+    }
+
+    router.post(url, data, {
+        forceFormData: true,
+        onSuccess: () => {
+            toast.success('Service created successfully!');
+            onSuccess?.();
+        },
+        onError: (ex) => {
+
+
+            toast.error(renderErrorList(ex));
+            onError?.(ex);
+        },
+        onFinish: () => {
+            onFinish?.();
+            hideLoader?.();
+        },
+    });
 }

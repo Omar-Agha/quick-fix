@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
 });
 
-Route::resource('services', ServiceController::class);
+// Route::resource('services', ServiceController::class);
 Route::get('gg', function () {
     return Service::all();
 });

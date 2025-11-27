@@ -17,7 +17,7 @@ import Textarea from '@/components/ui/textarea/Textarea.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import { Service, serviceCreateSchema, updateServiceSchema } from '../dtos/data';
 import { toast } from 'vue-sonner';
-import { objectToFormData, renderErrorList } from '@/lib/utils';
+import { objectToFormData, renderErrorList, saveRecord } from '@/lib/utils';
 
 interface Props {
     record: Service | null;
@@ -107,32 +107,15 @@ const removeImage = () => {
 
 
 const onSubmit = form.handleSubmit(async (values) => {
-    isSubmitting.value = true;
 
-
-    const formData = objectToFormData(values);
-    if (isUpdating) {
-        console.log('update', updatedRecordId.value);
-
-        formData.append('id', updatedRecordId.value?.toString() || '');
-    }
-
-    router.post('/services', formData, {
-        forceFormData: true,
-        onSuccess: () => {
+    saveRecord('/services', values, true, updatedRecordId.value,
+        () => isSubmitting.value = true,
+        () => isSubmitting.value = false,
+        () => {
             toast.success('Service created successfully!');
             props.onSuccess?.();
-        },
-        onError: (ex) => {
-            console.log(ex);
-
-
-            toast.error(renderErrorList(ex));
-        },
-        onFinish: () => {
-            isSubmitting.value = false;
-        },
-    });
+        }, (ex) => {
+        });
 
 
 });

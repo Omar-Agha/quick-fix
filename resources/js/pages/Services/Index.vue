@@ -149,56 +149,60 @@ const deleteRecord = async (record: Service) => {
 
 <template>
 
+
     <Head title="Services" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <PageHeader title="Services" description="Manage your services and offerings" show-view-toggle
-            v-model:selected-view="currentView">
-            <template #actions>
-                <Button @click="openCreateDialog">
-                    <Plus class="mr-2 h-4 w-4" />
-                    Create Service
-                </Button>
+        <div class="p-3">
 
-            </template>
-        </PageHeader>
+            <PageHeader title="Services" description="Manage your services and offerings" show-view-toggle
+                v-model:selected-view="currentView">
+                <template #actions>
+                    <Button @click="openCreateDialog">
+                        <Plus class="mr-2 h-4 w-4" />
+                        Create Service
+                    </Button>
 
-        <!-- Table View -->
-        <div class="flex-[100%]" v-if="currentView === 'table'">
-            <PaginateTable ref="paginateTableRef" :columns="columns" :data-source="fetchData"
-                :entity-actions="Actions" />
+                </template>
+            </PageHeader>
+
+            <!-- Table View -->
+            <div class="flex-[100%]" v-if="currentView === 'table'">
+                <PaginateTable ref="paginateTableRef" :columns="columns" :data-source="fetchData"
+                    :entity-actions="Actions" />
+            </div>
+
+            <!-- Grid View -->
+            <div v-else-if="currentView === 'grid'" class="flex-[100%]">
+                <CrudGrid ref="crudGridRef" :data-source="fetchData" :card-component="ServiceCard"
+                    item-prop-name="record" empty-message="No services yet" :empty-icon="Dumbbell"
+                    empty-action-text="Create Your First Service" :empty-action="openCreateDialog"
+                    @edit="handleEditRecord" @delete="handleDeleteRecord" :entity-actions="Actions" />
+            </div>
+
+
+            <!-- Edit Dialog -->
+            <Dialog v-model:open="isEditDialogOpen">
+                <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Edit Service</DialogTitle>
+                    </DialogHeader>
+
+                    <CreateUpdateServiceForm v-if="editingRecord" :record="editingRecord"
+                        :on-success="handleSaveSuccess" :on-cancel="closeDialogs" />
+                </DialogContent>
+            </Dialog>
+
+            <Dialog v-model:open="isCreateDialogOpen">
+                <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Create New Service</DialogTitle>
+                    </DialogHeader>
+
+                    <CreateUpdateServiceForm :record="editingRecord" :on-success="handleSaveSuccess"
+                        :on-cancel="closeDialogs" />
+                </DialogContent>
+            </Dialog>
         </div>
-
-        <!-- Grid View -->
-        <div v-else-if="currentView === 'grid'" class="flex-[100%]">
-            <CrudGrid ref="crudGridRef" :data-source="fetchData" :card-component="ServiceCard" item-prop-name="record"
-                empty-message="No services yet" :empty-icon="Dumbbell" empty-action-text="Create Your First Service"
-                :empty-action="openCreateDialog" @edit="handleEditRecord" @delete="handleDeleteRecord"
-                :entity-actions="Actions" />
-        </div>
-
-
-        <!-- Edit Dialog -->
-        <Dialog v-model:open="isEditDialogOpen">
-            <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>Edit Service</DialogTitle>
-                </DialogHeader>
-
-                <CreateUpdateServiceForm v-if="editingRecord" :record="editingRecord" :on-success="handleSaveSuccess"
-                    :on-cancel="closeDialogs" />
-            </DialogContent>
-        </Dialog>
-
-        <Dialog v-model:open="isCreateDialogOpen">
-            <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>Create New Service</DialogTitle>
-                </DialogHeader>
-
-                <CreateUpdateServiceForm :record="editingRecord" :on-success="handleSaveSuccess"
-                    :on-cancel="closeDialogs" />
-            </DialogContent>
-        </Dialog>
     </AppLayout>
 </template>
