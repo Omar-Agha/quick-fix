@@ -68,7 +68,11 @@ abstract class BaseCrudController extends Controller
         } else {
             $data = $request->validate($this->storeRequestRules());
         }
-        $data = $this->setImages($data);
+        try {
+            $data = $this->setImages($data);
+        } catch (\Throwable $th) {
+            return $this->responseError(['message' => $th->getMessage()]);
+        }
 
         if (request('id')) {
             $record = $this->service->update(request('id'), $data);
