@@ -14,7 +14,17 @@
                 "operationId": "27a06bf97bf5a8506fb36e9b6b625d9a",
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Service"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -179,6 +189,31 @@
                         "type": "string"
                     },
                     "password": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Service": {
+                "title": "Service",
+                "description": "Service data",
+                "required": [
+                    "name",
+                    "description",
+                    "price",
+                    "image"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "number"
+                    },
+                    "image": {
                         "type": "string"
                     }
                 },

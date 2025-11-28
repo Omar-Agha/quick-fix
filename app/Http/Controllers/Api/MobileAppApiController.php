@@ -20,7 +20,11 @@ class MobileAppApiController extends Controller
      *     tags={"Mobile App"},
      *     @OA\Response(
      *         response=200,
-     *         description="Successful operation"
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="App\Swagger\Schema\Service")
+     *         )
      *     )
      * )
      */

@@ -102,3 +102,47 @@ class LoginRequest
      */
     public $password;
 }
+
+/**
+ * @OA\Schema(
+ *     schema="Service",
+ *     type="object",
+ *     title="Service",
+ *     description="Service data",
+ *     required={"name", "description", "price", "image"},
+ * )
+ */
+class Service
+{
+    /**
+     * @OA\Property(
+     *     property="name",
+     *     type="string"
+     * )
+     */
+    public $name;
+
+    /**
+     * @OA\Property(
+     *     property="description",
+     *     type="string"
+     * )
+     */
+    public $description;
+
+    /**
+     * @OA\Property(
+     *     property="price",
+     *     type="number"
+     * )
+     */
+    public $price;
+
+    /**
+     * @OA\Property(
+     *     property="image",
+     *     type="string"
+     * )
+     */
+    public $image;
+}
