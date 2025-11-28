@@ -118,7 +118,15 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout endpoint - Revokes the user's current token.
+     * @OA\Post(
+     *     path="/api/logout",
+     *     summary="Logout a mobile user and revoke the access token.",
+     *     tags={"Auth"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully logged out."
+     *     )
+     * )
      */
     public function logout(Request $request): JsonResponse
     {
@@ -134,7 +142,15 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout from other devices endpoint - Revokes all tokens except the current one.
+     * @OA\Post(
+     *     path="/api/logout-other-devices",
+     *     summary="Logout a mobile user from other devices and revoke the access token.",
+     *     tags={"Auth"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully logged out from other devices."
+     *     )
+     * )
      */
     public function logoutFromOtherDevices(Request $request): JsonResponse
     {

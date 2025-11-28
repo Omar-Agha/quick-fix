@@ -151,52 +151,55 @@ const deleteRecord = async (record: Example) => {
     <Head title="Examples" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <PageHeader title="Examples" description="Manage your example routines and exercises" show-view-toggle
-            v-model:selected-view="currentView">
-            <template #actions>
-                <Button @click="openCreateDialog">
-                    <Plus class="mr-2 h-4 w-4" />
-                    Create Example
-                </Button>
+        <div class="p-3">
+            <PageHeader title="Examples" description="Manage your example routines and exercises" show-view-toggle
+                v-model:selected-view="currentView">
+                <template #actions>
+                    <Button @click="openCreateDialog">
+                        <Plus class="mr-2 h-4 w-4" />
+                        Create Example
+                    </Button>
 
-            </template>
-        </PageHeader>
+                </template>
+            </PageHeader>
 
-        <!-- Table View -->
-        <div class="flex-[100%]" v-if="currentView === 'table'">
-            <PaginateTable ref="paginateTableRef" :columns="columns" :data-source="fetchData"
-                :entity-actions="Actions" />
+            <!-- Table View -->
+            <div class="flex-[100%]" v-if="currentView === 'table'">
+                <PaginateTable ref="paginateTableRef" :columns="columns" :data-source="fetchData"
+                    :entity-actions="Actions" />
+            </div>
+
+            <!-- Grid View -->
+            <div v-else-if="currentView === 'grid'" class="flex-[100%]">
+                <CrudGrid ref="crudGridRef" :data-source="fetchData" :card-component="ExampleCard"
+                    item-prop-name="record" empty-message="No examples yet" :empty-icon="Dumbbell"
+                    empty-action-text="Create Your First Example" :empty-action="openCreateDialog"
+                    @edit="handleEditRecord" @delete="handleDeleteRecord" :entity-actions="Actions" />
+            </div>
+
+
+            <!-- Edit Dialog -->
+            <Dialog v-model:open="isEditDialogOpen">
+                <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Edit Example</DialogTitle>
+                    </DialogHeader>
+
+                    <EditExampleForm v-if="editingRecord" :record="editingRecord" :on-success="handleSaveSuccess"
+                        :on-cancel="closeDialogs" />
+                </DialogContent>
+            </Dialog>
+
+            <Dialog v-model:open="isCreateDialogOpen">
+                <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Create New Example</DialogTitle>
+                    </DialogHeader>
+
+                    <CreateExampleForm :record="editingRecord" :on-success="handleSaveSuccess"
+                        :on-cancel="closeDialogs" />
+                </DialogContent>
+            </Dialog>
         </div>
-
-        <!-- Grid View -->
-        <div v-else-if="currentView === 'grid'" class="flex-[100%]">
-            <CrudGrid ref="crudGridRef" :data-source="fetchData" :card-component="ExampleCard" item-prop-name="record"
-                empty-message="No examples yet" :empty-icon="Dumbbell" empty-action-text="Create Your First Example"
-                :empty-action="openCreateDialog" @edit="handleEditRecord" @delete="handleDeleteRecord"
-                :entity-actions="Actions" />
-        </div>
-
-
-        <!-- Edit Dialog -->
-        <Dialog v-model:open="isEditDialogOpen">
-            <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>Edit Example</DialogTitle>
-                </DialogHeader>
-
-                <EditExampleForm v-if="editingRecord" :record="editingRecord" :on-success="handleSaveSuccess"
-                    :on-cancel="closeDialogs" />
-            </DialogContent>
-        </Dialog>
-
-        <Dialog v-model:open="isCreateDialogOpen">
-            <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>Create New Example</DialogTitle>
-                </DialogHeader>
-
-                <CreateExampleForm :record="editingRecord" :on-success="handleSaveSuccess" :on-cancel="closeDialogs" />
-            </DialogContent>
-        </Dialog>
     </AppLayout>
 </template>

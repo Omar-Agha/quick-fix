@@ -7,6 +7,7 @@ import { h } from 'vue';
 import { Actions, EntityKey, Service } from './dtos/data';
 import { EntityAction } from '@/components/dv-components/common';
 import { CheckCircle2, XCircle } from 'lucide-vue-next';
+import { avatar } from '@/lib/columnsUtils';
 
 export const columns: ColumnDef<Service>[] = [
     {
@@ -14,22 +15,7 @@ export const columns: ColumnDef<Service>[] = [
         header: 'Image',
         cell: ({ row }) => {
             const service = row.original;
-            return h('div', { class: 'flex items-center' }, [
-                h(
-                    Avatar,
-                    { class: 'h-12 w-12' },
-                    {
-                        default: () => [
-                            service.image
-                                ? h(AvatarImage, { src: service.image, alt: service.name })
-                                : null,
-                            h(AvatarFallback, { class: 'bg-muted text-muted-foreground' }, () =>
-                                service.name.charAt(0).toUpperCase()
-                            ),
-                        ],
-                    }
-                ),
-            ]);
+            return avatar(service.image, service.name);
         },
     },
     {

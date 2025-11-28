@@ -32,7 +32,8 @@ Route::get('gg', function () {
 
 
 Route::get('/all-services', [MobileAppApiController::class, 'getAllServices']);
-//get banner ads (if for home page is true then return only for home page, otherwise return all)
+
+
 Route::get('/all-banner-ads', [MobileAppApiController::class, 'getAllBannerAds']);
 
 Route::get('/all-offers', [MobileAppApiController::class, 'getAllOffers']);

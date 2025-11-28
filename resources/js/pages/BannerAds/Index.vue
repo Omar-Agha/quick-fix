@@ -19,15 +19,15 @@ import { type BreadcrumbItem } from '@/types';
 import type { CrudPageProps } from '@/types/crud';
 import { Head, router } from '@inertiajs/vue3';
 import axios from 'axios';
-import { HandPlatter, Plus } from 'lucide-vue-next';
+import { Dumbbell, Image, Plus } from 'lucide-vue-next';
 import { computed, onMounted, onUnmounted, Ref, ref } from 'vue';
 import { toast } from 'vue-sonner';
-import { Actions, EntityKey, Service, ServiceActions } from './dtos/data';
-import ServiceCard from './forms/ServiceCard.vue';
+import { Actions, EntityKey, BannerAd, BannerAdActions } from './dtos/data';
+import BannerAdCard from './forms/BannerAdCard.vue';
 import { columns } from './columns';
-import CreateUpdateServiceForm from './forms/CreateUpdateServiceForm.vue';
-import { getActionEventName } from '@/components/dv-components/common'
 
+import { getActionEventName } from '@/components/dv-components/common'
+import CreateBannerAdForm from './forms/CreateBannerAdForm.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -35,14 +35,14 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Services',
-        href: '/services',
+        title: 'Examples',
+        href: '/examples',
     },
 ];
 
 const isCreateDialogOpen = ref(false);
 const isEditDialogOpen = ref(false);
-const editingRecord = ref<Service | null>(null);
+const editingRecord = ref<BannerAd | null>(null);
 
 // View state
 const currentView = ref<'grid' | 'table'>('grid');
@@ -58,7 +58,7 @@ const openCreateDialog = () => {
     isCreateDialogOpen.value = true;
 };
 
-const openEditDialog = (record: Service) => {
+const openEditDialog = (record: BannerAd) => {
     editingRecord.value = record;
     isEditDialogOpen.value = true;
 };
@@ -88,8 +88,7 @@ const refreshData = () => {
 
 
 const fetchData = async (page: number, perPage: number) => {
-    const response = await axios.get<PaginationResponse<Service>>(route('services.index'), { params: { page, per_page: perPage } });
-    console.log(response);
+    const response = await axios.get<PaginationResponse<BannerAd>>(route('banner-ads.index'), { params: { page, per_page: perPage } });
 
     return {
         data: response.data.data,
@@ -103,11 +102,11 @@ const fetchData = async (page: number, perPage: number) => {
 
 
 // Event listeners for table actions
-const handleEditRecord = (record: Service) => {
+const handleEditRecord = (record: BannerAd) => {
     openEditDialog(record);
 };
 
-const handleDeleteRecord = (record: Service) => {
+const handleDeleteRecord = (record: BannerAd) => {
     deleteRecord(record);
 };
 
@@ -119,8 +118,8 @@ onMounted(() => {
         handleDeleteRecord(event.detail);
     };
 
-    window.addEventListener(getActionEventName(ServiceActions.edit, EntityKey), handleEditEvent);
-    window.addEventListener(getActionEventName(ServiceActions.delete, EntityKey), handleDeleteEvent);
+    window.addEventListener(getActionEventName(BannerAdActions.edit, EntityKey), handleEditEvent);
+    window.addEventListener(getActionEventName(BannerAdActions.delete, EntityKey), handleDeleteEvent);
 
     // Store references for cleanup
     (window as any).__editRecordHandler = handleEditEvent;
@@ -128,19 +127,19 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    window.removeEventListener(getActionEventName(ServiceActions.edit, EntityKey), (window as any).__editRecordHandler);
-    window.removeEventListener(getActionEventName(ServiceActions.delete, EntityKey), (window as any).__deleteRecordHandler);
+    window.removeEventListener(getActionEventName(BannerAdActions.edit, EntityKey), (window as any).__editRecordHandler);
+    window.removeEventListener(getActionEventName(BannerAdActions.delete, EntityKey), (window as any).__deleteRecordHandler);
 });
 
-const deleteRecord = async (record: Service) => {
+const deleteRecord = async (record: BannerAd) => {
     if (!confirm(`Are you sure you want to delete "${record.name}"?`)) return;
 
     try {
-        await router.delete(`/services/${record.id}`);
-        toast.success('Service deleted successfully!');
+        await router.delete(`/banner-ads/${record.id}`);
+        toast.success('Banner Ad deleted successfully!');
         refreshData(); // Refresh data after successful deletion
     } catch (error) {
-        toast.error('Failed to delete service');
+        toast.error('Failed to delete Banner Ad');
     }
 };
 
@@ -149,18 +148,16 @@ const deleteRecord = async (record: Service) => {
 
 <template>
 
-
-    <Head title="Services" />
+    <Head title="Banner Ads" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-3">
-
-            <PageHeader title="Services" description="Manage your services and offerings" show-view-toggle
+            <PageHeader title="Banner Ads" description="Manage your banner ads" show-view-toggle
                 v-model:selected-view="currentView">
                 <template #actions>
                     <Button @click="openCreateDialog">
                         <Plus class="mr-2 h-4 w-4" />
-                        Create Service
+                        Create Banner Ad
                     </Button>
 
                 </template>
@@ -174,9 +171,9 @@ const deleteRecord = async (record: Service) => {
 
             <!-- Grid View -->
             <div v-else-if="currentView === 'grid'" class="flex-[100%]">
-                <CrudGrid ref="crudGridRef" :data-source="fetchData" :card-component="ServiceCard"
-                    item-prop-name="record" empty-message="No services yet" :empty-icon="HandPlatter"
-                    empty-action-text="Create Your First Service" :empty-action="openCreateDialog"
+                <CrudGrid ref="crudGridRef" :data-source="fetchData" :card-component="BannerAdCard"
+                    item-prop-name="record" empty-message="No banner ads yet" :empty-icon="Image"
+                    empty-action-text="Create Your First Banner Ad" :empty-action="openCreateDialog"
                     @edit="handleEditRecord" @delete="handleDeleteRecord" :entity-actions="Actions" />
             </div>
 
@@ -185,21 +182,21 @@ const deleteRecord = async (record: Service) => {
             <Dialog v-model:open="isEditDialogOpen">
                 <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>Edit Service</DialogTitle>
+                        <DialogTitle>Edit Banner Ad</DialogTitle>
                     </DialogHeader>
 
-                    <CreateUpdateServiceForm v-if="editingRecord" :record="editingRecord"
-                        :on-success="handleSaveSuccess" :on-cancel="closeDialogs" />
+                    <CreateBannerAdForm :record="editingRecord" :on-success="handleSaveSuccess"
+                        :on-cancel="closeDialogs" />
                 </DialogContent>
             </Dialog>
 
             <Dialog v-model:open="isCreateDialogOpen">
                 <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
                     <DialogHeader>
-                        <DialogTitle>Create New Service</DialogTitle>
+                        <DialogTitle>Create New Banner Ad</DialogTitle>
                     </DialogHeader>
 
-                    <CreateUpdateServiceForm :record="editingRecord" :on-success="handleSaveSuccess"
+                    <CreateBannerAdForm :record="editingRecord" :on-success="handleSaveSuccess"
                         :on-cancel="closeDialogs" />
                 </DialogContent>
             </Dialog>

@@ -14,7 +14,7 @@ import {
 
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Image, HandPlatter, } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { dashboard } from '@/routes';
 
@@ -27,7 +27,12 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Services',
         href: route('services.index'),
-        icon: LayoutGrid,
+        icon: HandPlatter,
+    },
+    {
+        title: 'Banner Ads',
+        href: route('banner-ads.index'),
+        icon: Image,
     },
 ];
 

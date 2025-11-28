@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\BannerAdCrudController;
 use App\Http\Controllers\Dashboard\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -19,6 +20,7 @@ Route::middleware([])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
     Route::resource('services', ServiceController::class);
+    Route::resource('banner-ads', BannerAdCrudController::class);
 });
 
 require __DIR__ . '/settings.php';

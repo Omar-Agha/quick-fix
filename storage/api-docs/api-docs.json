@@ -99,6 +99,34 @@
                     }
                 }
             }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout a mobile user and revoke the access token.",
+                "operationId": "5ff2dc8b48bff52908d3821a0ecc9b3e",
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged out."
+                    }
+                }
+            }
+        },
+        "/api/logout-other-devices": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout a mobile user from other devices and revoke the access token.",
+                "operationId": "656037f5c51140ff318938bb49f56b7a",
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged out from other devices."
+                    }
+                }
+            }
         }
     },
     "components": {

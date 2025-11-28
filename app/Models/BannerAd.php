@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class BannerAd extends Model
 {
-    protected $fillable = ['image', 'link', 'published_at'];
-
+    protected $fillable = ['name', 'description', 'image', 'link', 'is_active'];
+    public $timestamps = true;
     public $casts = [
-        'published_at' => 'datetime',
+        'is_active' => 'boolean'
     ];
+
+    public function getImageAttribute($value)
+    {
+        return asset('storage/' . $value);
+    }
 }

@@ -136,7 +136,7 @@ abstract class BaseCrudController extends Controller
 
     abstract protected function storeRequestRules(): array;
     abstract protected function updateRequestRules(): array;
-    abstract protected function index_view(): Response;
+    abstract protected function index_view();
 
     protected function setImages($data)
     {

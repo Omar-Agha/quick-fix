@@ -16,12 +16,14 @@ import FormMessage from '@/components/ui/form/FormMessage.vue';
 import Input from '@/components/ui/input/Input.vue';
 import Label from '@/components/ui/label/Label.vue';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
-import { Example, exampleCreateSchema } from '../dtos/data';
+import { BannerAd, bannerAdCreateSchema } from '../dtos/data';
 import { saveRecord } from '@/lib/utils';
+import FileUploaderInput from '@/components/dv-components/FileUploaderInput.vue';
+import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 const isSubmitting = ref(false);
 
 interface Props {
-    record: Example | null;
+    record: BannerAd | null;
     onSuccess?: () => void;
     onCancel?: () => void;
 }
@@ -33,7 +35,7 @@ const isCreating = computed(() => props.record === null);
 const updatedRecordId = computed(() => props.record?.id);
 
 const form = useForm({
-    validationSchema: exampleCreateSchema,
+    validationSchema: bannerAdCreateSchema,
     initialValues: props.record,
 });
 
@@ -41,13 +43,15 @@ const form = useForm({
 
 const onSubmit = form.handleSubmit(async (values) => {
 
-    saveRecord('/example', values, true, updatedRecordId.value,
+    saveRecord('/banner-ads', values, true, updatedRecordId.value,
         () => isSubmitting.value = true,
         () => isSubmitting.value = false,
         () => {
-            toast.success('Service created successfully!');
+            toast.success('Banner Ad created successfully!');
             props.onSuccess?.();
-        }, (ex) => {
+        }, (error) => {
+            toast.error('Failed to create Banner Ad');
+            console.error(error);
         });
 });
 </script>
@@ -58,7 +62,16 @@ const onSubmit = form.handleSubmit(async (values) => {
             <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                    <Input type="text" placeholder="Enter example name" v-bind="componentField" />
+                    <Input type="text" placeholder="Enter Banner Ad name" v-bind="componentField" />
+                </FormControl>
+                <FormMessage />
+            </FormItem>
+        </FormField>
+        <FormField name="link" v-slot="{ componentField }">
+            <FormItem>
+                <FormLabel>Link</FormLabel>
+                <FormControl>
+                    <Input type="text" placeholder="Enter Banner Ad link" v-bind="componentField" />
                 </FormControl>
                 <FormMessage />
             </FormItem>
@@ -68,9 +81,38 @@ const onSubmit = form.handleSubmit(async (values) => {
             <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                    <Textarea placeholder="Enter example description" v-bind="componentField" />
+                    <Textarea placeholder="Enter Banner Ad description" v-bind="componentField" />
                 </FormControl>
                 <FormMessage />
+            </FormItem>
+        </FormField>
+
+        <FormField name="image" v-slot="{ componentField }">
+            <FormItem>
+                <FormLabel>Image</FormLabel>
+                <FormControl>
+                    <FileUploaderInput v-bind="componentField" :existing-image-url="props.record?.image"
+                        :max-size-m-b="5" accept="image/*" label="Banner Ad Image"
+                        description="Upload a high-quality image for your banner ad (Max 5MB)"
+                        :disabled="isSubmitting" />
+                </FormControl>
+                <FormMessage />
+            </FormItem>
+        </FormField>
+
+        <FormField name="is_active" v-slot="{ componentField }">
+            <FormItem class="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div class="space-y-0.5">
+                    <FormLabel class="text-base">Active Status</FormLabel>
+                    <FormDescription>
+                        Toggle to enable or disable this service
+                    </FormDescription>
+                </div>
+                <FormControl>
+
+                    <Checkbox :model-value="componentField.modelValue" @update:model-value="componentField.onChange"
+                        @blur="componentField.onBlur" />
+                </FormControl>
             </FormItem>
         </FormField>
 

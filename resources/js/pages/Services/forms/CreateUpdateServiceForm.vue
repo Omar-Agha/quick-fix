@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3';
 import { toTypedSchema } from '@vee-validate/zod';
-import { Upload, X, Image as ImageIcon } from 'lucide-vue-next';
 import { useForm } from 'vee-validate';
-import { computed, h, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import Button from '@/components/ui/button/Button.vue';
 import { FormField } from '@/components/ui/form';
@@ -15,6 +14,7 @@ import FormDescription from '@/components/ui/form/FormDescription.vue';
 import Input from '@/components/ui/input/Input.vue';
 import Textarea from '@/components/ui/textarea/Textarea.vue';
 import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
+import FileUploaderInput from '@/components/dv-components/FileUploaderInput.vue';
 import { Service, serviceCreateSchema, updateServiceSchema } from '../dtos/data';
 import { toast } from 'vue-sonner';
 import { objectToFormData, renderErrorList, saveRecord } from '@/lib/utils';
@@ -42,9 +42,6 @@ const form = useForm({
     },
 });
 
-const imagePreview = ref<string | null>(props.record?.image || null);
-const imageFile = ref<File | null>(null);
-const fileInputRef = ref<HTMLInputElement | null>(null);
 const isSubmitting = ref(false);
 
 // Watch for record changes
@@ -57,52 +54,10 @@ watch(() => props.record, (newRecord) => {
             image: undefined,
             is_active: newRecord.is_active,
         });
-        imagePreview.value = newRecord.image || null;
-        imageFile.value = null;
     } else {
         form.resetForm();
-        imagePreview.value = null;
-        imageFile.value = null;
     }
 }, { immediate: true });
-
-const handleImageChange = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    const file = target.files?.[0];
-
-    if (file) {
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-            toast.error('Please select an image file');
-            return;
-        }
-
-        // Validate file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            toast.error('Image size must be less than 5MB');
-            return;
-        }
-
-        imageFile.value = file;
-        form.setFieldValue('image', file);
-
-        // Create preview
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imagePreview.value = e.target?.result as string;
-        };
-        reader.readAsDataURL(file);
-    }
-};
-
-const removeImage = () => {
-    imageFile.value = null;
-    imagePreview.value = props.record?.image || null;
-    form.setFieldValue('image', undefined);
-    if (fileInputRef.value) {
-        fileInputRef.value.value = '';
-    }
-};
 
 
 
@@ -131,40 +86,9 @@ const onSubmit = form.handleSubmit(async (values) => {
                     Upload a high-quality image for your service (Max 5MB)
                 </FormDescription>
                 <FormControl>
-                    <div class="space-y-4">
-                        <!-- Image Preview -->
-                        <div v-if="imagePreview" class="relative inline-block">
-                            <div
-                                class="relative h-48 w-48 overflow-hidden rounded-lg border-2 border-dashed border-muted">
-                                <img :src="imagePreview" alt="Service preview" class="h-full w-full object-cover" />
-                                <button type="button" @click="removeImage"
-                                    class="absolute right-2 top-2 rounded-full bg-destructive p-1.5 text-destructive-foreground shadow-sm transition-colors hover:bg-destructive/90">
-                                    <X class="h-4 w-4" />
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Upload Button -->
-                        <div v-else class="flex items-center justify-center">
-                            <div
-                                class="flex h-48 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-muted bg-muted/50 transition-colors hover:border-primary">
-                                <ImageIcon class="mb-4 h-12 w-12 text-muted-foreground" />
-                                <p class="mb-2 text-sm text-muted-foreground">
-                                    Click to upload or drag and drop
-                                </p>
-                                <p class="text-xs text-muted-foreground">
-                                    PNG, JPG, GIF up to 5MB
-                                </p>
-                            </div>
-                        </div>
-
-                        <input ref="fileInputRef" type="file" accept="image/*" @change="handleImageChange"
-                            class="hidden" id="image-upload" />
-                        <Button type="button" variant="outline" @click="fileInputRef?.click()" class="w-full">
-                            <Upload class="mr-2 h-4 w-4" />
-                            {{ imagePreview ? 'Change Image' : 'Upload Image' }}
-                        </Button>
-                    </div>
+                    <FileUploaderInput v-bind="componentField" :existing-image-url="props.record?.image"
+                        :max-size-m-b="5" accept="image/*" label="Service Image"
+                        description="Upload a high-quality image for your service (Max 5MB)" :disabled="isSubmitting" />
                 </FormControl>
                 <FormMessage />
             </FormItem>
@@ -227,8 +151,7 @@ const onSubmit = form.handleSubmit(async (values) => {
                     </FormDescription>
                 </div>
                 <FormControl>
-                    <!-- <Checkbox :checked="value" @update:checked="handleChange" /> -->
-                    <!-- <input type="checkbox" v-bind="componentField" /> -->
+
                     <Checkbox :model-value="componentField.modelValue" @update:model-value="componentField.onChange"
                         @blur="componentField.onBlur" />
                 </FormControl>
