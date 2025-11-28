@@ -10,6 +10,11 @@ use App\Http\Resources\OrderDto;
 use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 
+
+//swagger 
+Route::redirect('/', 'documentation');
+
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('/login', [AuthController::class, 'login']);

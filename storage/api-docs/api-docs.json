@@ -1,0 +1,29 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Example for response examples value",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/all-services": {
+            "get": {
+                "tags": [
+                    "Mobile App"
+                ],
+                "summary": "Get all services",
+                "operationId": "27a06bf97bf5a8506fb36e9b6b625d9a",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Mobile App",
+            "description": "Mobile App"
+        }
+    ]
+}

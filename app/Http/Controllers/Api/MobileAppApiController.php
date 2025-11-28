@@ -11,6 +11,19 @@ class MobileAppApiController extends Controller
         private MobileAppService $mobileAppService
     ) {}
 
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/all-services",
+     *     summary="Get all services",
+     *     tags={"Mobile App"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
+     */
     public function getAllServices()
     {
         $services = $this->mobileAppService->getAllServices();
