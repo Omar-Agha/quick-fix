@@ -16,8 +16,26 @@ class AuthController extends Controller
         public AuthService $authService
     ) {}
 
+
+
     /**
-     * Register a new mobile user and issue an OTP for verification.
+     * @OA\Post(
+     *     path="/api/register",
+     *     summary="Register a new mobile user and issue an OTP for verification.",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="App\Swagger\Schema\RegisterRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User registered. Please verify OTP sent to your phone."
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     )
+     * )
      */
     public function register(RegisterRequest $request): JsonResponse
     {
@@ -32,7 +50,24 @@ class AuthController extends Controller
     }
 
     /**
-     * Verify OTP for registration.
+     *     @OA\Post(
+     *         path="/api/verify-otp",
+     *         summary="Verify OTP (One Time Password) for a newly registered mobile user.",
+     *         tags={"Auth"},
+     *         @OA\RequestBody(
+     *             required=true,
+     *             @OA\JsonContent(ref="App\Swagger\Schema\VerifyOtpRequest")
+     *         ),
+     *         @OA\Response(
+     *             response=200,
+     *             description="Phone number successfully verified or already verified."
+     *         ),
+     *         @OA\Response(
+     *             response=400,
+     *             description="Invalid request"
+     *         )
+     *     )
+     * )
      */
     public function verifyOtp(VerifyOtpRequest $request): JsonResponse
     {
@@ -52,8 +87,25 @@ class AuthController extends Controller
         ], 200);
     }
 
+
     /**
-     * Login endpoint - Only allows verified users to login via phone_number & password.
+     * @OA\Post(
+     *     path="/api/login",
+     *     summary="Login a mobile user and issue an access token.",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="App\Swagger\Schema\LoginRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Access token issued successfully."
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     )
+     * )
      */
     public function login(LoginRequest $request): JsonResponse
     {

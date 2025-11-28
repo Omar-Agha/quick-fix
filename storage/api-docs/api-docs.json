@@ -18,12 +18,154 @@
                     }
                 }
             }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new mobile user and issue an OTP for verification.",
+                "operationId": "ca7c0cb6772de9bffbb8c896980cebc8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User registered. Please verify OTP sent to your phone."
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/verify-otp": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify OTP (One Time Password) for a newly registered mobile user.",
+                "operationId": "7ffdcc2529f1d1bbbbac715c91b1c809",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerifyOtpRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Phone number successfully verified or already verified."
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login a mobile user and issue an access token.",
+                "operationId": "c373bc4cffa4a56fc64e3979b8ee7b96",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Access token issued successfully."
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "RegisterRequest": {
+                "title": "Register Request",
+                "description": "Request data for registering a new user",
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "phone_number": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "VerifyOtpRequest": {
+                "title": "Verify OTP Request",
+                "description": "Request data for verifying OTP",
+                "required": [
+                    "phone_number",
+                    "otp_code"
+                ],
+                "properties": {
+                    "phone_number": {
+                        "type": "string"
+                    },
+                    "otp_code": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "title": "Login Request",
+                "description": "Request data for logging in a user",
+                "required": [
+                    "phone_number",
+                    "password"
+                ],
+                "properties": {
+                    "phone_number": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
         }
     },
     "tags": [
         {
             "name": "Mobile App",
             "description": "Mobile App"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
         }
     ]
 }
