@@ -14,16 +14,18 @@ use Illuminate\Support\Facades\Route;
 //swagger 
 Route::redirect('/', 'documentation');
 
-
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
-Route::post('/login', [AuthController::class, 'login']);
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/logout-other-devices', [AuthController::class, 'logoutFromOtherDevices']);
-    Route::get('/user', [AuthController::class, 'user']);
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+    Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/logout-other-devices', [AuthController::class, 'logoutFromOtherDevices']);
+        Route::get('/user', [AuthController::class, 'user']);
+    });
 });
+
 
 // Route::resource('services', ServiceController::class);
 Route::get('gg', function () {

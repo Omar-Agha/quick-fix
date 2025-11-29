@@ -146,3 +146,23 @@ class Service
      */
     public $image;
 }
+
+/**
+ * @OA\Schema(
+ *     schema="ResendOtpRequest",
+ *     type="object",
+ *     title="Resend OTP Request",
+ *     description="Request data for resending OTP",
+ *     required={"phone_number"},
+ * )
+ */
+class ResendOtpRequest
+{
+    /**
+     * @OA\Property(
+     *     property="phone_number",
+     *     type="string"
+     * )
+     */
+    public $phone_number;
+}

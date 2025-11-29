@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Example for response examples value",
+        "title": "Mobile App API",
         "version": "1.0"
     },
     "paths": {
@@ -29,13 +29,13 @@
                 }
             }
         },
-        "/api/register": {
+        "/api/auth/register": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Register a new mobile user and issue an OTP for verification.",
-                "operationId": "ca7c0cb6772de9bffbb8c896980cebc8",
+                "operationId": "da8643013c2941f5ed7f8a9c9b4a7f7a",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -56,13 +56,13 @@
                 }
             }
         },
-        "/api/verify-otp": {
+        "/api/auth/verify-otp": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Verify OTP (One Time Password) for a newly registered mobile user.",
-                "operationId": "7ffdcc2529f1d1bbbbac715c91b1c809",
+                "operationId": "cf9cf2a20b688a8823802bf1b25c6429",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -83,13 +83,13 @@
                 }
             }
         },
-        "/api/login": {
+        "/api/auth/login": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Login a mobile user and issue an access token.",
-                "operationId": "c373bc4cffa4a56fc64e3979b8ee7b96",
+                "operationId": "535ffeda4b78916efd658b2844ea897a",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -110,13 +110,13 @@
                 }
             }
         },
-        "/api/logout": {
+        "/api/auth/logout": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Logout a mobile user and revoke the access token.",
-                "operationId": "5ff2dc8b48bff52908d3821a0ecc9b3e",
+                "operationId": "46f8a14c8083abb69eed72768aa08629",
                 "responses": {
                     "200": {
                         "description": "Successfully logged out."
@@ -124,16 +124,43 @@
                 }
             }
         },
-        "/api/logout-other-devices": {
+        "/api/auth/logout-other-devices": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Logout a mobile user from other devices and revoke the access token.",
-                "operationId": "656037f5c51140ff318938bb49f56b7a",
+                "operationId": "96704989c3f6004989638159b2c8263d",
                 "responses": {
                     "200": {
                         "description": "Successfully logged out from other devices."
+                    }
+                }
+            }
+        },
+        "/api/auth/resend-otp": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Resend OTP to a mobile user.",
+                "operationId": "11a9685a977b5eef57a08e0d5a782a34",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResendOtpRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OTP sent successfully."
+                    },
+                    "400": {
+                        "description": "Invalid request"
                     }
                 }
             }
@@ -218,6 +245,30 @@
                     }
                 },
                 "type": "object"
+            },
+            "ResendOtpRequest": {
+                "title": "Resend OTP Request",
+                "description": "Request data for resending OTP",
+                "required": [
+                    "phone_number"
+                ],
+                "properties": {
+                    "phone_number": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "parameters": {
+            "acceptJson": {
+                "name": "Accept",
+                "in": "header",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "default": "application/json"
+                }
             }
         }
     },

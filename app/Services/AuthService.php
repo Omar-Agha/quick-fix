@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\SendOtpToUser;
 use App\Models\MobileUser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -24,7 +25,7 @@ class AuthService
         $user->save();
 
         // Here you should send the OTP to the user's phone (e.g., with SMS)
-        // event(new SendOtpToUser($user, $otp));
+        event(new SendOtpToUser($user, $otp));
 
         return $user;
     }
@@ -131,5 +132,22 @@ class AuthService
             // If no current token, delete all tokens
             $user->tokens()->delete();
         }
+    }
+
+    public function resendOtp(string $phoneNumber): void
+    {
+        $user = MobileUser::where('phone_number', $phoneNumber)->first();
+
+        if (! $user) {
+            throw ValidationException::withMessages([
+                'phone_number' => ['No user found with this phone number.'],
+            ]);
+        }
+        $otp = random_int(100000, 999999);
+        $user->otp_code = $otp;
+        $user->save();
+
+        // Here you should send the OTP to the user's phone (e.g., with SMS)
+        event(new SendOtpToUser($user, $otp));
     }
 }

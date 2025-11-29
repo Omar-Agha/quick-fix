@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\ForceAcceptJsonRequestHeader;
+
 return [
     'default' => 'default',
     'documentations' => [
@@ -65,7 +67,7 @@ return [
              * Middleware allows to prevent unexpected access to API documentation
              */
             'middleware' => [
-                'api' => [],
+                'api' => [ForceAcceptJsonRequestHeader::class],
                 'asset' => [],
                 'docs' => [],
                 'oauth2_callback' => [],

@@ -10,6 +10,8 @@ use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+
+
 class AuthController extends Controller
 {
     public function __construct(
@@ -20,7 +22,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/register",
+     *     path="/api/auth/register",
      *     summary="Register a new mobile user and issue an OTP for verification.",
      *     tags={"Auth"},
      *     @OA\RequestBody(
@@ -51,7 +53,7 @@ class AuthController extends Controller
 
     /**
      *     @OA\Post(
-     *         path="/api/verify-otp",
+     *         path="/api/auth/verify-otp",
      *         summary="Verify OTP (One Time Password) for a newly registered mobile user.",
      *         tags={"Auth"},
      *         @OA\RequestBody(
@@ -90,7 +92,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/login",
+     *     path="/api/auth/login",
      *     summary="Login a mobile user and issue an access token.",
      *     tags={"Auth"},
      *     @OA\RequestBody(
@@ -119,7 +121,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/logout",
+     *     path="/api/auth/logout",
      *     summary="Logout a mobile user and revoke the access token.",
      *     tags={"Auth"},
      *     @OA\Response(
@@ -143,7 +145,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/logout-other-devices",
+     *     path="/api/auth/logout-other-devices",
      *     summary="Logout a mobile user from other devices and revoke the access token.",
      *     tags={"Auth"},
      *     @OA\Response(
@@ -171,5 +173,33 @@ class AuthController extends Controller
     public function user(Request $request): JsonResponse
     {
         return response()->json($request->user());
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/auth/resend-otp",
+     *     summary="Resend OTP to a mobile user.",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="App\Swagger\Schema\ResendOtpRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="OTP sent successfully."
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request"
+     *     )
+     * )
+     */
+    public function resendOtp(Request $request): JsonResponse
+    {
+        $this->authService->resendOtp($request->validated()['phone_number']);
+
+        return response()->json([
+            'message' => 'OTP sent successfully.',
+        ]);
     }
 }
