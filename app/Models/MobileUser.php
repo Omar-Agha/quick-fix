@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 
 class MobileUser extends Model
@@ -43,5 +44,10 @@ class MobileUser extends Model
             'otp_verified' => 'boolean',
             'password' => 'hashed',
         ];
+    }
+
+    public function locationAddresses(): HasMany
+    {
+        return $this->hasMany(LocationAddress::class);
     }
 }

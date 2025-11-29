@@ -32,12 +32,18 @@ Route::get('gg', function () {
     return Service::all();
 });
 
-
 Route::get('/all-services', [MobileAppApiController::class, 'getAllServices']);
-
-
 Route::get('/all-banner-ads', [MobileAppApiController::class, 'getAllBannerAds']);
 
+Route::get('/user-address', [MobileUserApiController::class, 'getUserAddresses'])->middleware(['auth:customer']);
+Route::post('/user-address', [MobileUserApiController::class, 'createOrUpdateAddress'])->middleware(['auth:customer']);
+Route::delete('/user-address/{address}', [MobileUserApiController::class, 'deleteAddress'])->middleware(['auth:customer']);
+
+
+Route::get('/customer', function () {
+    return 'gg';
+})->middleware(['auth:customer']);
+// Not implemented yet
 Route::get('/all-offers', [MobileAppApiController::class, 'getAllOffers']);
 Route::get('/all-articles', [MobileAppApiController::class, 'getAllArticles']);
 Route::get('/user-orders', [MobileUserApiController::class, 'getUserOrders']);

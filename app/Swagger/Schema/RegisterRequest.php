@@ -166,3 +166,93 @@ class ResendOtpRequest
      */
     public $phone_number;
 }
+
+/**
+ * @OA\Schema(
+ *     schema="LocationAddress",
+ *     type="object",
+ *     title="Location Address",
+ *     description="Location address data",
+ *     required={"id", "address_type", "address", "full_address"},
+ * )
+ */
+class LocationAddress
+{
+    /**
+     * @OA\Property(
+     *     property="id",
+     *     type="integer"
+     * )
+     */
+    public $id;
+
+    /**
+     * @OA\Property(
+     *     property="address_type",
+     *     type="string"
+     * )
+     */
+    public $address_type;
+
+    /**
+     * @OA\Property(
+     *     property="address",
+     *     type="string"
+     * )
+     */
+    public $address;
+
+
+    /**
+     * @OA\Property(
+     *     property="full_address",
+     *     type="string"
+     * )
+     */
+    public $full_address;
+}
+
+/**
+ * @OA\Schema(
+ *     schema="CreateOrUpdateAddressRequest",
+ *     type="object",
+ *     title="Create or update address request",
+ *     description="Request data for creating or updating an address",
+ *     required={"id", "address_type", "address", "full_address"},
+ * )
+ */
+class CreateOrUpdateAddressRequest
+{
+    /**
+     * @OA\Property(
+     *     property="id",
+     *     type="integer",
+     *     nullable=true
+     * )
+     */
+    public ?int $id = null;
+    /**
+     * @OA\Property(
+     *     property="address_type",
+     *     type="string",
+     *     @OA\Schema(enum={"A","B","C"})
+     * )
+     * */
+    public $address_type;
+
+    /**
+     * @OA\Property(
+     *     property="address",
+     *     type="string"
+     * )
+     */
+    public $address;
+
+    /**
+     * @OA\Property(
+     *     property="full_address",
+     *     type="string"
+     * )
+     */
+    public $full_address;
+}

@@ -20,7 +20,7 @@ class AuthService
             'otp_verified' => false,
         ]);
 
-        $otp = random_int(100000, 999999);
+        $otp = $this->generateOtp();
         $user->otp_code = $otp;
         $user->save();
 
@@ -105,6 +105,12 @@ class AuthService
         ];
     }
 
+    public function generateAccessTokenForUser(MobileUser $user)
+    {
+        $token = $user->createToken('auth-token')->plainTextToken;
+        return $token;
+    }
+
     /**
      * Logout the authenticated user (current device only).
      */
@@ -143,11 +149,23 @@ class AuthService
                 'phone_number' => ['No user found with this phone number.'],
             ]);
         }
-        $otp = random_int(100000, 999999);
+        $otp = $this->generateOtp();
+
+
         $user->otp_code = $otp;
         $user->save();
 
         // Here you should send the OTP to the user's phone (e.g., with SMS)
         event(new SendOtpToUser($user, $otp));
+    }
+
+    private function generateOtp()
+    {
+        $otp = random_int(1000, 9999);
+
+        if (env('FAKE_OTP', false))
+            $otp = "9999";
+
+        return $otp;
     }
 }

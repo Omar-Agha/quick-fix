@@ -83,9 +83,10 @@ class AuthController extends Controller
                 'message' => 'User already verified.',
             ], 200);
         }
-
+        $token = $this->authService->generateAccessTokenForUser($result['user']);
         return response()->json([
             'message' => 'Phone number successfully verified.',
+            'token' => $token
         ], 200);
     }
 

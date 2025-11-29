@@ -41,9 +41,9 @@ class MobileUserService
         return $user->delete();
     }
 
-    public function createOrUpdateAddress(array $data): LocationAddress
+    public function createOrUpdateAddress(array $data, MobileUser $user): LocationAddress
     {
-        $data['mobile_user_id'] = Auth::id();
+        $data['mobile_user_id'] = $user->id;
 
         return LocationAddress::updateOrCreate(
             ['id' => $data['id'] ?? null],
@@ -53,9 +53,7 @@ class MobileUserService
 
     public function deleteAddress(LocationAddress $address): bool
     {
-        if ($address->mobile_user_id !== Auth::id()) {
-            return false;
-        }
+
 
         return $address->delete();
     }

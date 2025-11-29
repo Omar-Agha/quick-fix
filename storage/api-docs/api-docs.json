@@ -29,6 +29,112 @@
                 }
             }
         },
+        "/api/all-banner-ads": {
+            "get": {
+                "tags": [
+                    "Mobile App"
+                ],
+                "summary": "Get all banner ads",
+                "operationId": "8f812050a9e3eed2a7cbb355e9a16ceb",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "App\\Swagger\\Schema\\BannerAd"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user-address": {
+            "get": {
+                "tags": [
+                    "Mobile App"
+                ],
+                "summary": "Get user addresses",
+                "operationId": "650b885487f9a3de381503aa77beb6fd",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/LocationAddress"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Mobile App"
+                ],
+                "summary": "Create or update user address",
+                "operationId": "da45480707ac5a308c49ff779899ca24",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LocationAddress"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Address created or updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user-address/{id}": {
+            "delete": {
+                "tags": [
+                    "Mobile App"
+                ],
+                "summary": "Delete user address",
+                "operationId": "258496d593446cc367e146aa33492a1c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
         "/api/auth/register": {
             "post": {
                 "tags": [
@@ -168,6 +274,14 @@
     },
     "components": {
         "schemas": {
+            "AddressType": {
+                "type": "string",
+                "enum": [
+                    "HOME",
+                    "WORK",
+                    "OTHER"
+                ]
+            },
             "RegisterRequest": {
                 "title": "Register Request",
                 "description": "Request data for registering a new user",
@@ -258,6 +372,57 @@
                     }
                 },
                 "type": "object"
+            },
+            "LocationAddress": {
+                "title": "Location Address",
+                "description": "Location address data",
+                "required": [
+                    "id",
+                    "address_type",
+                    "address",
+                    "full_address"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "address_type": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "full_address": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateOrUpdateAddressRequest": {
+                "title": "Create or update address request",
+                "description": "Request data for creating or updating an address",
+                "required": [
+                    "id",
+                    "address_type",
+                    "address",
+                    "full_address"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "address_type": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "full_address": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
             }
         },
         "parameters": {
@@ -270,6 +435,14 @@
                     "default": "application/json"
                 }
             }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
         }
     },
     "tags": [
@@ -280,6 +453,11 @@
         {
             "name": "Auth",
             "description": "Auth"
+        }
+    ],
+    "security": [
+        {
+            "sanctum": []
         }
     ]
 }
