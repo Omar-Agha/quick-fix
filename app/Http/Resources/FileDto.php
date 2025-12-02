@@ -4,8 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
-class OrderDto extends JsonResource
+class FileDto extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,7 +16,10 @@ class OrderDto extends JsonResource
     public function toArray(Request $request): array
     {
         $data = parent::toArray($request);
-        $data['files'] = FileDto::collection($this->files);
-        return $data;
+        $result = [
+            'id' => $data['id'],
+            'file' => asset('storage/' . $data['path']),
+        ];
+        return $result;
     }
 }

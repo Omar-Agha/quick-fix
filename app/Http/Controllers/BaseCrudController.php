@@ -41,22 +41,8 @@ abstract class BaseCrudController extends Controller
         // return Inertia::render('RoomTemplates/Index', $result);
         return $this->index_view();
     }
-    protected function responseSuccess($record, $message)
-    {
-        if (request()->wantsJson()) return response()->json([
-            'message' => $message,
-            'record' => $record
-        ]);
 
-        return back()->with('success', $message);
-    }
-    protected function responseError($errors)
-    {
-        // return back()->with(['message' => 'record not found']);
-        if (request()->wantsJson()) return response()->json($errors);
 
-        return back()->withErrors($errors);
-    }
     /**
      * Store a newly created resource in storage.
      */

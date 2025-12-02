@@ -22,5 +22,22 @@ namespace App\Http\Controllers;
  */
 abstract class Controller
 {
-    //
+
+    protected function responseError($errors, $status = 400)
+    {
+        // return back()->with(['message' => 'record not found']);
+        if (request()->wantsJson()) return response()->json($errors, $status);
+
+        return back()->withErrors($errors);
+    }
+
+    protected function responseSuccess($record, $message)
+    {
+        if (request()->wantsJson()) return response()->json([
+            'message' => $message,
+            'record' => $record
+        ]);
+
+        return back()->with('success', $message);
+    }
 }

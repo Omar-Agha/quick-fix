@@ -43,6 +43,14 @@ Route::delete('/user-address/{address}', [MobileUserApiController::class, 'delet
 Route::get('/customer', function () {
     return 'gg';
 })->middleware(['auth:customer']);
+
+
+Route::post('/set-order', [OrderApiController::class, 'setOrder'])->middleware(['auth:customer']);
+// calculate order fees
+Route::get('/calculate-service-fees', [OrderApiController::class, 'calculateServiceFees']);
+//cancel order
+Route::post('/cancel-order/{order}', [OrderApiController::class, 'cancelOrder']);
+
 // Not implemented yet
 Route::get('/all-offers', [MobileAppApiController::class, 'getAllOffers']);
 Route::get('/all-articles', [MobileAppApiController::class, 'getAllArticles']);
@@ -53,25 +61,3 @@ Route::get('/user-order/{order}', [MobileUserApiController::class, 'getUserOrder
 
 //update user
 Route::put('/user-update/{user}', [MobileUserApiController::class, 'updateUserProfile']);
-
-
-
-//user login 
-Route::post('/user-login', function () {});
-//user logout 
-Route::post('/user-logout', function () {});
-//user delete account 
-Route::post('/user-delete-account', [MobileUserApiController::class, 'deleteUserAccount']);
-//user confirm OTP
-Route::post('/user-confirm-otp', function () {});
-
-
-//create or update address
-Route::post('/user-address/{address}', [MobileUserApiController::class, 'createOrUpdateAddress']);
-Route::delete('/user-address/{address}', [MobileUserApiController::class, 'deleteAddress']);
-
-Route::post('/set-order', [OrderApiController::class, 'setOrder']);
-
-
-//cancel order
-Route::post('/cancel-order/{order}', [OrderApiController::class, 'cancelOrder']);

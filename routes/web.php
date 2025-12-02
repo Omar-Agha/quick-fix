@@ -15,10 +15,11 @@ Route::get('/', function () {
 
 
 // Route::middleware(['auth', 'verified'])->group(function () {
-Route::middleware([])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
     Route::resource('services', ServiceController::class);
     Route::resource('banner-ads', BannerAdCrudController::class);
 });

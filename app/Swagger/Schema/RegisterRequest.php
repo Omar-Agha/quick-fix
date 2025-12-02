@@ -256,3 +256,58 @@ class CreateOrUpdateAddressRequest
      */
     public $full_address;
 }
+
+/**
+ * @OA\Schema(
+ *     schema="SetOrderRequest",
+ *     type="object",
+ *     title="Set order request",
+ *     description="Request data for setting an order",
+ *     required={"service_id", "reserve_datetime", "address_id", "images", "payment_method"},
+ * )
+ */
+class SetOrderRequest
+{
+    /**
+     * @OA\Property(
+     *     property="service_id",
+     *     type="integer"
+     * )
+     */
+    public $service_id;
+
+    /**
+     * @OA\Property(
+     *     property="reserve_datetime",
+     *     type="string",
+     *     format="date-time"
+     * )
+     */
+    public $reserve_datetime;
+
+    /**
+     * @OA\Property(
+     *     property="address_id",
+     *     type="integer"
+     * )
+     */
+    public $address_id;
+
+    /**
+     * @OA\Property(
+     *     property="images",
+     *     type="array",
+     *     @OA\Items(type="string", format="binary"),
+     *     description="Images of the order"
+     * )
+     */
+    public $images;
+
+    /**
+     * @OA\Property(
+     *     property="payment_method",
+     *     type="string"
+     * )
+     */
+    public $payment_method;
+}
