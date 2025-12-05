@@ -5,8 +5,12 @@ use App\Http\Controllers\Api\MobileUserApiController;
 use App\Http\Controllers\Api\OrderApiController;
 use App\Http\Controllers\Api\ServicesApiController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Dashboard\CouponCrudController;
+use App\Http\Controllers\Dashboard\OrderCrudController;
 use App\Http\Controllers\Dashboard\ServiceController;
-use App\Http\Resources\OrderDto;
+use App\Http\Resources\Dashboard\OrderDto;
+use App\Models\Coupon;
+use App\Models\Order;
 use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 
@@ -28,9 +32,12 @@ Route::prefix('auth')->group(function () {
 
 
 // Route::resource('services', ServiceController::class);
+// Route::resource('orders', OrderCrudController::class);
+// Route::resource('coupons', CouponCrudController::class);
 Route::get('gg', function () {
-    return Service::all();
+    $g =  Coupon::with('orders')->withCount(['orders']);
 });
+
 
 Route::get('/all-services', [MobileAppApiController::class, 'getAllServices']);
 Route::get('/all-banner-ads', [MobileAppApiController::class, 'getAllBannerAds']);
@@ -40,16 +47,11 @@ Route::post('/user-address', [MobileUserApiController::class, 'createOrUpdateAdd
 Route::delete('/user-address/{address}', [MobileUserApiController::class, 'deleteAddress'])->middleware(['auth:customer']);
 
 
-Route::get('/customer', function () {
-    return 'gg';
-})->middleware(['auth:customer']);
-
 
 Route::post('/set-order', [OrderApiController::class, 'setOrder'])->middleware(['auth:customer']);
-// calculate order fees
-Route::get('/calculate-service-fees', [OrderApiController::class, 'calculateServiceFees']);
-//cancel order
-Route::post('/cancel-order/{order}', [OrderApiController::class, 'cancelOrder']);
+Route::post('/calculate-service-fees', [OrderApiController::class, 'calculateServiceFees'])->middleware(['auth:customer']);
+Route::get('/verify-coupon/{coupon}', [OrderApiController::class, 'verifyCoupon'])->middleware(['auth:customer']);
+Route::post('/cancel-order/{order}', [OrderApiController::class, 'cancelOrder'])->middleware(['auth:customer']);
 
 // Not implemented yet
 Route::get('/all-offers', [MobileAppApiController::class, 'getAllOffers']);

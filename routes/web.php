@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Dashboard\BannerAdCrudController;
+use App\Http\Controllers\Dashboard\CouponCrudController;
+use App\Http\Controllers\Dashboard\OrderCrudController;
 use App\Http\Controllers\Dashboard\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,6 +24,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('services', ServiceController::class);
     Route::resource('banner-ads', BannerAdCrudController::class);
+    Route::resource('orders', OrderCrudController::class);
+    Route::resource('coupons', CouponCrudController::class);
 });
 
 require __DIR__ . '/settings.php';

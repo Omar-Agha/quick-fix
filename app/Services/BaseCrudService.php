@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseCrudService
 {
-    abstract protected function get_model(): Model;
+    abstract protected function get_model(): Builder;
 
     public function getAll(): Collection
     {

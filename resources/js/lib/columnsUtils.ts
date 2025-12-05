@@ -3,7 +3,7 @@ import Avatar from "@/components/ui/avatar/Avatar.vue";
 import { h } from "vue";
 
 
-export function avatar(avatar: string | undefined, name: string) {
+export function avatar(avatar: string, name: string) {
     return h('div', { class: 'flex items-center' }, [
         h(
             Avatar,

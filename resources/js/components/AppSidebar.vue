@@ -14,7 +14,7 @@ import {
 
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Image, HandPlatter, } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Image, HandPlatter, Dumbbell, } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { dashboard } from '@/routes';
 
@@ -34,6 +34,17 @@ const mainNavItems: NavItem[] = [
         href: route('banner-ads.index'),
         icon: Image,
     },
+    {
+        title: 'Orders',
+        href: route('orders.index'),
+        icon: Dumbbell,
+    },
+    {
+        title: 'Coupons',
+        href: route('coupons.index'),
+        icon: Dumbbell,
+    },
+
 ];
 
 const footerNavItems: NavItem[] = [

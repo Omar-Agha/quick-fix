@@ -18,6 +18,11 @@ abstract class BaseCrudController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    protected function resource_get_list($data)
+    {
+        return $data;
+    }
     public function index(Request $request)
     {
 
@@ -28,7 +33,7 @@ abstract class BaseCrudController extends Controller
 
         $paginated_result = $this->service->getPaginated($page, $perPage);
         $result = [
-            'data' => $paginated_result->items(),
+            'data' => $this->resource_get_list($paginated_result->items()),
 
             'pagination' => [
                 'current_page' => $paginated_result->currentPage(),

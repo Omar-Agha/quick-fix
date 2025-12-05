@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Contracts\OrderItemRequestDto;
 use App\Core\FeeCalculator;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\OrderDto;
+use App\Http\Requests\SetOrderRequest;
+use App\Http\Resources\Dashboard\OrderDto;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Service;
 use App\Services\OrderService;
+use Illuminate\Validation\Rule;
 
 class OrderApiController extends Controller
 {
@@ -32,28 +36,21 @@ class OrderApiController extends Controller
      *     @OA\Response(response=409, description="Order already exists"),
      * )
      */
-    public function setOrder()
+    public function setOrder(SetOrderRequest $request)
     {
-        $validated = request()->validate([
-            'service_id' => 'required|exists:services,id',
-            'reserve_datetime' => 'required|after:now|date_format:Y-m-d H:i:s',
-            'address_id' => 'required|exists:location_addresses,id',
-            'images' => 'array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'payment_method' => 'required|in:cash,card',
-        ]);
+        $validated = $request->validated();
 
-
+        $items = OrderItemRequestDto::collect($validated['items']);
 
         try {
             $order = $this->orderService->createOrder(
-                $validated,
+
                 request()->user('customer'),
-                Service::find($validated['service_id']),
+                collect($items),
                 request()->file('images') ?? []
             );
-
-            return response()->json(new OrderDto($order));
+            return $this->responseSuccess($order, 'yes');
+            // return response()->json(new OrderDto($order));
         } catch (\Exception $e) {
             // return $this->responseError($e->getMessage());
             return $this->responseError([
@@ -92,7 +89,7 @@ class OrderApiController extends Controller
 
 //calculate fee api is GET request
     /**
-     * @OA\Get(
+     * @OA\Post(
      *     path="/api/calculate-service-fees",
      *     summary="Calculate service fees",
      *     tags={"Orders"},
@@ -109,15 +106,32 @@ class OrderApiController extends Controller
     public function calculateServiceFees()
     {
         $validated = request()->validate([
-            'service_id' => 'required|exists:services,id',
+
+            'items' => 'required|array|min:1',
+            'items.*.service_id' => 'required|exists:services,id',
+            'items.*.number_of_workers' => 'required|integer|max:5|min:1',
+            'is_direct_service' => 'required|boolean',
+            'reserve_datetime' => [Rule::requiredIf(request('is_direct_service') == false), Rule::date()->after(now())],
+            'payment_method' => 'required|in:cash,card',
+            'coupon' => 'nullable|string|max:255',
         ]);
 
-        $service = Service::find($validated['service_id']);
+        $items = OrderItemRequestDto::collect($validated['items']);
 
         return response()->json([
             'message' => 'Service fees calculated successfully',
-            'fees' => $this->feeCalculator->calculateServiceFees($service, request()->user('customer')),
-            'cost' => $service->price,
+            'order_summery' => $this->feeCalculator->calculateServiceFees(collect($items), request('coupon'), request()->user('customer')),
+
         ]);
+    }
+
+    public function verifyCoupon(string $coupon)
+    {
+        try {
+            $this->feeCalculator->verifyCoupon($coupon, request()->user('customer'));
+        } catch (\Exception $e) {
+            return $this->responseError(['coupon' => $e->getMessage()], $e->getMessage());
+        }
+        return $this->responseSuccess(['coupon' => 'valid'], 'coupon is valid');
     }
 }

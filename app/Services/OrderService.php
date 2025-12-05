@@ -2,12 +2,15 @@
 
 namespace App\Services;
 
+use App\Contracts\OrderItemRequestDto;
 use App\Core\FeeCalculator;
 use App\Enums\OrderStatus;
 use App\Models\MobileUser;
 use App\Models\Order;
 use App\Models\Service;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Spatie\LaravelData\DataCollection;
 
 class OrderService
 {
@@ -15,22 +18,44 @@ class OrderService
         private FeeCalculator $feeCalculator
     ) {}
 
-    public function createOrder(array $data, MobileUser $mobileUser, Service $service, array $images): Order
+
+    /**
+     * @param Collection<OrderItemRequestDto> $order_items
+     */
+    public function createOrder(MobileUser $mobileUser, Collection $order_items, array $images): Order
     {
-        if ($service->is_active == false) {
-            throw new \Exception('Service is not active');
+
+        $service_ids = $order_items->pluck('service_id')->unique()->toArray();
+        $services = Service::whereIn('id', $service_ids)->get();
+        $contains_inactive_service = collect($services)->containsOneItem(fn($service) => $service->is_active == false);
+        if ($contains_inactive_service) {
+            throw new \Exception('One or more services are not active');
         }
-        $fees = $this->feeCalculator->calculateServiceFees($service, $mobileUser);
+
+        $pricing_result = $this->feeCalculator->calculateServiceFees($order_items, request('coupon'), $mobileUser);
+
         $order = Order::create([
-            'service_id' => $service->id,
-            'reserve_datetime' => $data['reserve_datetime'],
-            'location_address_id' => $data['address_id'],
-            'payment_method' => $data['payment_method'],
             'mobile_user_id' => $mobileUser->id,
-            'cost' => $service->price,
-            'fees' => $fees,
+            'location_address_id' => request('address_id'),
+            'is_direct_service' => request('is_direct_service'),
+            'reserve_datetime' => request('reserve_datetime'),
+            'payment_method' => request('payment_method'),
+            'total_cost' => $pricing_result['total_cost'],
+            'fees' => $pricing_result['fees'],
+            'pay_at_cashier' => $pricing_result['pay_at_cashier'],
             'status' => OrderStatus::PENDING,
+            'description' => request('description'),
+            'coupon_id' => $pricing_result['coupon_id'],
         ]);
+
+        foreach ($pricing_result['items'] as $item) {
+
+            $order->orderItems()->create([
+                'service_id' => $item['service_id'],
+                'number_of_workers' => $item['number_of_workers'],
+                'cost' => $item['cost'],
+            ]);
+        }
 
         if ($images) {
             foreach ($images as $image) {
@@ -38,7 +63,7 @@ class OrderService
             }
         }
 
-        return $order->load('service', 'locationAddress', 'mobileUser', 'files');
+        return $order->load('orderItems', 'orderItems.service', 'locationAddress', 'mobileUser', 'files');
     }
 
     public function cancelOrder(Order $order, MobileUser $mobileUser)

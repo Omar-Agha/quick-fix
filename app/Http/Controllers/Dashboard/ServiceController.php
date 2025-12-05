@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Services\BaseCrudService;
 use App\Services\ServicesService;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Inertia\Response;
@@ -20,9 +21,9 @@ class ServiceController extends BaseCrudController
     {
         return parent::__construct($this->service);
     }
-    protected function get_model(): Model
+    protected function get_model(): Builder
     {
-        return Service::model();
+        return Service::query();
     }
     protected function index_view(): Response
     {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Coupon;
 use App\Models\MobileUser;
 use App\Models\LocationAddress;
 use App\Models\Service;
@@ -18,13 +19,18 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignIdFor(MobileUser::class)->constrained();
-            $table->foreignIdFor(Service::class)->constrained();
             $table->foreignIdFor(LocationAddress::class)->constrained();
-            $table->double('cost');
+
+
+            $table->boolean('is_direct_service');
+            $table->double('total_cost');
             $table->double('fees');
-            $table->string('payment_method');
-            $table->string('status');
-            $table->dateTime('reserve_datetime');
+            $table->double('pay_at_cashier');
+            $table->string('payment_method')->nullable();
+            $table->integer('status');
+            $table->dateTime('reserve_datetime')->nullable();
+            $table->text('description')->nullable();
+            $table->string('coupon')->nullable();
         });
     }
 
