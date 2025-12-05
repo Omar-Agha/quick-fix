@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ServiceDto;
+use App\Models\Article;
 use App\Models\BannerAd;
 use App\Models\MobileUser;
 use App\Models\Offer;
@@ -79,9 +80,21 @@ class MobileAppApiController extends Controller
         return response()->json($offers);
     }
 
-    public function getAllArticles()
+    /**
+     * @OA\Get(
+     *     path="/api/all-articles",
+     *     summary="Get all articles",
+     *     tags={"Mobile App"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *         )
+     *     )
+     * )
+     */
+    public function getAllActiveArticles()
     {
-        $articles = $this->mobileAppService->getAllArticles();
+        $articles = Article::whereIsActive(true)->get();
 
         return response()->json($articles);
     }

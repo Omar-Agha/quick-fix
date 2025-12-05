@@ -36,7 +36,7 @@ Route::prefix('auth')->group(function () {
 Route::get('/all-services', [MobileAppApiController::class, 'getAllActiveServices']);
 Route::get('/all-banner-ads', [MobileAppApiController::class, 'getAllActiveBannerAds']);
 Route::get('/all-offers', [MobileAppApiController::class, 'getAllActiveOffers']);
-Route::get('/all-articles', [MobileAppApiController::class, 'getAllArticles']);
+Route::get('/all-articles', [MobileAppApiController::class, 'getAllActiveArticles']);
 
 Route::get('/user-address', [MobileUserApiController::class, 'getUserAddresses'])->middleware(['auth:customer']);
 Route::post('/user-address', [MobileUserApiController::class, 'createOrUpdateAddress'])->middleware(['auth:customer']);

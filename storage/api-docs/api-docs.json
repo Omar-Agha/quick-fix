@@ -67,6 +67,20 @@
                 }
             }
         },
+        "/api/all-articles": {
+            "get": {
+                "tags": [
+                    "Mobile App"
+                ],
+                "summary": "Get all articles",
+                "operationId": "046cc5ddc856cbbc49c15625e6d70822",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
         "/api/user-address": {
             "get": {
                 "tags": [
