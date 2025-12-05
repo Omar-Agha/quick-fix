@@ -14,7 +14,7 @@ import {
 
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Image, HandPlatter, Dumbbell, } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, Image, HandPlatter, Dumbbell, FileText, } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { dashboard } from '@/routes';
 
@@ -49,7 +49,11 @@ const mainNavItems: NavItem[] = [
         href: route('coupons.index'),
         icon: Dumbbell,
     },
-
+    {
+        title: 'Articles',
+        href: route('articles.index'),
+        icon: FileText,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
