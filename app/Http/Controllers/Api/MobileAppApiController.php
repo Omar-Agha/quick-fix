@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ServiceDto;
 use App\Models\BannerAd;
 use App\Models\MobileUser;
+use App\Models\Offer;
 use App\Models\Service;
 use App\Services\MobileAppService;
 
@@ -59,9 +60,21 @@ class MobileAppApiController extends Controller
         return response()->json($bannerAds);
     }
 
-    public function getAllOffers()
+    /**
+     * @OA\Get(
+     *     path="/api/all-offers",
+     *     summary="Get all offers",
+     *     tags={"Mobile App"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *         )
+     *     )
+     * )
+     */
+    public function getAllActiveOffers()
     {
-        $offers = $this->mobileAppService->getAllOffers();
+        $offers = Offer::whereIsActive(true)->get();
 
         return response()->json($offers);
     }

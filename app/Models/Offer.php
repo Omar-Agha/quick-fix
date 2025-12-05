@@ -10,6 +10,7 @@ class Offer extends Model
 
     public $casts = [
         'published_at' => 'datetime',
+        'is_active' => 'boolean'
     ];
 
     public function getImageAttribute($value)

@@ -11,7 +11,7 @@
                     "Mobile App"
                 ],
                 "summary": "Get all services",
-                "operationId": "27a06bf97bf5a8506fb36e9b6b625d9a",
+                "operationId": "a4aab09c84c5c1569f6b49342cfdc417",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -35,7 +35,7 @@
                     "Mobile App"
                 ],
                 "summary": "Get all banner ads",
-                "operationId": "8f812050a9e3eed2a7cbb355e9a16ceb",
+                "operationId": "ff6745b69ef18b0fb0aabe847ad7da3b",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -49,6 +49,20 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/api/all-offers": {
+            "get": {
+                "tags": [
+                    "Mobile App"
+                ],
+                "summary": "Get all offers",
+                "operationId": "d20a3d45022aa967e335582d7ac2aded",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
                     }
                 }
             }
@@ -232,12 +246,12 @@
             }
         },
         "/api/calculate-service-fees": {
-            "get": {
+            "post": {
                 "tags": [
                     "Orders"
                 ],
                 "summary": "Calculate service fees",
-                "operationId": "ded45c61c8e343bd3647083e6ffd179e",
+                "operationId": "fb8e4655d7299931447a03e31d9d42e0",
                 "requestBody": {
                     "required": true,
                     "content": {

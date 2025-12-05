@@ -35,6 +35,8 @@ Route::prefix('auth')->group(function () {
 
 Route::get('/all-services', [MobileAppApiController::class, 'getAllActiveServices']);
 Route::get('/all-banner-ads', [MobileAppApiController::class, 'getAllActiveBannerAds']);
+Route::get('/all-offers', [MobileAppApiController::class, 'getAllActiveOffers']);
+Route::get('/all-articles', [MobileAppApiController::class, 'getAllArticles']);
 
 Route::get('/user-address', [MobileUserApiController::class, 'getUserAddresses'])->middleware(['auth:customer']);
 Route::post('/user-address', [MobileUserApiController::class, 'createOrUpdateAddress'])->middleware(['auth:customer']);
@@ -48,8 +50,6 @@ Route::get('/verify-coupon/{coupon}', [OrderApiController::class, 'verifyCoupon'
 Route::post('/cancel-order/{order}', [OrderApiController::class, 'cancelOrder'])->middleware(['auth:customer']);
 
 // Not implemented yet
-Route::get('/all-offers', [MobileAppApiController::class, 'getAllOffers']);
-Route::get('/all-articles', [MobileAppApiController::class, 'getAllArticles']);
 Route::get('/user-orders', [MobileUserApiController::class, 'getUserOrders']);
 
 //get user order by id
