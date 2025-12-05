@@ -26,8 +26,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
+            $table->dropConstrainedForeignIdFor(Coupon::class);
             $table->string('coupon')->nullable();
-            $table->dropForeignIdFor(Coupon::class);
         });
     }
 };

@@ -6,9 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Offer extends Model
 {
-    protected $fillable = ['name', 'description', 'image', 'published_at'];
+    protected $fillable = ['name', 'description', 'image', 'is_active', 'published_at'];
 
     public $casts = [
         'published_at' => 'datetime',
     ];
+
+    public function getImageAttribute($value)
+    {
+        return asset('storage/' . $value);
+    }
 }

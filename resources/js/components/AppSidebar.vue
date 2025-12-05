@@ -35,6 +35,11 @@ const mainNavItems: NavItem[] = [
         icon: Image,
     },
     {
+        title: 'Offers',
+        href: route('offers.index'),
+        icon: Image,
+    },
+    {
         title: 'Orders',
         href: route('orders.index'),
         icon: Dumbbell,

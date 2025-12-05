@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\BannerAdCrudController;
 use App\Http\Controllers\Dashboard\CouponCrudController;
+use App\Http\Controllers\Dashboard\OfferCrudController;
 use App\Http\Controllers\Dashboard\OrderCrudController;
 use App\Http\Controllers\Dashboard\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('services', ServiceController::class);
     Route::resource('banner-ads', BannerAdCrudController::class);
+    Route::resource('offers', OfferCrudController::class);
     Route::resource('orders', OrderCrudController::class);
     Route::resource('coupons', CouponCrudController::class);
 });
