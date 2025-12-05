@@ -36,7 +36,13 @@ const updatedRecordId = computed(() => props.record?.id);
 
 const form = useForm({
     validationSchema: articleCreateSchema,
-    initialValues: props.record,
+    initialValues: {
+        title: props.record?.title || '',
+        content: props.record?.content || '',
+        image: undefined as File | undefined,
+        is_active: props.record?.is_active ?? true,
+
+    },
 });
 
 // Watch for changes in exercises and update form values
@@ -50,7 +56,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             toast.success('Article created successfully!');
             props.onSuccess?.();
         }, (error) => {
-            toast.error('Failed to create Article');
+
             console.error(error);
         });
 });

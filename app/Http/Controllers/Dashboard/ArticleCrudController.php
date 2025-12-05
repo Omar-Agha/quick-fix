@@ -37,7 +37,7 @@ class ArticleCrudController extends BaseCrudController
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'description' => 'nullable|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'required|boolean',
         ];
     }
