@@ -52,7 +52,7 @@ export const updateBannerAdSchema = toTypedSchema(
     z.object({
         name: z.string().min(1, 'Name is required').max(255),
         description: z.string().nullable(),
-        image: z.instanceof(File).optional(),
+        // image: z.instanceof(File, { message: 'Image is required' }).optional(),
         link: z.string().min(1, 'Link is required').max(255),
         is_active: z.boolean().default(true),
 

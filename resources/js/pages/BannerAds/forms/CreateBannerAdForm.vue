@@ -36,7 +36,13 @@ const updatedRecordId = computed(() => props.record?.id);
 
 const form = useForm({
     validationSchema: bannerAdCreateSchema,
-    initialValues: props.record,
+    initialValues: {
+        name: props.record?.name || '',
+        description: props.record?.description || '',
+        image: undefined as File | undefined,
+        link: props.record?.link || '',
+        is_active: props.record?.is_active ?? true,
+    },
 });
 
 // Watch for changes in exercises and update form values

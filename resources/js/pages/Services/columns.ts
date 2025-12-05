@@ -38,14 +38,14 @@ export const columns: ColumnDef<Service>[] = [
         },
     },
     {
-        accessorKey: 'price',
-        header: 'Price',
+        accessorKey: 'cost_per_worker',
+        header: 'Cost per Worker',
         cell: ({ row }) => {
-            const price = row.original.price;
+            const cost_per_worker = row.original.cost_per_worker;
             return h(
                 'div',
                 { class: 'font-semibold' },
-                `$${price.toFixed(2)}`
+                `$${cost_per_worker.toFixed(2)}`
             );
         },
     },

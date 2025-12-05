@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ServiceDto;
+use App\Models\BannerAd;
 use App\Models\MobileUser;
+use App\Models\Service;
 use App\Services\MobileAppService;
 
 class MobileAppApiController extends Controller
@@ -29,11 +32,11 @@ class MobileAppApiController extends Controller
      *     )
      * )
      */
-    public function getAllServices()
+    public function getAllActiveServices()
     {
-        $services = $this->mobileAppService->getAllServices();
+        $services = Service::whereIsActive(true)->get();
 
-        return response()->json($services);
+        return response()->json(ServiceDto::collection($services));
     }
 
     /**
@@ -48,10 +51,10 @@ class MobileAppApiController extends Controller
      *     )
      * )
      */
-    public function getAllBannerAds()
+    public function getAllActiveBannerAds()
     {
         $forHomePage = request()->has('for_home_page') ? true : null;
-        $bannerAds = $this->mobileAppService->getAllBannerAds($forHomePage);
+        $bannerAds = BannerAd::whereIsActive(true)->get();
 
         return response()->json($bannerAds);
     }

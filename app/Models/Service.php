@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\HasFiles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Service extends Model
 {
+    use HasFiles;
+
     protected $fillable = [
         'name',
         'description',
-        'price',
+        'cost_per_worker',
         'image',
         'is_active',
     ];
@@ -23,7 +26,6 @@ class Service extends Model
 
     public function getImageAttribute($value)
     {
-
         return asset('storage/' . $value);
     }
 }

@@ -31,16 +31,10 @@ Route::prefix('auth')->group(function () {
 });
 
 
-// Route::resource('services', ServiceController::class);
-// Route::resource('orders', OrderCrudController::class);
-// Route::resource('coupons', CouponCrudController::class);
-Route::get('gg', function () {
-    $g =  Coupon::with('orders')->withCount(['orders']);
-});
 
 
-Route::get('/all-services', [MobileAppApiController::class, 'getAllServices']);
-Route::get('/all-banner-ads', [MobileAppApiController::class, 'getAllBannerAds']);
+Route::get('/all-services', [MobileAppApiController::class, 'getAllActiveServices']);
+Route::get('/all-banner-ads', [MobileAppApiController::class, 'getAllActiveBannerAds']);
 
 Route::get('/user-address', [MobileUserApiController::class, 'getUserAddresses'])->middleware(['auth:customer']);
 Route::post('/user-address', [MobileUserApiController::class, 'createOrUpdateAddress'])->middleware(['auth:customer']);

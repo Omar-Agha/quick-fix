@@ -34,7 +34,7 @@ class ServiceController extends BaseCrudController
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'required|numeric',
+            'cost_per_worker' => 'required|numeric',
             'image' => 'required|file|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'required|boolean',
 
@@ -45,7 +45,7 @@ class ServiceController extends BaseCrudController
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'required|numeric',
+            'cost_per_worker' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'is_active' => 'required|boolean',
         ];

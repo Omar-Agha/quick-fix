@@ -36,7 +36,7 @@ const form = useForm({
     initialValues: {
         name: props.record?.name || '',
         description: props.record?.description || '',
-        price: props.record?.price || 0,
+        cost_per_worker: props.record?.cost_per_worker || 0,
         image: undefined as File | undefined,
         is_active: props.record?.is_active ?? true,
     },
@@ -50,7 +50,7 @@ watch(() => props.record, (newRecord) => {
         form.setValues({
             name: newRecord.name,
             description: newRecord.description || '',
-            price: newRecord.price,
+            cost_per_worker: newRecord.cost_per_worker,
             image: undefined,
             is_active: newRecord.is_active,
         });
@@ -123,18 +123,18 @@ const onSubmit = form.handleSubmit(async (values) => {
             </FormItem>
         </FormField>
 
-        <!-- Price Field -->
-        <FormField name="price" v-slot="{ componentField }">
+        <!-- Cost per Worker Field -->
+        <FormField name="cost_per_worker" v-slot="{ componentField }">
             <FormItem>
-                <FormLabel>Price</FormLabel>
+                <FormLabel>Cost per Worker</FormLabel>
                 <FormDescription>
-                    Set the price for this service in dollars
+                    Set the cost per worker for this service
                 </FormDescription>
                 <FormControl>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
                         <Input type="number" step="0.01" min="0" placeholder="0.00" class="pl-7" v-bind="componentField"
-                            @update:modelValue="(val) => form.setFieldValue('price', parseFloat(val as string) || 0)" />
+                            @update:modelValue="(val) => form.setFieldValue('cost_per_worker', parseFloat(val as string) || 0)" />
                     </div>
                 </FormControl>
                 <FormMessage />
