@@ -25,22 +25,22 @@ class FeeCalculator
                 'service_id' => $item->service_id,
                 'service_name' => $service->name,
                 'number_of_workers' => $item->number_of_workers,
-                'cost_per_worker' => $service->price,
-                'cost' => $service->price * $item->number_of_workers,
+                'cost_per_worker' => $service->cost_per_worker,
+                'cost' => $service->cost_per_worker * $item->number_of_workers,
             ];
         }
         $total_cost = collect($items)->sum('cost');
         $discount = $this->calculateDiscount($coupons, $mobileUser, $total_cost);
-        $total_cost = $total_cost - $discount['discount'];
+
         $fees = $total_cost * 0.03;
-        $pay_at_cashier = $total_cost + $fees;
+        $pay_at_cashier = $total_cost + $fees - $discount['discount'];
         return [
             'fees' => $fees,
             'total_cost' => $total_cost,
             'discount' => $discount,
             'pay_at_cashier' => $pay_at_cashier,
             'items' => $items,
-            'coupon_id' => $discount['coupon_id'],
+
         ];
     }
     public function calculateDiscount(string $code = null, MobileUser $mobileUser, int $amount)
