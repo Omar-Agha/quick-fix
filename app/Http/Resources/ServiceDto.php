@@ -21,6 +21,8 @@ class ServiceDto extends JsonResource
             'cost_per_worker' => $this->cost_per_worker,
             'image' => $this->image,
             'files' => FileDto::collection($this->files),
+            'is_active' => $this->is_active,
+            'created_at' => $this->created_at,
 
         ];
     }

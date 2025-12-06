@@ -36,6 +36,7 @@ abstract class BaseCrudService
 
     public function update(int $id, array $data): ?Model
     {
+
         $old_record = $this->get_model()->find($id);
 
         if (! $old_record) {
