@@ -12,6 +12,6 @@ class ServicesService extends BaseCrudService
 {
     protected function get_model(): Builder
     {
-        return Service::query();
+        return Service::with(['files']);
     }
 }

@@ -13,9 +13,9 @@ use Inertia\Inertia;
 
 class OrderCrudController extends BaseCrudController
 {
-    protected function resource_get_list($data)
+    protected function resource($data)
     {
-        return OrderDto::collection($data);
+        return new OrderDto($data);
     }
     public function __construct(private OrderService $order_service)
     {

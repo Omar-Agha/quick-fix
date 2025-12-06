@@ -25,6 +25,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::resource('services', ServiceController::class);
+    Route::post('services/{service}/images', [ServiceController::class, 'uploadImages'])->name('services.uploadImages');
+    Route::delete('services/{service}/images/{id}', [ServiceController::class, 'deleteImage'])->name('services.deleteImage');
     Route::resource('banner-ads', BannerAdCrudController::class);
     Route::resource('offers', OfferCrudController::class);
     Route::resource('orders', OrderCrudController::class);

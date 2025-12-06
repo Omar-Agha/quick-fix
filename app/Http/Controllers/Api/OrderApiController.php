@@ -124,7 +124,21 @@ class OrderApiController extends Controller
 
         ]);
     }
-
+    /**
+     * @OA\Post(
+     *     path="/api/verify-coupon",
+     *     summary="Verify a coupon",
+     *     tags={"Orders"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(type="object", @OA\Property(property="coupon", type="string")),
+     *     ),
+     *     @OA\Response(response=200, description="Coupon verified successfully"),
+     *     @OA\Response(response=400, description="Validation error"),
+     *     @OA\Response(response=401, description="Unauthorized"),
+     *     @OA\Response(response=404, description="Coupon not found"),
+     * )
+     */
     public function verifyCoupon(string $coupon)
     {
         try {

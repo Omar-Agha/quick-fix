@@ -27,6 +27,7 @@ import ServiceCard from './forms/ServiceCard.vue';
 import { columns } from './columns';
 import CreateUpdateServiceForm from './forms/CreateUpdateServiceForm.vue';
 import { getActionEventName } from '@/components/dv-components/common'
+import ImageListManager from '@/components/dv-components/ImageListManager.vue';
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -41,6 +42,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const isCreateDialogOpen = ref(false);
+const isManageImagesDialogOpen = ref(false);
 const isEditDialogOpen = ref(false);
 const editingRecord = ref<Service | null>(null);
 
@@ -53,10 +55,13 @@ const paginateTableRef = ref();
 
 
 
+
+
 const openCreateDialog = () => {
     editingRecord.value = null;
     isCreateDialogOpen.value = true;
 };
+
 
 const openEditDialog = (record: Service) => {
     editingRecord.value = record;
@@ -89,7 +94,6 @@ const refreshData = () => {
 
 const fetchData = async (page: number, perPage: number) => {
     const response = await axios.get<PaginationResponse<Service>>(route('services.index'), { params: { page, per_page: perPage } });
-    console.log(response);
 
     return {
         data: response.data.data,
@@ -110,6 +114,10 @@ const handleEditRecord = (record: Service) => {
 const handleDeleteRecord = (record: Service) => {
     deleteRecord(record);
 };
+const handleManageImagesRecord = (record: Service) => {
+    openManageImagesDialog(record)
+
+};
 
 onMounted(() => {
     const handleEditEvent = (event: any) => {
@@ -118,18 +126,24 @@ onMounted(() => {
     const handleDeleteEvent = (event: any) => {
         handleDeleteRecord(event.detail);
     };
+    const handleManageImagesEvent = (event: any) => {
+        handleManageImagesRecord(event.detail);
+    };
 
     window.addEventListener(getActionEventName(ServiceActions.edit, EntityKey), handleEditEvent);
     window.addEventListener(getActionEventName(ServiceActions.delete, EntityKey), handleDeleteEvent);
+    window.addEventListener(getActionEventName(ServiceActions.manageImages, EntityKey), handleManageImagesEvent);
 
     // Store references for cleanup
     (window as any).__editRecordHandler = handleEditEvent;
     (window as any).__deleteRecordHandler = handleDeleteEvent;
+    (window as any).__manageImagesHandler = handleManageImagesEvent;
 });
 
 onUnmounted(() => {
     window.removeEventListener(getActionEventName(ServiceActions.edit, EntityKey), (window as any).__editRecordHandler);
     window.removeEventListener(getActionEventName(ServiceActions.delete, EntityKey), (window as any).__deleteRecordHandler);
+    window.removeEventListener(getActionEventName(ServiceActions.manageImages, EntityKey), (window as any).__manageImagesHandler);
 });
 
 const deleteRecord = async (record: Service) => {
@@ -145,9 +159,29 @@ const deleteRecord = async (record: Service) => {
 };
 
 
+const openManageImagesDialog = async (record: Service) => {
+    const response = await axios.get<{ message: string, record: Service }>(route('services.show', record.id));
+
+
+    editingRecord.value = response.data.record;
+    isManageImagesDialogOpen.value = true;
+};
+
+const onSaveComplete = async () => {
+    const response = await axios.get<{ message: string, record: Service }>(route('services.show', editingRecord.value?.id));
+
+
+    editingRecord.value = response.data.record;
+}
+
+const uploadEndpoint = computed(() => route('services.uploadImages', { service: editingRecord.value?.id }));
+// const deleteEndpoint = computed(() => route('services.deleteImage', { service: editingRecord.value?.id ?? 0, image: "" }));
+const deleteEndpoint = computed(() => route('services.deleteImage', { service: editingRecord.value?.id, id: "" }));
+
 </script>
 
 <template>
+
 
 
     <Head title="Services" />
@@ -201,6 +235,18 @@ const deleteRecord = async (record: Service) => {
 
                     <CreateUpdateServiceForm :record="editingRecord" :on-success="handleSaveSuccess"
                         :on-cancel="closeDialogs" />
+                </DialogContent>
+            </Dialog>
+
+            <Dialog v-model:open="isManageImagesDialogOpen">
+                <DialogContent class="max-h-[90vh] max-w-2xl overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Service Images</DialogTitle>
+                    </DialogHeader>
+
+                    <ImageListManager :upload-endpoint="uploadEndpoint" :delete-endpoint="deleteEndpoint"
+                        :images="editingRecord?.files" @save-complete="onSaveComplete" />
+
                 </DialogContent>
             </Dialog>
         </div>

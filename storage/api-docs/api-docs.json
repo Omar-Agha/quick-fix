@@ -297,6 +297,44 @@
                 }
             }
         },
+        "/api/verify-coupon": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Verify a coupon",
+                "operationId": "68d29187a2414b2d7241fee5f0a8806e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "coupon": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Coupon verified successfully"
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Coupon not found"
+                    }
+                }
+            }
+        },
         "/api/auth/register": {
             "post": {
                 "tags": [

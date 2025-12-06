@@ -18,7 +18,8 @@ class FileDto extends JsonResource
         $data = parent::toArray($request);
         $result = [
             'id' => $data['id'],
-            'file' => asset('storage/' . $data['path']),
+            'url' => asset('storage/' . $data['path']),
+            'path' => $data['path'],
         ];
         return $result;
     }

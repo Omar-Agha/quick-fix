@@ -1,4 +1,5 @@
 import { EntityAction } from "@/components/dv-components/common";
+import { FileDto } from "@/lib/classes";
 import { toTypedSchema } from "@vee-validate/zod";
 import { Edit, Images, LucideProps, Trash2 } from "lucide-vue-next";
 import { Component, FunctionalComponent } from "vue";
@@ -12,6 +13,7 @@ export interface Service {
     cost_per_worker: number;
     image?: string;
     is_active: boolean;
+    files?: FileDto[];
     created_at?: string;
     updated_at?: string;
 }

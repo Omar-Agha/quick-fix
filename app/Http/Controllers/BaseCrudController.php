@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DefaultResource;
 use App\Models\Service;
 use App\Services\BaseCrudService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Http\Resources\Json\JsonResource;
 use Inertia\Response;
 
 abstract class BaseCrudController extends Controller
@@ -19,9 +20,9 @@ abstract class BaseCrudController extends Controller
      * Display a listing of the resource.
      */
 
-    protected function resource_get_list($data)
+    protected function resource($data)
     {
-        return $data;
+        return new DefaultResource($data);
     }
     public function index(Request $request)
     {
@@ -33,7 +34,7 @@ abstract class BaseCrudController extends Controller
 
         $paginated_result = $this->service->getPaginated($page, $perPage);
         $result = [
-            'data' => $this->resource_get_list($paginated_result->items()),
+            'data' => $this->resource($paginated_result->items())->collection($paginated_result->items()),
 
             'pagination' => [
                 'current_page' => $paginated_result->currentPage(),
@@ -89,7 +90,7 @@ abstract class BaseCrudController extends Controller
             $this->responseError(['message' => 'record not found']);
         }
 
-        $this->responseSuccess($record, 'record created successfully');
+        return $this->responseSuccess($this->resource($record)->make($record), 'record created successfully');
     }
 
     /**

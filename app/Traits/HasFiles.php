@@ -28,7 +28,12 @@ trait HasFiles
 
     public function deleteFile(string $path): void
     {
-        Storage::delete($path);
+
+
+        $is_deleted = Storage::delete($path);
+        if (!$is_deleted) {
+            throw new \Exception('Failed to delete file');
+        }
         $this->files()->where('path', $path)->delete();
     }
 
@@ -36,7 +41,13 @@ trait HasFiles
     {
 
         $file = $this->files()->find($id);
-        Storage::delete($file->path);
+        if (!$file) {
+            throw new \Exception('File not found');
+        }
+        $is_deleted = Storage::delete($file->path);
+        if (!$is_deleted) {
+            throw new \Exception('Failed to delete file');
+        }
         $this->deleteFile($file->path);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\BaseCrudController;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ServiceDto;
 use App\Models\Service;
 use App\Services\BaseCrudService;
 use App\Services\ServicesService;
@@ -62,4 +63,37 @@ class ServiceController extends BaseCrudController
         }
         return $data;
     }
+    public function uploadImages(Request $request, Service $service)
+    {
+        $request->validate([
+            'images' => 'required|array',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $images = $request->file('images');
+        foreach ($images as $image) {
+            $service->storeFile($image);
+            // $image->store('images', 'public');
+        }
+        return $this->responseSuccess(['message' => 'Images uploaded successfully'], 'nice');
+    }
+    public function deleteImage(Request $request, Service $service, $id)
+    {
+        try {
+            $service->deleteById($id);
+            return $this->responseSuccess(['message' => 'Image deleted successfully'], 'nice');
+        } catch (\Throwable $th) {
+            return $this->responseError(['message' => $th->getMessage()], 500);
+        }
+    }
+    protected function resource($data)
+    {
+        return new ServiceDto($data);
+    }
+    // ($data)
+    // {
+
+    //     new ServiceDto()->
+    //     return ServiceDto::collection($data);
+    // }
 }

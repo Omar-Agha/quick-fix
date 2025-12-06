@@ -30,7 +30,9 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-
+Route::get('gg', function () {
+    return Service::with('files')->get();
+});
 
 
 Route::get('/all-services', [MobileAppApiController::class, 'getAllActiveServices']);
