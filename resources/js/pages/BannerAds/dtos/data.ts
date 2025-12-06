@@ -7,29 +7,22 @@ import z from "zod";
 
 export interface BannerAd {
     id: number;
-    name: string;
-    description: string;
+
     image: string;
-    link: string;
+
     is_active: boolean;
     created_at?: string;
     updated_at?: string;
 }
 
 export interface CreateBannerAd {
-    name: string;
-    description: string;
     image: string;
-    link: string;
     is_active: boolean;
 }
 
 export const bannerAdCreateSchema = toTypedSchema(
     z.object({
-        name: z.string().min(1, 'Name is required').max(255),
-        description: z.string().nullable(),
         image: z.instanceof(File).optional(),
-        link: z.string().min(1, 'Link is required').max(255),
         is_active: z.boolean().default(true),
 
     }),
@@ -40,10 +33,9 @@ export const bannerAdCreateSchema = toTypedSchema(
 
 export interface UpdateBannerAd {
     id: number;
-    name: string;
-    description: string;
+
     image: string;
-    link: string;
+
     is_active: boolean;
 }
 

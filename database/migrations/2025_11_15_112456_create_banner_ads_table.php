@@ -13,12 +13,8 @@ return new class extends Migration
     {
         Schema::create('banner_ads', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->onUpdate(now());
-            $table->string('name');
-            $table->text('description')->nullable();
+            $table->timestamps();
             $table->string('image');
-            $table->string('link');
             $table->boolean('is_active')->default(true);
         });
     }

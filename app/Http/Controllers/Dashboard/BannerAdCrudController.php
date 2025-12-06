@@ -22,20 +22,14 @@ class BannerAdCrudController extends BaseCrudController
     protected function storeRequestRules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'link' => 'required|url',
             'is_active' => 'required|boolean',
         ];
     }
     protected function updateRequestRules(): array
     {
         return [
-            'name' => 'string|max:255',
-            'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'link' => 'url',
             'is_active' => 'boolean',
         ];
     }

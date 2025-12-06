@@ -37,10 +37,7 @@ const updatedRecordId = computed(() => props.record?.id);
 const form = useForm({
     validationSchema: bannerAdCreateSchema,
     initialValues: {
-        name: props.record?.name || '',
-        description: props.record?.description || '',
         image: undefined as File | undefined,
-        link: props.record?.link || '',
         is_active: props.record?.is_active ?? true,
     },
 });
@@ -64,34 +61,8 @@ const onSubmit = form.handleSubmit(async (values) => {
 
 <template>
     <form @submit="onSubmit" class="space-y-4">
-        <FormField name="name" v-slot="{ componentField }">
-            <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                    <Input type="text" placeholder="Enter Banner Ad name" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-            </FormItem>
-        </FormField>
-        <FormField name="link" v-slot="{ componentField }">
-            <FormItem>
-                <FormLabel>Link</FormLabel>
-                <FormControl>
-                    <Input type="text" placeholder="Enter Banner Ad link" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-            </FormItem>
-        </FormField>
 
-        <FormField name="description" v-slot="{ componentField }">
-            <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                    <Textarea placeholder="Enter Banner Ad description" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-            </FormItem>
-        </FormField>
+
 
         <FormField name="image" v-slot="{ componentField }">
             <FormItem>

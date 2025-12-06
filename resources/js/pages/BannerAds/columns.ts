@@ -11,34 +11,7 @@ import { banner } from '@/lib/columnsUtils';
 
 
 export const columns: ColumnDef<BannerAd>[] = [
-    {
-        accessorKey: 'name',
-        header: 'Name',
-        cell: ({ row }) => {
-            // Large, bold, and single-line clamping for long names
-            return h(
-                'div',
-                {
-                    class: 'font-semibold text-base text-gray-900 dark:text-white truncate max-w-xs'
-                },
-                row.original.name
-            );
-        },
-    },
-    {
-        accessorKey: 'description',
-        header: 'Description',
-        cell: ({ row }) => {
-            // Muted color, smaller text, and line clamping for long descriptions
-            return h(
-                'div',
-                {
-                    class: 'text-gray-500 dark:text-gray-400 text-sm line-clamp-2 max-w-xs'
-                },
-                row.original.description ?? '—'
-            );
-        },
-    },
+
     {
         accessorKey: 'image',
         header: 'Image',

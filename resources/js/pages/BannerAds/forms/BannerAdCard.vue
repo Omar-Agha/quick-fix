@@ -39,10 +39,7 @@ const emit = defineEmits<{
         <CardHeader>
             <div class="flex items-start justify-between">
                 <div class="space-y-1">
-                    <CardTitle class="text-lg">{{ record.name }}</CardTitle>
-                    <CardDescription v-if="record.description">
-                        <!-- {{ record.description }} -->
-                    </CardDescription>
+
                 </div>
                 <DropdownMenu>
                     <DropdownMenuTrigger as-child>
@@ -71,14 +68,6 @@ const emit = defineEmits<{
                     </div>
                     <!-- Banner Details -->
                     <div class="flex-1 space-y-1 w-full">
-                        <div v-if="record.link" class="font-medium flex items-center gap-1">
-                            <span class="text-gray-500 dark:text-gray-400">Link:</span>
-                            <a :href="record.link" target="_blank" rel="noopener noreferrer"
-                                class="hover:underline text-blue-600 dark:text-blue-400 break-all">{{ record.link }}</a>
-                        </div>
-                        <div v-if="record.description" class="text-gray-600 dark:text-gray-300">
-                            {{ record.description }}
-                        </div>
                         <div class="flex items-center space-x-3">
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold"
                                 :class="record.is_active

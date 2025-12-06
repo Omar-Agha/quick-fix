@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BannerAd extends Model
 {
-    protected $fillable = ['name', 'description', 'image', 'link', 'is_active'];
+    protected $fillable = ['image', 'is_active'];
     public $timestamps = true;
     public $casts = [
         'is_active' => 'boolean'
