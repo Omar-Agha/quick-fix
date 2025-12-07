@@ -254,12 +254,15 @@ const formatCurrency = (amount: number): string => {
             </div>
 
             <!-- Reserve DateTime -->
-            <div v-if="record.reserve_datetime"
+            <div
                 class="flex items-center gap-2 p-2 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
                 <Calendar class="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0" />
                 <div class="flex-1">
                     <p class="text-xs text-blue-600 dark:text-blue-400 font-medium">Reserved for</p>
-                    <p class="text-sm text-blue-700 dark:text-blue-300 font-semibold">
+                    <p v-if="record.is_direct_service" class="text-sm text-blue-700 dark:text-blue-300 font-semibold">
+                        Direct Service
+                    </p>
+                    <p v-else class="text-sm text-blue-700 dark:text-blue-300 font-semibold">
                         {{ formatDate(record.reserve_datetime) }}
                     </p>
                 </div>
