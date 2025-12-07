@@ -9,6 +9,7 @@ use App\Http\Resources\Dashboard\OrderDto;
 use App\Models\LocationAddress;
 use App\Models\Order;
 use App\Services\MobileUserService;
+use Illuminate\Http\Resources\Json\PaginatedResourceResponse;
 use Illuminate\Validation\Rule;
 
 class MobileUserApiController extends Controller
@@ -31,10 +32,11 @@ class MobileUserApiController extends Controller
             })
             ->with(['files'])
             ->latest()
-            ->paginate(10, page: request()->get('page', 1));
+            ->paginate(request()->get('per_page', 10), page: request()->get('page', 1));
+        return new PaginatedResourceResponse(OrderDto::collection($orders));
 
-
-        return $this->responseSuccess(OrderDto::collection($orders), 'Orders fetched successfully');
+        // return $this->responseSuccess(OrderDto::collection($orders), 'Orders fetched successfully');
+        // return $this->responseSuccess($paginatedResponse, 'Orders fetched successfully');
     }
     public function getUserOrderById($id)
     {
