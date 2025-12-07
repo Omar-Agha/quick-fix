@@ -26,6 +26,7 @@ class Order extends Model
         'reserve_datetime',
         'description',
         'coupon_id',
+        'discount',
     ];
 
     protected $casts = [

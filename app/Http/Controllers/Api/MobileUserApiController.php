@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\AddressType;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Dashboard\OrderDto;
 use App\Models\LocationAddress;
 use App\Services\MobileUserService;
 use Illuminate\Validation\Rule;
@@ -20,9 +21,9 @@ class MobileUserApiController extends Controller
             'status' => 'nullable|in:pending,confirmed,completed,cancelled',
         ]);
 
-        $orders = $this->mobileUserService->getUserOrders($validated['status'] ?? null);
+        $orders = $this->mobileUserService->getUserOrders($validated['status'] ?? null, request()->user('customer'));
 
-        return response()->json($orders);
+        return $this->responseSuccess(OrderDto::collection($orders), 'Orders fetched successfully');
     }
 
     public function getUserOrderById($id)

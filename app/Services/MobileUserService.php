@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class MobileUserService
 {
-    public function getUserOrders(?string $status = null): Collection
+    public function getUserOrders(?string $status = null, MobileUser $user): Collection
     {
-        $query = Order::where('mobile_user_id', Auth::id());
+        $query = Order::where('mobile_user_id', $user->id);
 
         if ($status !== null) {
             $query->where('status', $status);

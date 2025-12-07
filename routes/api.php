@@ -53,7 +53,7 @@ Route::get('/verify-coupon/{coupon}', [OrderApiController::class, 'verifyCoupon'
 Route::post('/cancel-order/{order}', [OrderApiController::class, 'cancelOrder'])->middleware(['auth:customer']);
 
 // Not implemented yet
-Route::get('/user-orders', [MobileUserApiController::class, 'getUserOrders']);
+Route::get('/user-orders', [MobileUserApiController::class, 'getUserOrders'])->middleware(['auth:customer']);
 
 //get user order by id
 Route::get('/user-order/{order}', [MobileUserApiController::class, 'getUserOrderById']);

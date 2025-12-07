@@ -46,6 +46,7 @@ class OrderService
             'status' => OrderStatus::PENDING,
             'description' => request('description'),
             'coupon_id' => $pricing_result['discount']['coupon_id'],
+            'discount' => $pricing_result['discount']['discount'],
         ]);
 
         foreach ($pricing_result['items'] as $item) {
