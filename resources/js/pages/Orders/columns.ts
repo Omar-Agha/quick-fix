@@ -162,7 +162,7 @@ export const columns: ColumnDef<OrderResponse>[] = [
         cell: ({ row }) => {
             const date = row.original.reserve_datetime;
             if (!date) {
-                return h('span', { class: 'text-muted-foreground text-sm' }, 'Not reserved');
+                return h('span', { class: 'text-muted-foreground text-sm' }, 'Direct Service');
             }
             return h('div', { class: 'flex items-center gap-2' }, [
                 h(Calendar, { class: 'h-4 w-4 text-muted-foreground' }),
