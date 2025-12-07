@@ -1,5 +1,6 @@
 import { AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Avatar from "@/components/ui/avatar/Avatar.vue";
+import Badge from "@/components/ui/badge/Badge.vue";
 import { h } from "vue";
 
 

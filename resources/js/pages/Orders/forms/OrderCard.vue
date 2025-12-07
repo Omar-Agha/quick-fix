@@ -28,7 +28,7 @@ import {
     XCircle,
     AlertCircle,
 } from 'lucide-vue-next';
-import { EntityKey, OrderResponse, OrderStatus } from '../dtos/data';
+import { EntityKey, makeBadge, OrderResponse, OrderStatus } from '../dtos/data';
 import { EntityAction } from '@/components/dv-components/common';
 import { computed } from 'vue';
 
@@ -142,14 +142,9 @@ const formatCurrency = (amount: number): string => {
             </div>
 
             <!-- Status Badge -->
-            <div class="flex items-center gap-2 mt-2">
-                <Badge :variant="statusConfig.variant" class="flex items-center gap-1.5">
-                    <component :is="statusConfig.icon" class="h-3 w-3" />
-                    {{ statusConfig.label }}
-                </Badge>
-                <Badge v-if="record.is_direct_service" variant="secondary" class="text-xs">
-                    Direct Service
-                </Badge>
+            <div class="flex items-center gap-2 mt-2 ">
+                <component :is="makeBadge(record.status)" />
+
             </div>
         </CardHeader>
 
@@ -231,7 +226,7 @@ const formatCurrency = (amount: number): string => {
                     <div class="flex justify-between items-center">
                         <span class="text-muted-foreground">Subtotal</span>
                         <span class="font-medium">
-                            {{ formatCurrency(record.price_summary.total_cost - record.price_summary.fees) }}
+                            {{ formatCurrency(record.price_summary.total_cost) }}
                         </span>
                     </div>
                     <div v-if="record.price_summary.fees > 0" class="flex justify-between items-center">
@@ -246,7 +241,7 @@ const formatCurrency = (amount: number): string => {
                     <div class="flex justify-between items-center pt-2 border-t">
                         <span class="font-semibold text-foreground">Total Cost</span>
                         <span class="text-lg font-bold text-foreground">
-                            {{ formatCurrency(record.price_summary.total_cost) }}
+                            {{ formatCurrency(record.price_summary.total_cost + record.price_summary.fees) }}
                         </span>
                     </div>
                     <div v-if="record.price_summary.pay_at_cashier > 0" class="flex justify-between items-center pt-1">

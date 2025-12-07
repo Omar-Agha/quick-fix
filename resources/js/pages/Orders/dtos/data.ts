@@ -1,7 +1,8 @@
 import { EntityAction } from "@/components/dv-components/common";
+import Badge from "@/components/ui/badge/Badge.vue";
 import { toTypedSchema } from "@vee-validate/zod";
-import { Edit, LucideProps, Trash2 } from "lucide-vue-next";
-import { Component, FunctionalComponent } from "vue";
+import { AlertCircle, CheckCircle2, Clock, Edit, LucideProps, Trash2, XCircle } from "lucide-vue-next";
+import { Component, FunctionalComponent, h } from "vue";
 import z from "zod";
 
 
@@ -64,4 +65,64 @@ export class OrderItem {
     service_image!: string;
     number_of_workers!: number;
     cost!: number;
+}
+
+
+export const getStatusConfig = (status: OrderStatus) => {
+    switch (status) {
+        case OrderStatus.PENDING:
+            return {
+                label: 'Pending',
+                variant: 'outline' as const,
+                icon: Clock,
+                class: 'text-yellow-600 dark:text-yellow-400',
+            };
+        case OrderStatus.CONFIRMED:
+            return {
+                label: 'Confirmed',
+                variant: 'default' as const,
+                icon: CheckCircle2,
+                class: 'text-blue-600 dark:text-blue-400',
+            };
+        case OrderStatus.CANCELLED:
+            return {
+                label: 'Cancelled',
+                variant: 'destructive' as const,
+                icon: XCircle,
+                class: 'text-red-600 dark:text-red-400',
+            };
+        case OrderStatus.COMPLETED:
+            return {
+                label: 'Completed',
+                variant: 'default' as const,
+                icon: CheckCircle2,
+                class: 'text-green-600 dark:text-green-400',
+            };
+        default:
+            return {
+                label: 'Unknown',
+                variant: 'outline' as const,
+                icon: AlertCircle,
+                class: 'text-muted-foreground',
+            };
+    }
+};
+
+
+// export function makeBadge(statusConfig: { label: string, variant: 'default' | 'destructive' | 'outline' | 'secondary', icon: Component, class: string }) {
+export function makeBadge(OrderStatus: OrderStatus) {
+    const statusConfig = getStatusConfig(OrderStatus);
+    return h(
+        Badge,
+        {
+            variant: statusConfig.variant,
+            class: `flex items-center gap-1.5 w-fit ${statusConfig.class}`,
+        },
+        {
+            default: () => [
+                h(statusConfig.icon, { class: 'h-3 w-3' }),
+                statusConfig.label,
+            ],
+        }
+    );
 }
