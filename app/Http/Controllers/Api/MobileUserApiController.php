@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\AddressType;
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Dashboard\OrderDto;
 use App\Models\LocationAddress;
@@ -19,7 +20,8 @@ class MobileUserApiController extends Controller
     public function getUserOrders()
     {
         $validated = request()->validate([
-            'status' => 'nullable|in:pending,confirmed,completed,cancelled',
+            // 'status' => 'nullable|in:pending,confirmed,completed,cancelled',
+            'status' => ['nullable', Rule::enum(OrderStatus::class)],
         ]);
 
         // $orders = $this->mobileUserService->getUserOrders($validated['status'] ?? null, request()->user('customer'));
@@ -29,12 +31,11 @@ class MobileUserApiController extends Controller
             })
             ->with(['files'])
             ->latest()
-            ->get();
+            ->paginate(10, page: request()->get('page', 1));
 
 
         return $this->responseSuccess(OrderDto::collection($orders), 'Orders fetched successfully');
     }
-
     public function getUserOrderById($id)
     {
         $order = $this->mobileUserService->getUserOrderById($id);

@@ -16,6 +16,7 @@ class OrderDto extends JsonResource
     {
         // return parent::toArray($request);
         return [
+            'id' => $this->id,
             'user' => [
                 'phone_number' => $this->mobileUser->phone_number,
                 'avatar' => $this->mobileUser->avatar,
