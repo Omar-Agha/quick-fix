@@ -49,8 +49,8 @@ class OrderApiController extends Controller
                 collect($items),
                 request()->file('images') ?? []
             );
-            return $this->responseSuccess($order, 'yes');
-            // return response()->json(new OrderDto($order));
+            // return $this->responseSuccess($order, 'yes');
+            return response()->json(new OrderDto($order));
         } catch (\Exception $e) {
             // return $this->responseError($e->getMessage());
             return $this->responseError([

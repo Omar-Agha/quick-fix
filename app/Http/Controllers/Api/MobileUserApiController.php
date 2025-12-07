@@ -6,6 +6,7 @@ use App\Enums\AddressType;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Dashboard\OrderDto;
 use App\Models\LocationAddress;
+use App\Models\Order;
 use App\Services\MobileUserService;
 use Illuminate\Validation\Rule;
 
@@ -21,7 +22,15 @@ class MobileUserApiController extends Controller
             'status' => 'nullable|in:pending,confirmed,completed,cancelled',
         ]);
 
-        $orders = $this->mobileUserService->getUserOrders($validated['status'] ?? null, request()->user('customer'));
+        // $orders = $this->mobileUserService->getUserOrders($validated['status'] ?? null, request()->user('customer'));
+        $orders = Order::whereBelongsTo(request()->user('customer'))
+            ->when($validated['status'] ?? null, function ($query, $status) {
+                $query->where('status', $status);
+            })
+            ->with(['files'])
+            ->latest()
+            ->get();
+
 
         return $this->responseSuccess(OrderDto::collection($orders), 'Orders fetched successfully');
     }

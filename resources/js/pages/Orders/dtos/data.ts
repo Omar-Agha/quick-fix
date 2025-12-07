@@ -109,7 +109,6 @@ export const getStatusConfig = (status: OrderStatus) => {
 };
 
 
-// export function makeBadge(statusConfig: { label: string, variant: 'default' | 'destructive' | 'outline' | 'secondary', icon: Component, class: string }) {
 export function makeBadge(OrderStatus: OrderStatus) {
     const statusConfig = getStatusConfig(OrderStatus);
     return h(
