@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->double('discount')->default(0);
+            $table->double('discount')->after('coupon_id')->default(0);
         });
     }
 
