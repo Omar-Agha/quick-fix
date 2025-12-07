@@ -297,28 +297,23 @@
                 }
             }
         },
-        "/api/verify-coupon": {
-            "post": {
+        "/api/verify-coupon/{coupon}": {
+            "get": {
                 "tags": [
                     "Orders"
                 ],
                 "summary": "Verify a coupon",
-                "operationId": "68d29187a2414b2d7241fee5f0a8806e",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "coupon": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
+                "operationId": "c2d1c85775922640cb7e9ffbdbf51f27",
+                "parameters": [
+                    {
+                        "name": "coupon",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
-                },
+                ],
                 "responses": {
                     "200": {
                         "description": "Coupon verified successfully"

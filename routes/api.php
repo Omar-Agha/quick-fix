@@ -48,7 +48,8 @@ Route::delete('/user-address/{address}', [MobileUserApiController::class, 'delet
 
 Route::post('/set-order', [OrderApiController::class, 'setOrder'])->middleware(['auth:customer']);
 Route::post('/calculate-service-fees', [OrderApiController::class, 'calculateServiceFees'])->middleware(['auth:customer']);
-Route::get('/verify-coupon/{coupon}', [OrderApiController::class, 'verifyCoupon'])->middleware(['auth:customer']);
+Route::post('/verify-coupon/{coupon}', [OrderApiController::class, 'verifyCoupon'])->middleware(['auth:customer']);
+
 Route::post('/cancel-order/{order}', [OrderApiController::class, 'cancelOrder'])->middleware(['auth:customer']);
 
 // Not implemented yet

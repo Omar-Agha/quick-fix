@@ -124,27 +124,34 @@ class OrderApiController extends Controller
 
         ]);
     }
+
     /**
-     * @OA\Post(
-     *     path="/api/verify-coupon",
+     * @OA\Get(
+     *     path="/api/verify-coupon/{coupon}",
      *     summary="Verify a coupon",
      *     tags={"Orders"},
-     *     @OA\RequestBody(
+     *     @OA\Parameter(
+     *         name="coupon",
+     *         in="path",
      *         required=true,
-     *         @OA\JsonContent(type="object", @OA\Property(property="coupon", type="string")),
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response=200, description="Coupon verified successfully"),
      *     @OA\Response(response=400, description="Validation error"),
      *     @OA\Response(response=401, description="Unauthorized"),
      *     @OA\Response(response=404, description="Coupon not found"),
      * )
+     * @param string $coupon
+     * @return string
      */
     public function verifyCoupon(string $coupon)
     {
+
         try {
             $this->feeCalculator->verifyCoupon($coupon, request()->user('customer'));
         } catch (\Exception $e) {
-            return $this->responseError(['coupon' => $e->getMessage()], $e->getMessage());
+
+            return $this->responseError(['coupon' => $e->getMessage()]);
         }
         return $this->responseSuccess(['coupon' => 'valid'], 'coupon is valid');
     }

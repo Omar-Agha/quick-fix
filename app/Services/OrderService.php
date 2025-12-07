@@ -45,7 +45,7 @@ class OrderService
             'pay_at_cashier' => $pricing_result['pay_at_cashier'],
             'status' => OrderStatus::PENDING,
             'description' => request('description'),
-            'coupon_id' => $pricing_result['coupon_id'],
+            'coupon_id' => $pricing_result['discount']['coupon_id'],
         ]);
 
         foreach ($pricing_result['items'] as $item) {
