@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('avatar')->nullable()->after('full_name');
             $table->string('home_phone')->nullable()->after('phone_number');
             $table->string(column: 'email')->nullable()->after('home_phone');
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->dropColumn('avatar');
             $table->dropColumn('home_phone');
             $table->dropColumn('email');
+            $table->dropSoftDeletes();
         });
     }
 };

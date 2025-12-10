@@ -10,6 +10,7 @@ use App\Models\LocationAddress;
 use App\Models\Order;
 use App\Services\MobileUserService;
 use Illuminate\Http\Resources\Json\PaginatedResourceResponse;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class MobileUserApiController extends Controller
@@ -17,6 +18,13 @@ class MobileUserApiController extends Controller
     public function __construct(
         private MobileUserService $mobileUserService
     ) {}
+
+    public function getUser()
+    {
+        return response()->json(request()->user('customer'));
+    }
+
+
 
     public function getUserOrders()
     {
@@ -55,24 +63,30 @@ class MobileUserApiController extends Controller
     {
         $validated = request()->validate([
             'full_name' => 'string|max:255',
-            'email' => 'email|unique:mobile_users,email,' . auth()->user()->id . ',id',
-            'mobile_number' => 'string|max:255|unique:mobile_users,mobile_number,' . auth()->user()->id . ',id',
-            'address' => 'string|max:255',
             'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable',
+            'home_phone' => 'string|max:255',
+            'email' => 'email|unique:mobile_users,email,' . auth('customer')->user()->id . ',id',
         ]);
+        if (request()->hasFile('avatar')) {
+            $validated['avatar'] = request()->file('avatar')->store('avatars', 'public');
+        }
 
-        $user = $this->mobileUserService->updateUserProfile($validated);
+        $user = request()->user('customer');
+        $user->update($validated);
 
-        return response()->json($user);
+        return $this->responseSuccess($user, 'User profile updated successfully');
     }
 
     public function deleteUserAccount()
     {
-        $this->mobileUserService->deleteUserAccount();
-
-        return response()->json([
-            'message' => 'User account deleted successfully',
-        ]);
+        request()->validate(['password' => 'required|string']);
+        if (!Hash::check(request()->input('password'), request()->user('customer')->password)) {
+            return response()->json([
+                'message' => 'Invalid password',
+            ], 401);
+        }
+        request()->user('customer')->delete();
+        return $this->responseSuccess(null, 'User account deleted successfully');
     }
 
 

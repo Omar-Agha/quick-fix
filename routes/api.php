@@ -10,6 +10,7 @@ use App\Http\Controllers\Dashboard\OrderCrudController;
 use App\Http\Controllers\Dashboard\ServiceController;
 use App\Http\Resources\Dashboard\OrderDto;
 use App\Models\Coupon;
+use App\Models\MobileUser;
 use App\Models\Order;
 use App\Models\Service;
 use Illuminate\Support\Facades\Route;
@@ -29,9 +30,13 @@ Route::prefix('auth')->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
     });
 });
-
+Route::prefix('user')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', [MobileUserApiController::class, 'getUser']);
+    Route::post('/', [MobileUserApiController::class, 'updateUserProfile']);
+    Route::delete('/', [MobileUserApiController::class, 'deleteUserAccount']);
+});
 Route::get('gg', function () {
-    return Service::with('files')->get();
+    return MobileUser::all();
 });
 
 

@@ -34,12 +34,7 @@ class MobileUserService
         return $user->fresh();
     }
 
-    public function deleteUserAccount(): bool
-    {
-        $user = MobileUser::findOrFail(Auth::id());
 
-        return $user->delete();
-    }
 
     public function createOrUpdateAddress(array $data, MobileUser $user): LocationAddress
     {
