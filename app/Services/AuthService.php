@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Events\SendOtpToUser;
 use App\Models\MobileUser;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -12,13 +13,12 @@ class AuthService
     /**
      * Register a new mobile user and generate OTP.
      */
-    public function register(string $phoneNumber, string $password): MobileUser
+    // public function register(string $phoneNumber, string $password, string $fullName, UploadedFile $avatar, string $homePhone, string $email): MobileUser
+    public function register(array $data): MobileUser
     {
-        $user = MobileUser::create([
-            'phone_number' => $phoneNumber,
-            'password' => $password,
-            'otp_verified' => false,
-        ]);
+
+        $user = MobileUser::create($data);
+
 
         $otp = $this->generateOtp();
         $user->otp_code = $otp;

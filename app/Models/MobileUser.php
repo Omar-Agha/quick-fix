@@ -22,6 +22,10 @@ class MobileUser extends Model
         'password',
         'otp_code',
         'otp_verified',
+        'full_name',
+        'avatar',
+        'home_phone',
+        'email',
     ];
 
     /**
@@ -56,5 +60,9 @@ class MobileUser extends Model
     public function coupons(): BelongsToMany
     {
         return $this->belongsToMany(Coupon::class, Order::class);
+    }
+    public function getAvatarAttribute($value)
+    {
+        return asset('storage/' . $value);
     }
 }

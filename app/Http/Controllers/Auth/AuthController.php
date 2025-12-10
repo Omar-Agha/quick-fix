@@ -41,10 +41,13 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $this->authService->register(
-            $request->validated()['phone_number'],
-            $request->validated()['password']
-        );
+        $validated = $request->validated();
+        $avatarPath = null;
+        if (request()->hasFile('avatar')) {
+            $avatarPath = request()->file('avatar')->store('avatars', 'public');
+        }
+        $validated['avatar'] = $avatarPath;
+        $this->authService->register($validated);
 
         return response()->json([
             'message' => 'User registered. Please verify OTP sent to your phone.',
