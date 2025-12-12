@@ -20,7 +20,7 @@ class RegisterRequest extends FormRequest
             'full_name' => ['required', 'string', 'max:255'],
             'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'home_phone' => ['nullable', 'string', 'max:255'],
-            // 'email' => ['nullable', 'email', 'max:255', 'unique:mobile_users,email'],
+            'email' => ['nullable', 'email', 'max:255', 'unique:mobile_users,email'],
         ];
     }
 }
