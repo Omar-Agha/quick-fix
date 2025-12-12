@@ -66,8 +66,8 @@ class MobileUserApiController extends Controller
         $validated = request()->validate([
             'full_name' => 'string|max:255',
             'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable',
-            'home_phone' => 'string|max:255',
-            'email' => 'email|unique:mobile_users,email,' . auth('customer')->user()->id . ',id',
+            'home_phone' => 'nullable|string|max:255',
+            'email' => 'nullable|email|unique:mobile_users,email,' . auth('customer')->user()->id . ',id',
         ]);
         if (request()->hasFile('avatar')) {
             $validated['avatar'] = request()->file('avatar')->store('avatars', 'public');
