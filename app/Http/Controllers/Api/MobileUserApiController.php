@@ -21,7 +21,9 @@ class MobileUserApiController extends Controller
 
     public function getUser()
     {
-        return response()->json(request()->user('customer'));
+        $user = request()->user('customer');
+        $user->load('locationAddresses');
+        return $this->responseSuccess($user, 'User fetched successfully');
     }
 
 
@@ -182,6 +184,6 @@ class MobileUserApiController extends Controller
         $user = request()->user('customer');
 
 
-        return response()->json($user->locationAddresses);
+        return $this->responseSuccess($user->locationAddresses, 'Addresses fetched successfully');
     }
 }

@@ -125,5 +125,6 @@ return [
 
 
     'currency' => 'USD',
+    'supported_countries' => explode(',', env('SUPPORTED_PHONE_CODES'))
 
 ];
