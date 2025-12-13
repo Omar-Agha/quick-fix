@@ -68,7 +68,11 @@ class MobileUserApiController extends Controller
             'avatar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable',
             'home_phone' => 'nullable|string|max:255',
             'email' => 'nullable|email|unique:mobile_users,email,' . auth('customer')->user()->id . ',id',
+            'delete_avatar' => 'boolean|nullable'
         ]);
+        if (request('delete_avatar')) {
+            $validated['avatar'] = null;
+        }
         if (request()->hasFile('avatar')) {
             $validated['avatar'] = request()->file('avatar')->store('avatars', 'public');
         }

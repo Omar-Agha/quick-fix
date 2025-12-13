@@ -65,6 +65,7 @@ class MobileUser extends Model
     }
     public function getAvatarAttribute($value)
     {
+        if (!$value) return null;
         return asset('storage/' . $value);
     }
 }
