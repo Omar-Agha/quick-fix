@@ -54,6 +54,11 @@ const mainNavItems: NavItem[] = [
         href: route('articles.index'),
         icon: FileText,
     },
+    {
+        title: 'Companies',
+        href: route('companies.index'),
+        icon: FileText,
+    },
 ];
 
 const footerNavItems: NavItem[] = [
@@ -77,7 +82,7 @@ const footerNavItems: NavItem[] = [
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
                         <Link :href="dashboard()">
-                        <AppLogo />
+                            <AppLogo />
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>

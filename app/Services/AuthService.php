@@ -30,6 +30,15 @@ class AuthService
         return $user;
     }
 
+    public function sendOtpForUser(MobileUser $user)
+    {
+        $otp = $this->generateOtp();
+        $user->otp_code = $otp;
+        $user->save();
+        event(new SendOtpToUser($user, $otp));
+        return $otp;
+    }
+
     /**
      * Verify OTP for a mobile user.
      *

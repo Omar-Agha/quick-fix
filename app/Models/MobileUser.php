@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -67,5 +68,16 @@ class MobileUser extends Model
     {
         if (!$value) return null;
         return asset('storage/' . $value);
+    }
+    public function changePhoneNumberRequests(): HasMany
+    {
+        return $this->hasMany(ChangePhoneNumberRequest::class);
+    }
+    public function currentChangePhoneNumberRequest(): HasOne|null
+    {
+        return $this->changePhoneNumberRequests()
+            ->one()
+            ->whereNowOrFuture('otp_expires_at')
+            ->where('verified', false);
     }
 }

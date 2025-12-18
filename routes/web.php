@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\ArticleCrudController;
 use App\Http\Controllers\Dashboard\BannerAdCrudController;
+use App\Http\Controllers\Dashboard\CompanyCrudController;
 use App\Http\Controllers\Dashboard\CouponCrudController;
 use App\Http\Controllers\Dashboard\OfferCrudController;
 use App\Http\Controllers\Dashboard\OrderCrudController;
@@ -32,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('orders', OrderCrudController::class);
     Route::resource('coupons', CouponCrudController::class);
     Route::resource('articles', ArticleCrudController::class);
+    Route::resource('companies', CompanyCrudController::class);
 });
 
 require __DIR__ . '/settings.php';

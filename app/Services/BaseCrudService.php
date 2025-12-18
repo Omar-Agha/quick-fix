@@ -30,7 +30,7 @@ abstract class BaseCrudService
     public function create(array $data): Model
     {
         $new_record = $this->get_model()->create($data);
-
+        $this->postSave($new_record, $data);
         return $new_record;
     }
 
@@ -44,6 +44,7 @@ abstract class BaseCrudService
         }
 
         $old_record->update($data);
+        $this->postSave($old_record, $data);
 
         return $old_record;
     }
@@ -58,4 +59,6 @@ abstract class BaseCrudService
 
         return $room_template->delete();
     }
+
+    protected function postSave(Model $model, array $data) {}
 }

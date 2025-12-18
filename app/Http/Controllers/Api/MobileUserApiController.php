@@ -6,17 +6,23 @@ use App\Enums\AddressType;
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Dashboard\OrderDto;
+use App\Models\ChangePhoneNumberRequest;
 use App\Models\LocationAddress;
+use App\Models\MobileUser;
 use App\Models\Order;
+use App\Services\AuthService;
 use App\Services\MobileUserService;
 use Illuminate\Http\Resources\Json\PaginatedResourceResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
+use Propaganistas\LaravelPhone\Rules\Phone;
 
 class MobileUserApiController extends Controller
 {
     public function __construct(
-        private MobileUserService $mobileUserService
+        private MobileUserService $mobileUserService,
+        private AuthService $authService
     ) {}
 
     public function getUser()
@@ -94,10 +100,92 @@ class MobileUserApiController extends Controller
         request()->user('customer')->delete();
         return $this->responseSuccess(null, 'User account deleted successfully');
     }
+    public function changePassword()
+    {
+        $validated = request()->validate([
+            'old_password' => 'required|string',
+            'new_password' => ['required', 'string', 'min:8', 'confirmed', Password::default()],
+        ]);
+        $user = request()->user('customer');
+        if (!Hash::check(request()->input('old_password'), $user->password)) {
+
+            return response()->json([
+                'message' => 'Invalid old password',
+            ], 401);
+        }
+        $user->update([
+            'password' => Hash::make(request()->input('new_password')),
+        ]);
+        return $this->responseSuccess(null, 'Password changed successfully');
+    }
+
+    public function requestChangePhoneNumber()
+    {
+        /**
+         * @var MobileUser $user
+         */
+        $user = request()->user('customer');
+        $user->load('currentChangePhoneNumberRequest');
+        // return $user;
+        $validated = request()->validate([
+            'new_phone_number' => [
+                'required',
+                'string',
+                Rule::unique('mobile_users', 'phone_number')->ignore(request()->user('customer')->id),
+                (new Phone)->international()->country([config('app.supported_countries')])
+            ],
+        ]);
+        $currentChangePhoneNumberRequest = $user->currentChangePhoneNumberRequest;
+
+        if ($currentChangePhoneNumberRequest) {
+            return $this->responseError(['message' => 'You already have a pending change phone number request'], 400);
+        }
+        if ($user->phone_number == $validated['new_phone_number']) {
+            return $this->responseError(['message' => 'New phone number is the same as the current phone number'], 400);
+        }
+
+        $otp = $this->authService->sendOtpForUser($user);
+        $changePhoneNumberRequest = ChangePhoneNumberRequest::create([
+            'mobile_user_id' => $user->id,
+            'new_phone_number' => $validated['new_phone_number'],
+            'otp' => $otp,
+            'otp_expires_at' => now()->addMinutes(10),
+        ]);
+
+        // $user->sendOtpForChangePassword();
+        return $this->responseSuccess(null, 'OTP sent successfully');
+    }
+
+    public function verifyOtpForChangePhoneNumber()
+    {
+        $validated = request()->validate([
+            'otp' => 'required|string',
+        ]);
+        /**
+         * @var MobileUser $user
+         */
+
+        $user = request()->user('customer');
+        $changePhoneNumberRequest = $user->currentChangePhoneNumberRequest;
 
 
+        if (!$changePhoneNumberRequest) {
+            return $this->responseError(['message' => 'No pending change phone number request found'], 400);
+        }
 
-
+        if ($changePhoneNumberRequest->otp != $validated['otp']) {
+            return $this->responseError(['message' => 'Invalid OTP'], 400);
+        }
+        $user->update([
+            'phone_number' => $changePhoneNumberRequest->new_phone_number,
+        ]);
+        $changePhoneNumberRequest->update([
+            'verified_at' => now(),
+            'expired_at' => now(),
+            'verified' => true,
+        ]);
+        return $this->responseSuccess(null, 'Phone number changed successfully');
+    }
 
     /**
      * @OA\Post(

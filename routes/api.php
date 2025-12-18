@@ -34,6 +34,9 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
     Route::get('/', [MobileUserApiController::class, 'getUser']);
     Route::post('/', [MobileUserApiController::class, 'updateUserProfile']);
     Route::delete('/', [MobileUserApiController::class, 'deleteUserAccount']);
+    Route::post('/change-password', [MobileUserApiController::class, 'changePassword']);
+    Route::post('/change-phone-number/request', [MobileUserApiController::class, 'requestChangePhoneNumber']);
+    Route::post('/change-phone-number/verify', [MobileUserApiController::class, 'verifyOtpForChangePhoneNumber']);
 });
 Route::get('supported-phone-codes', function () {
     $phoneCodes = explode(',', env('SUPPORTED_PHONE_CODES'));
