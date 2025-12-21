@@ -10,11 +10,20 @@ class LocationAddress extends Model
 {
     protected $fillable = ['mobile_user_id', 'address_type', 'address', 'full_address'];
     public $timestamps = false;
+
     public function mobileUser(): BelongsTo
     {
         return $this->belongsTo(MobileUser::class);
     }
     public $casts = [
         'address_type' => AddressType::class,
+        'is_deleted' => 'boolean',
     ];
+
+
+    public function delete()
+    {
+        $this->is_deleted = true;
+        return $this->save();
+    }
 }

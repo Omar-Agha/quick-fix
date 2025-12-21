@@ -57,7 +57,7 @@ class MobileUser extends Model
 
     public function locationAddresses(): HasMany
     {
-        return $this->hasMany(LocationAddress::class);
+        return $this->hasMany(LocationAddress::class)->where('is_deleted', false);
     }
 
     public function coupons(): BelongsToMany
