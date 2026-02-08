@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\MobileAppApiController;
 use App\Http\Controllers\Api\MobileUserApiController;
 use App\Http\Controllers\Api\OrderApiController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ServicesApiController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Dashboard\CouponCrudController;
@@ -69,3 +70,21 @@ Route::get('/user-order/{order}', [MobileUserApiController::class, 'getUserOrder
 
 //update user
 Route::put('/user-update/{user}', [MobileUserApiController::class, 'updateUserProfile']);
+
+// Payment routes
+Route::prefix('payments')->group(function () {
+    // Initiate payment (requires authentication)
+    Route::post('/initiate', [PaymentController::class, 'initiate'])
+        ->middleware(['auth:customer']);
+
+    // DANA specific routes
+    Route::prefix('dana')->group(function () {
+        // Handle customer return from DANA hosted checkout
+        Route::get('/return', [PaymentController::class, 'handleReturn']);
+
+        // Webhook endpoint for DANA Finish Notify
+        // Note: This endpoint should be publicly accessible (no auth middleware)
+        // DANA will call this endpoint directly
+        Route::post('/webhook/finish-notify', [PaymentController::class, 'handleWebhook']);
+    });
+});
