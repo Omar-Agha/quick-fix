@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PaymentMidtransController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Models\Order;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Route;
 
 // swagger
@@ -84,5 +85,9 @@ Route::prefix('payments')->group(function () {
             ->middleware(['auth:customer']);
         Route::get('/return', [PaymentMidtransController::class, 'handleReturn']);
         Route::post('/webhook/notify', [PaymentMidtransController::class, 'handleWebhook']);
+    });
+
+    Route::get('/', function () {
+        return Payment::all();
     });
 });
