@@ -7,11 +7,9 @@ use App\Traits\HasFiles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Order extends Model
 {
-
     use HasFiles;
 
     protected $fillable = [
@@ -50,8 +48,14 @@ class Order extends Model
     {
         return $this->belongsTo(LocationAddress::class, 'location_address_id');
     }
+
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 }

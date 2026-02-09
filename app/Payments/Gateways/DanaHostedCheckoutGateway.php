@@ -2,12 +2,14 @@
 
 namespace App\Payments\Gateways;
 
+use App\Enums\OrderStatus as OrderStatusEnum;
+use App\Enums\PaymentStatus;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Payments\Contracts\PaymentGateway;
 use App\Payments\Dana\DanaClient;
 use App\Payments\Dana\DanaKeyHelper;
 use App\Payments\Dana\DanaSignature;
-use App\Payments\Dana\DanaTimestamp;
 use App\Payments\DTOs\PaymentInitResult;
 use App\Payments\DTOs\PaymentReturnResult;
 use App\Payments\DTOs\PaymentReturnStatus;
@@ -27,19 +29,43 @@ class DanaHostedCheckoutGateway implements PaymentGateway
 
     /**
      * Create payment intent for DANA Hosted Checkout.
-     * 
-     * Generates partnerReferenceNo from order ID for idempotency.
+     *
+     * partnerReferenceNo = merchantId_orderId (first attempt) or merchantId_orderId-N (retries).
      * Returns webRedirectUrl for customer to complete payment.
      */
     public function createPaymentIntent(Order $order): PaymentInitResult
     {
         try {
-            // Calculate total amount (total_cost + fees - discount)
-            // $totalAmount = $order->total_cost + $order->fees - ($order->discount ?? 0);
             $totalAmount = $order->pay_at_cashier;
+            $existingPayments = Payment::where('order_id', $order->id)->where('gateway', 'dana')->orderByDesc('id')->get();
+            $latestPayment = $existingPayments->first();
 
-            // Generate partner reference number (idempotency key: merchantId + orderId)
-            $partnerReferenceNo = config('payments.dana.merchant_id') . '_' . $order->id;
+            if ($latestPayment?->status === PaymentStatus::COMPLETED) {
+                $redirectUrl = $latestPayment->metadata['webRedirectUrl'] ?? '';
+
+                return PaymentInitResult::success(
+                    redirectUrl: $redirectUrl,
+                    paymentReference: $latestPayment->gateway_reference,
+                    rawResponse: ['already_paid' => true],
+                );
+            }
+
+            $isPendingRecent = $latestPayment
+                && $latestPayment->status === PaymentStatus::PENDING
+                && $latestPayment->initiated_at?->isAfter(now()->subMinutes(15));
+
+            if ($isPendingRecent) {
+                $redirectUrl = $latestPayment->metadata['webRedirectUrl'] ?? '';
+
+                return PaymentInitResult::success(
+                    redirectUrl: $redirectUrl,
+                    paymentReference: $latestPayment->gateway_reference,
+                    rawResponse: [],
+                );
+            }
+
+            $attempt = $existingPayments->count() + 1;
+            $partnerReferenceNo = $this->toPartnerReferenceNo($order->id, $attempt);
 
             // Build request payload as per DANA documentation
             $payload = [
@@ -59,15 +85,22 @@ class DanaHostedCheckoutGateway implements PaymentGateway
             $response = $this->client->createPaymentOrder($payload);
 
             // Extract webRedirectUrl from response
-            if (isset($response['webRedirectUrl']) && !empty($response['webRedirectUrl'])) {
-                // TODO: Persist payment_reference_no to payments table
-                // Example: $order->payment_reference_no = $response['referenceNo'] ?? $partnerReferenceNo;
-                // Example: $order->payment_gateway = 'dana';
-                // Example: $order->save();
+            if (isset($response['webRedirectUrl']) && ! empty($response['webRedirectUrl'])) {
+                $paymentReference = $response['referenceNo'] ?? $partnerReferenceNo;
+
+                $order->payments()->create([
+                    'gateway' => 'dana',
+                    'gateway_reference' => $partnerReferenceNo,
+                    'gateway_transaction_id' => $response['referenceNo'] ?? null,
+                    'status' => PaymentStatus::PENDING,
+                    'amount' => $totalAmount,
+                    'metadata' => $response,
+                    'initiated_at' => now(),
+                ]);
 
                 return PaymentInitResult::success(
                     redirectUrl: $response['webRedirectUrl'],
-                    paymentReference: $response['referenceNo'] ?? $partnerReferenceNo,
+                    paymentReference: $paymentReference,
                     rawResponse: $response,
                 );
             }
@@ -90,7 +123,7 @@ class DanaHostedCheckoutGateway implements PaymentGateway
 
     /**
      * Handle customer return from DANA hosted checkout.
-     * 
+     *
      * DANA redirects with query parameters:
      * - resultCode: Payment result code
      * - partnerReferenceNo: Our reference number
@@ -105,7 +138,7 @@ class DanaHostedCheckoutGateway implements PaymentGateway
         // Extract order ID from partnerReferenceNo (format: merchantId_orderId)
         $orderId = $this->extractOrderIdFromPartnerReference($partnerReferenceNo);
 
-        if (!$orderId) {
+        if (! $orderId) {
             return PaymentReturnResult::failed(
                 orderId: '',
                 message: 'Invalid partner reference number',
@@ -117,35 +150,44 @@ class DanaHostedCheckoutGateway implements PaymentGateway
         // Based on DANA documentation, resultCode values may vary
         // Common values: SUCCESS, FAILED, CANCEL, etc.
         $status = match (strtoupper($resultCode ?? '')) {
-            'SUCCESS', '00' => PaymentReturnStatus::SUCCESS,
-            'CANCEL', 'CANCELLED' => PaymentReturnStatus::CANCELLED,
-            'EXPIRED', '05' => PaymentReturnStatus::EXPIRED,
-            default => PaymentReturnStatus::PENDING, // Wait for webhook for final status
+            'SUCCESS', '00' => PaymentStatus::COMPLETED,
+            'CANCEL', 'CANCELLED' => PaymentStatus::CANCELLED,
+            'EXPIRED', '05' => PaymentStatus::EXPIRED,
+            default => PaymentStatus::PENDING, // Wait for webhook for final status
         };
 
-        // TODO: Update order payment status based on return status
-        // Example: if status is SUCCESS, mark as pending verification until webhook confirms
-        // Example: if status is CANCELLED/EXPIRED, mark accordingly
+        $payment = Payment::where('order_id', $orderId)->where('gateway', 'dana')->latest()->first();
+        if ($payment && ! $payment->isFinal()) {
+            if ($status === PaymentStatus::CANCELLED || $status === PaymentStatus::EXPIRED) {
+                $payment->update([
+                    'status' => $status === PaymentStatus::CANCELLED ? PaymentStatus::CANCELLED : PaymentStatus::EXPIRED,
+                    'gateway_transaction_id' => $referenceNo,
+                    'completed_at' => now(),
+                    'metadata' => array_merge($payment->metadata ?? [], ['redirect' => $request->query()]),
+                ]);
+                $payment->order->update(['status' => OrderStatusEnum::CANCELLED]);
+            }
+        }
 
         return match ($status) {
-            PaymentReturnStatus::SUCCESS => PaymentReturnResult::success(
+            PaymentStatus::COMPLETED => PaymentReturnResult::success(
                 orderId: (string) $orderId,
                 paymentReference: $referenceNo,
                 rawData: $request->query(),
             ),
-            PaymentReturnStatus::CANCELLED => PaymentReturnResult::cancelled(
+            PaymentStatus::CANCELLED => PaymentReturnResult::cancelled(
                 orderId: (string) $orderId,
-                paymentReference: $referenceNo,
+                message: null,
                 rawData: $request->query(),
             ),
-            PaymentReturnStatus::EXPIRED => PaymentReturnResult::expired(
+            PaymentStatus::EXPIRED => PaymentReturnResult::expired(
                 orderId: (string) $orderId,
-                paymentReference: $referenceNo,
+                message: null,
                 rawData: $request->query(),
             ),
-            default => PaymentReturnResult::pending(
+            PaymentStatus::PENDING => PaymentReturnResult::pending(
                 orderId: (string) $orderId,
-                paymentReference: $referenceNo,
+                message: null,
                 rawData: $request->query(),
             ),
         };
@@ -153,9 +195,9 @@ class DanaHostedCheckoutGateway implements PaymentGateway
 
     /**
      * Handle DANA Finish Notify webhook.
-     * 
+     *
      * Endpoint: POST /v1.0/debit/notify
-     * 
+     *
      * Verifies signature and processes payment status update.
      * Status codes:
      * - 00: Success
@@ -168,7 +210,7 @@ class DanaHostedCheckoutGateway implements PaymentGateway
         $timestamp = $request->header('X-TIMESTAMP');
         $signature = $request->header('X-SIGNATURE');
 
-        if (!$partnerId || !$timestamp || !$signature) {
+        if (! $partnerId || ! $timestamp || ! $signature) {
             Log::warning('DANA: Missing required headers in webhook', [
                 'headers' => $request->headers->all(),
             ]);
@@ -194,7 +236,7 @@ class DanaHostedCheckoutGateway implements PaymentGateway
             publicKey: $publicKey,
         );
 
-        if (!$isValid) {
+        if (! $isValid) {
             Log::warning('DANA: Webhook signature verification failed', [
                 'partner_id' => $partnerId,
                 'timestamp' => $timestamp,
@@ -213,7 +255,7 @@ class DanaHostedCheckoutGateway implements PaymentGateway
         $partnerReferenceNo = $payload['partnerReferenceNo'] ?? null;
         $orderId = $this->extractOrderIdFromPartnerReference($partnerReferenceNo);
 
-        if (!$orderId) {
+        if (! $orderId) {
             Log::warning('DANA: Could not extract order ID from webhook', [
                 'partnerReferenceNo' => $partnerReferenceNo,
                 'payload' => $payload,
@@ -233,14 +275,49 @@ class DanaHostedCheckoutGateway implements PaymentGateway
             default => WebhookStatus::FAILED,
         };
 
-        // TODO: Implement idempotency check
-        // Example: Check if webhook with this referenceNo has already been processed
-        // Example: Store webhook_reference_no in payments table to prevent duplicate processing
+        $payment = Payment::where('order_id', $orderId)->where('gateway', 'dana')->latest()->first();
+        if (! $payment) {
+            Log::warning('DANA: Webhook received for unknown payment', ['order_id' => $orderId]);
 
-        // TODO: Update order status based on webhook status
-        // Example: if status is SUCCESS, update order status to CONFIRMED and mark payment as completed
-        // Example: if status is EXPIRED, update order status to CANCELLED
-        // Example: Store transaction_id, reference_no, and other payment details
+            return WebhookResult::verified(
+                status: $status,
+                orderId: (string) $orderId,
+                paymentReference: $payload['referenceNo'] ?? null,
+                transactionId: $payload['transactionId'] ?? null,
+                message: $payload['responseMessage'] ?? null,
+                rawPayload: $payload,
+            );
+        }
+
+        if ($payment->isFinal()) {
+            Log::info('DANA: Webhook idempotent skip (already processed)', ['order_id' => $orderId, 'payment_status' => $payment->status->value]);
+
+            return WebhookResult::verified(
+                status: $status,
+                orderId: (string) $orderId,
+                paymentReference: $payload['referenceNo'] ?? null,
+                transactionId: $payload['transactionId'] ?? null,
+                message: $payload['responseMessage'] ?? null,
+                rawPayload: $payload,
+            );
+        }
+
+        $paymentStatus = match ($status) {
+            WebhookStatus::SUCCESS => PaymentStatus::COMPLETED,
+            WebhookStatus::EXPIRED => PaymentStatus::EXPIRED,
+            default => PaymentStatus::FAILED,
+        };
+        $payment->update([
+            'status' => $paymentStatus,
+            'gateway_transaction_id' => $payload['referenceNo'] ?? $payment->gateway_transaction_id,
+            'completed_at' => now(),
+            'metadata' => array_merge($payment->metadata ?? [], ['webhook' => $payload]),
+        ]);
+
+        $order = $payment->order;
+        $order->update([
+            'status' => $status === WebhookStatus::SUCCESS ? OrderStatusEnum::CONFIRMED : OrderStatusEnum::CANCELLED,
+        ]);
 
         Log::info('DANA: Webhook processed successfully', [
             'order_id' => $orderId,
@@ -258,25 +335,35 @@ class DanaHostedCheckoutGateway implements PaymentGateway
         );
     }
 
+    private function toPartnerReferenceNo(int $orderId, int $attempt = 1): string
+    {
+        $base = config('payments.dana.merchant_id') . '_' . $orderId;
+
+        if ($attempt === 1) {
+            return $base;
+        }
+
+        return $base . '-' . $attempt;
+    }
+
     /**
      * Extract order ID from partner reference number.
-     * Format: merchantId_orderId
+     * Format: merchantId_orderId or merchantId_orderId-attempt
      */
     private function extractOrderIdFromPartnerReference(?string $partnerReferenceNo): ?int
     {
-        if (!$partnerReferenceNo) {
+        if (! $partnerReferenceNo) {
             return null;
         }
 
-        // Format: merchantId_orderId
         $parts = explode('_', $partnerReferenceNo);
 
         if (count($parts) < 2) {
             return null;
         }
 
-        // Last part should be the order ID
-        $orderId = end($parts);
+        $orderPart = $parts[1];
+        $orderId = explode('-', $orderPart)[0] ?? '';
 
         return is_numeric($orderId) ? (int) $orderId : null;
     }

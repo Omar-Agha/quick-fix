@@ -47,9 +47,33 @@ return [
         'public_key' => env('DANA_PUBLIC_KEY'),
 
         // Return URL - where DANA redirects customer after payment
-        'return_url' => env('DANA_RETURN_URL', env('APP_URL') . '/api/payments/dana/return'),
+        'return_url' => env('DANA_RETURN_URL', env('APP_URL').'/api/payments/dana/return'),
 
         // Notify URL - webhook endpoint for server-to-server notifications
-        'notify_url' => env('DANA_NOTIFY_URL', env('APP_URL') . '/api/payments/dana/webhook/finish-notify'),
+        'notify_url' => env('DANA_NOTIFY_URL', env('APP_URL').'/api/payments/dana/webhook/finish-notify'),
+    ],
+
+    'midtrans' => [
+        /*
+        |--------------------------------------------------------------------------
+        | Midtrans Snap Configuration
+        |--------------------------------------------------------------------------
+        |
+        | Configuration for Midtrans Snap (built-in checkout / redirect).
+        | @see https://docs.midtrans.com/docs/snap-snap-integration-guide
+        |
+        */
+
+        // Base URL: Sandbox or Production
+        'base_url' => env('MIDTRANS_BASE_URL', 'https://app.sandbox.midtrans.com'),
+
+        // Server Key (from Midtrans Dashboard > Settings > Access Keys)
+        'server_key' => env('MIDTRANS_SERVER_KEY', ''),
+
+        // Client Key (for frontend Snap.js; optional for backend-only redirect flow)
+        'client_key' => env('MIDTRANS_CLIENT_KEY'),
+
+        // Whether to use production (accept real payments)
+        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
     ],
 ];

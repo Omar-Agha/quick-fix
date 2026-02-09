@@ -4,20 +4,12 @@ use App\Http\Controllers\Api\MobileAppApiController;
 use App\Http\Controllers\Api\MobileUserApiController;
 use App\Http\Controllers\Api\OrderApiController;
 use App\Http\Controllers\Api\PaymentController;
-use App\Http\Controllers\Api\ServicesApiController;
+use App\Http\Controllers\Api\PaymentMidtransController;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Dashboard\CouponCrudController;
-use App\Http\Controllers\Dashboard\OrderCrudController;
-use App\Http\Controllers\Dashboard\ServiceController;
-use App\Http\Resources\Dashboard\OrderDto;
-use App\Models\Coupon;
-use App\Models\MobileUser;
 use App\Models\Order;
-use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 
-
-//swagger 
+// swagger
 Route::redirect('/', 'documentation');
 
 Route::prefix('auth')->group(function () {
@@ -41,9 +33,9 @@ Route::prefix('user')->middleware('auth:sanctum')->group(function () {
 });
 Route::get('supported-phone-codes', function () {
     $phoneCodes = explode(',', env('SUPPORTED_PHONE_CODES'));
+
     return response()->json($phoneCodes);
 });
-
 
 Route::get('/all-services', [MobileAppApiController::class, 'getAllActiveServices']);
 Route::get('/all-banner-ads', [MobileAppApiController::class, 'getAllActiveBannerAds']);
@@ -54,8 +46,6 @@ Route::get('/user-address', [MobileUserApiController::class, 'getUserAddresses']
 Route::post('/user-address', [MobileUserApiController::class, 'createOrUpdateAddress'])->middleware(['auth:customer']);
 Route::delete('/user-address/{address}', [MobileUserApiController::class, 'deleteAddress'])->middleware(['auth:customer']);
 
-
-
 Route::post('/set-order', [OrderApiController::class, 'setOrder'])->middleware(['auth:customer']);
 Route::post('/calculate-service-fees', [OrderApiController::class, 'calculateServiceFees'])->middleware(['auth:customer']);
 Route::get('/verify-coupon/{coupon}', [OrderApiController::class, 'verifyCoupon'])->middleware(['auth:customer']);
@@ -65,10 +55,10 @@ Route::post('/cancel-order/{order}', [OrderApiController::class, 'cancelOrder'])
 // Not implemented yet
 Route::get('/user-orders', [MobileUserApiController::class, 'getUserOrders'])->middleware(['auth:customer']);
 
-//get user order by id
+// get user order by id
 Route::get('/user-order/{order}', [MobileUserApiController::class, 'getUserOrderById']);
 
-//update user
+// update user
 Route::put('/user-update/{user}', [MobileUserApiController::class, 'updateUserProfile']);
 
 // Payment routes
@@ -86,5 +76,13 @@ Route::prefix('payments')->group(function () {
         // Note: This endpoint should be publicly accessible (no auth middleware)
         // DANA will call this endpoint directly
         Route::post('/webhook/finish-notify', [PaymentController::class, 'handleWebhook']);
+    });
+
+    // Midtrans Snap routes
+    Route::prefix('midtrans')->group(function () {
+        Route::post('/initiate', [PaymentMidtransController::class, 'initiate'])
+            ->middleware(['auth:customer']);
+        Route::get('/return', [PaymentMidtransController::class, 'handleReturn']);
+        Route::post('/webhook/notify', [PaymentMidtransController::class, 'handleWebhook']);
     });
 });

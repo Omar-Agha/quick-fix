@@ -6,6 +6,8 @@ use App\Payments\Contracts\PaymentGateway;
 use App\Payments\Dana\DanaClient;
 use App\Payments\Dana\DanaKeyHelper;
 use App\Payments\Gateways\DanaHostedCheckoutGateway;
+use App\Payments\Gateways\MidtransSnapGateway;
+use App\Payments\Midtrans\MidtransClient;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -37,6 +39,20 @@ class AppServiceProvider extends ServiceProvider
                 publicKey: $publicKey,
                 returnUrl: $config['return_url'],
                 notifyUrl: $config['notify_url'],
+            );
+        });
+
+        // Midtrans Snap gateway (resolved by class name for Midtrans-specific routes)
+        $this->app->singleton(MidtransSnapGateway::class, function ($app) {
+            $config = config('payments.midtrans');
+            $client = new MidtransClient(
+                baseUrl: $config['base_url'],
+                serverKey: $config['server_key'],
+            );
+
+            return new MidtransSnapGateway(
+                client: $client,
+                serverKey: $config['server_key'],
             );
         });
     }
