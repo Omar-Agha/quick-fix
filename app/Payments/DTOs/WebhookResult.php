@@ -2,13 +2,6 @@
 
 namespace App\Payments\DTOs;
 
-enum WebhookStatus: string
-{
-    case SUCCESS = 'success';      // 00 - Payment successful
-    case EXPIRED = 'expired';      // 05 - Order expired/cancelled
-    case FAILED = 'failed';        // Other failure statuses
-    case PENDING = 'pending';      // Still processing
-}
 
 class WebhookResult
 {
@@ -51,4 +44,3 @@ class WebhookResult
         );
     }
 }
-
