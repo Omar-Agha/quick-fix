@@ -91,3 +91,11 @@ Route::prefix('payments')->group(function () {
         return Payment::all();
     });
 });
+
+Route::get('get-gg/{order_id}', function ($order_id) {
+    $payments = Payment::where('order_id', $order_id)->get();
+    return response()->json([
+        'payments' => $payments,
+        'order' => Order::find($order_id)
+    ]);
+});
