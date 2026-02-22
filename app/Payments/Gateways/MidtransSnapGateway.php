@@ -227,7 +227,7 @@ class MidtransSnapGateway implements PaymentGateway
 
 
         $status = $this->mapTransactionStatusToWebhookStatus($transactionStatus, $fraudStatus, $statusCode);
-        Log::info('Midtrans: Webhook received: transaction_status is :' . $transactionStatus . ' and mapped status is : ' . $status);
+        Log::info('Midtrans: Webhook received: transaction_status is :', ['transaction_status' => $transactionStatus, 'fraud_status' => $fraudStatus, 'statusCode' => $statusCode, 'status' => $status]);
         $internalOrderId = $this->extractInternalOrderId($orderId);
 
         $payment = $internalOrderId !== null

@@ -93,6 +93,7 @@ Route::prefix('payments')->group(function () {
 });
 
 Route::get('get-gg/{order_id}', function ($order_id) {
+
     $payments = Payment::where('order_id', $order_id)->get();
     return response()->json([
         'payments' => $payments,
