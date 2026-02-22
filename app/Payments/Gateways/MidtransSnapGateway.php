@@ -198,6 +198,8 @@ class MidtransSnapGateway implements PaymentGateway
         $grossAmount = (string) ($payload['gross_amount'] ?? '');
         $signatureKey = $payload['signature_key'] ?? '';
 
+
+
         if (! $orderId || $signatureKey === '') {
             Log::warning('Midtrans: Webhook missing required fields', [
                 'keys' => array_keys($payload),
@@ -223,8 +225,9 @@ class MidtransSnapGateway implements PaymentGateway
         $transactionStatus = $payload['transaction_status'] ?? '';
         $fraudStatus = $payload['fraud_status'] ?? '';
 
-        $status = $this->mapTransactionStatusToWebhookStatus($transactionStatus, $fraudStatus, $statusCode);
 
+        $status = $this->mapTransactionStatusToWebhookStatus($transactionStatus, $fraudStatus, $statusCode);
+        Log::info('Midtrans: Webhook received: transaction_status is :' . $transactionStatus . ' and mapped status is : ' . $status);
         $internalOrderId = $this->extractInternalOrderId($orderId);
 
         $payment = $internalOrderId !== null
@@ -345,6 +348,7 @@ class MidtransSnapGateway implements PaymentGateway
             return $t === 'expire' ? WebhookStatus::EXPIRED : WebhookStatus::FAILED;
         }
 
+        //TODO: TO BE CHECKED
         return WebhookStatus::PENDING;
     }
 }

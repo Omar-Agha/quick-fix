@@ -74,9 +74,7 @@ class PaymentMidtransController extends Controller
      */
     public function handleWebhook(Request $request): JsonResponse
     {
-        Log::info('Midtrans: Webhook received', [
-            'payload' => $request->all(),
-        ]);
+
         $result = $this->gateway->handleWebhook($request);
 
         if (! $result->verified) {
