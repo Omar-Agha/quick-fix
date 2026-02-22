@@ -247,6 +247,17 @@ class MidtransSnapGateway implements PaymentGateway
             );
         }
 
+        $order = $payment->order;
+        $orderStatus = match ($status) {
+            WebhookStatus::PENDING => OrderStatusEnum::PENDING,
+            WebhookStatus::SUCCESS => OrderStatusEnum::SUCCESS,
+            default => PaymentStatus::FAILED,
+        };
+        $order->update([
+            'order_id' => $orderId,
+            'status' => $orderStatus,
+        ]);
+
         if ($payment->isFinal()) {
             Log::info('Midtrans: Webhook idempotent skip (already processed)', ['order_id' => $orderId, 'payment_status' => $payment->status->value]);
 
@@ -275,16 +286,7 @@ class MidtransSnapGateway implements PaymentGateway
             'metadata' => array_merge($payment->metadata ?? [], ['webhook' => $payload]),
         ]);
 
-        $order = $payment->order;
-        $orderStatus = match ($status) {
-            WebhookStatus::PENDING => OrderStatusEnum::PENDING,
-            WebhookStatus::SUCCESS => OrderStatusEnum::SUCCESS,
-            default => PaymentStatus::FAILED,
-        };
-        $order->update([
-            'order_id' => $orderId,
-            'status' => $orderStatus,
-        ]);
+
 
         Log::info('Midtrans: Webhook processed', [
             'order_id' => $orderId,

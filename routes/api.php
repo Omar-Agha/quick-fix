@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Api\MobileAppApiController;
 use App\Http\Controllers\Api\MobileUserApiController;
 use App\Http\Controllers\Api\OrderApiController;
