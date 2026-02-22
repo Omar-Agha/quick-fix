@@ -261,10 +261,13 @@ class MidtransSnapGateway implements PaymentGateway
         }
 
         $paymentStatus = match ($status) {
+            WebhookStatus::PENDING => PaymentStatus::PENDING,
             WebhookStatus::SUCCESS => PaymentStatus::COMPLETED,
             WebhookStatus::EXPIRED => PaymentStatus::EXPIRED,
             default => PaymentStatus::FAILED,
         };
+        Log::info('Midtrans: Webhook received: payment status is :', ['payment_status' => $paymentStatus]);
+
         $payment->update([
             'status' => $paymentStatus,
             'gateway_transaction_id' => $payload['transaction_id'] ?? $payment->gateway_transaction_id,
@@ -274,6 +277,7 @@ class MidtransSnapGateway implements PaymentGateway
 
         $order = $payment->order;
         $order->update([
+            'order_id' => $orderId,
             'status' => $status === WebhookStatus::SUCCESS ? OrderStatusEnum::CONFIRMED : OrderStatusEnum::CANCELLED,
         ]);
 
