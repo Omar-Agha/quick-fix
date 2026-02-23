@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Payments\Gateways\MidtransSnapGateway;
@@ -28,8 +29,12 @@ class PaymentMidtransController extends Controller
 
         $order = Order::with('mobileUser')->findOrFail($request->input('order_id'));
 
+
         if ($order->mobile_user_id !== request()->user('customer')->id) {
             abort(403);
+        }
+        if ($order->status == OrderStatus::SUCCESS) {
+            return $this->responseError(['message' => 'Order already completed']);
         }
 
         $result = $this->gateway->createPaymentIntent($order);
