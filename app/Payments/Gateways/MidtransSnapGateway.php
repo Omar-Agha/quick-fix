@@ -251,7 +251,7 @@ class MidtransSnapGateway implements PaymentGateway
         $orderStatus = match ($status) {
             WebhookStatus::PENDING => OrderStatusEnum::PENDING,
             WebhookStatus::SUCCESS => OrderStatusEnum::SUCCESS,
-            default => PaymentStatus::FAILED,
+            default => OrderStatusEnum::FAILED,
         };
         $order->update([
             'order_id' => $orderId,
