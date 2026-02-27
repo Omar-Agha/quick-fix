@@ -21,9 +21,9 @@ class MobileUserService
         return $query->latest()->get();
     }
 
-    public function getUserOrderById(int $id): ?Order
+    public function getUserOrderById(int $id, $user): ?Order
     {
-        return Order::where('mobile_user_id', Auth::id())->find($id);
+        return Order::find($id);
     }
 
     public function updateUserProfile(array $data): MobileUser

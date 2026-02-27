@@ -56,7 +56,12 @@ class MobileUserApiController extends Controller
     }
     public function getUserOrderById($id)
     {
-        $order = $this->mobileUserService->getUserOrderById($id);
+        $user = request()->user('customer');
+        // $order = $this->mobileUserService->getUserOrderById($id, $user);
+        $order = Order::find($id);
+
+
+
 
         if (! $order) {
             return response()->json([

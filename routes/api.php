@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
 use App\Http\Controllers\Api\MobileAppApiController;
 use App\Http\Controllers\Api\MobileUserApiController;
 use App\Http\Controllers\Api\OrderApiController;
@@ -100,4 +101,13 @@ Route::get('get-gg/{order_id}', function ($order_id) {
         'payments' => $payments,
         'order' => Order::find($order_id)
     ]);
+});
+
+Route::get('cc', function () {
+
+    $o = Order::first();
+    $o->update([
+        'status' => OrderStatus::SUCCESS,
+    ]);
+    return $o;
 });
