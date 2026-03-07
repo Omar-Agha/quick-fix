@@ -48,6 +48,8 @@ class ServiceResource extends Resource
                     ->numeric()
                     ->suffix(" " . config('app.currency')),
                 FileUpload::make('image')
+                    ->dehydrated(fn($state) => filled($state))
+                    ->required(fn(string $operation): bool => $operation === 'create')
                     ->image()
                     ->disk('public')
                     ->directory('services')
