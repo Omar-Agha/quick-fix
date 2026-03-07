@@ -124,7 +124,7 @@ return [
     ],
 
 
-    'currency' => 'USD',
+    'currency' => env('APP_CURRENCY', 'USD'),
     'supported_countries' => explode(',', env('SUPPORTED_PHONE_CODES'))
 
 ];
