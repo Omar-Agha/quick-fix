@@ -6,12 +6,6 @@ import { PaginationResponse } from '@/components/dv-components/CrudTableTypes';
 
 
 
-import Button from '@/components/ui/button/Button.vue';
-import Dialog from '@/components/ui/dialog/Dialog.vue';
-import DialogContent from '@/components/ui/dialog/DialogContent.vue';
-import DialogHeader from '@/components/ui/dialog/DialogHeader.vue';
-import DialogTitle from '@/components/ui/dialog/DialogTitle.vue';
-
 
 
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -26,6 +20,17 @@ import { Actions, EntityKey, OrderResponse, OrderActions } from './dtos/data';
 import OrderCard from './forms/OrderCard.vue';
 import { columns } from './columns';
 import { getActionEventName } from '@/components/dv-components/common'
+import Card from '@/components/ui/card/Card.vue';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { toTypedSchema } from '@vee-validate/zod';
+import z from 'zod';
+import { useForm } from 'vee-validate';
+import RadioGroup from '@/components/ui/radio-group/RadioGroup.vue';
+import RadioGroupItem from '@/components/ui/radio-group/RadioGroupItem.vue';
+import { Button } from '@/components/ui/button';
+import { CardContent } from '@/components/ui/card';
+
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -33,8 +38,8 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Examples',
-        href: '/examples',
+        title: 'Orders',
+        href: '/orders',
     },
 ];
 
@@ -131,6 +136,27 @@ onUnmounted(() => {
 
 
 
+interface FilterOrdersDto {
+    orderStatus: string
+}
+
+
+
+const form = useForm<FilterOrdersDto>({
+
+    initialValues: {
+        orderStatus: 'all'
+    }
+})
+
+const onFilterSubmit = form.handleSubmit((formValues) => {
+    const dto: FilterOrdersDto = {
+        orderStatus: formValues.orderStatus
+    }
+
+    console.log(dto)
+    // call your API here
+})
 
 </script>
 
@@ -140,8 +166,7 @@ onUnmounted(() => {
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-3">
-            <PageHeader title="Orders" description="Manage your orders" show-view-toggle
-                v-model:selected-view="currentView">
+            <PageHeader title="Orders" show-view-toggle v-model:selected-view="currentView">
                 <template #actions>
                     <!-- <Button @click="openCreateDialog">
                         <Plus class="mr-2 h-4 w-4" />
@@ -150,6 +175,62 @@ onUnmounted(() => {
 
                 </template>
             </PageHeader>
+
+            <div class="flex flex-col gap-4 filter-container card mb-3 my-1">
+                <Card>
+
+                    <CardContent>
+                        <div class="flex flex-col gap-2">
+                            <form @submit="onFilterSubmit" class="space-y-4">
+                                <div class="grid grid-cols-2">
+                                    <div class="col-sm-1">
+
+                                        <FormField name="orderStatus" v-slot="{ componentField }">
+                                            <FormItem>
+                                                <FormLabel>Order Payment Status</FormLabel>
+                                                <FormControl>
+                                                    <div class="row">
+
+                                                        <RadioGroup default-value="all" v-bind="componentField">
+
+                                                            <div class="grid grid-cols-2 gap-2">
+
+                                                                <div class="flex items-center space-x-2">
+                                                                    <RadioGroupItem id="r1" value="all" />
+                                                                    <Label for="r1">All</Label>
+                                                                </div>
+                                                                <div class="flex items-center space-x-2">
+                                                                    <RadioGroupItem id="r2" value="pending" />
+                                                                    <Label for="r2">Pending</Label>
+                                                                </div>
+                                                                <div class="flex items-center space-x-2">
+                                                                    <RadioGroupItem id="r3" value="settled" />
+                                                                    <Label for="r3">Settled</Label>
+                                                                </div>
+                                                                <div class="flex items-center space-x-2">
+                                                                    <RadioGroupItem id="r4" value="failed" />
+                                                                    <Label for="r4">Failed</Label>
+                                                                </div>
+                                                            </div>
+
+                                                        </RadioGroup>
+                                                    </div>
+
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        </FormField>
+                                    </div>
+
+                                </div>
+                                <Button type="submit">Filter</Button>
+                            </form>
+                        </div>
+                    </CardContent>
+                </Card>
+
+
+            </div>
 
             <!-- Table View -->
             <div class="flex-[100%]" v-if="currentView === 'table'">

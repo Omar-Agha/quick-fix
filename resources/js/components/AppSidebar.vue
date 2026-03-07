@@ -40,7 +40,7 @@ const mainNavItems: NavItem[] = [
         icon: Image,
     },
     {
-        title: 'Orders',
+        title: 'Orders Payments',
         href: route('orders.index'),
         icon: Dumbbell,
     },
