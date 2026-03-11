@@ -154,11 +154,11 @@ const formatCurrency = (amount: number): string => {
                 <MapPin class="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-foreground line-clamp-1">
-                        {{ record.location_address.address }}
+                        <!-- {{ record.location_address.address }} -->
                     </p>
                     <p v-if="record.location_address.full_address"
                         class="text-xs text-muted-foreground line-clamp-2 mt-1">
-                        {{ record.location_address.full_address }}
+                        <!-- {{ record.location_address.full_address }} -->
                     </p>
                 </div>
             </div>
