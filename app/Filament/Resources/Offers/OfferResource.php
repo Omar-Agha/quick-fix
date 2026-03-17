@@ -28,7 +28,7 @@ class OfferResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPercentBadge;
 
-    protected static ?string $recordTitleAttribute = 'App Offers';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
     {

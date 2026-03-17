@@ -31,7 +31,7 @@ class ServiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingStorefront;
 
-    protected static ?string $recordTitleAttribute = 'Services';
+    protected static ?string $recordTitleAttribute = 'name';
 
 
 

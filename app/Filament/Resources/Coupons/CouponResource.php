@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Builder;
 class CouponResource extends Resource
 {
     protected static ?string $model = Coupon::class;
-
+    protected static ?string $recordTitleAttribute = 'code';
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedGift;
 
     public static function form(Schema $schema): Schema

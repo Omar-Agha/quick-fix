@@ -25,7 +25,7 @@ class BannerAdResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInformationCircle;
 
-    protected static ?string $recordTitleAttribute = 'App Banners ';
+
 
     public static function form(Schema $schema): Schema
     {
@@ -47,7 +47,7 @@ class BannerAdResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('App Banners ')
+            ->recordTitleAttribute('App Banners')
             ->columns([
                 TextColumn::make('created_at')
                     ->dateTime()
