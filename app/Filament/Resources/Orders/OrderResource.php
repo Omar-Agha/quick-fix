@@ -35,6 +35,7 @@ use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -46,11 +47,13 @@ class OrderResource extends Resource
     //add menu badge 
     public static function getNavigationBadge(): ?string
     {
-        return Order::where('status', OrderStatus::PAYMENT_SUCCESS)->count();
+        return Order::where('status', OrderStatus::PAYMENT_SUCCESS)->where('is_completed', false)->count();
     }
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['mobileUser', 'locationAddress', 'orderItems.service', 'files']);
+        return parent::getEloquentQuery()->with(['mobileUser', 'locationAddress', 'orderItems.service', 'files'])
+            ->orderBy('is_completed')
+            ->orderByDesc('created_at');
     }
 
     public static function form(Schema $schema): Schema
@@ -69,12 +72,15 @@ class OrderResource extends Resource
                     ->schema([
                         TextEntry::make('status')
                             ->badge()
-                            ->formatStateUsing(fn(OrderStatus $state) => $state->name)
-                            ->color(fn(OrderStatus $state) => match ($state) {
-                                OrderStatus::PAYMENT_SUCCESS => 'success',
-                                OrderStatus::PAYMENT_FAILED => 'danger',
-                                default => 'warning',
-                            }),
+                            ->formatStateUsing(fn(OrderStatus $state, ?Order $order) => $order->is_completed ? 'Completed' : $state->name)
+                            ->color(
+                                fn(OrderStatus $state, ?Order $record) => match ($state) {
+                                    OrderStatus::PAYMENT_SUCCESS => $record->is_completed ? 'success' : 'info',
+                                    OrderStatus::PAYMENT_FAILED => 'danger',
+                                    OrderStatus::PAYMENT_PENDING => 'warning',
+                                    default => 'warning'
+                                }
+                            ),
                         TextEntry::make('created_at')
                             ->label('Ordered')
                             ->dateTime()
@@ -180,10 +186,11 @@ class OrderResource extends Resource
                             ])->space(1),
                             TextColumn::make('status')
                                 ->badge()
-                                ->formatStateUsing(fn(OrderStatus $state) => $state->name)
-                                ->color(fn(OrderStatus $state) => match ($state) {
-                                    OrderStatus::PAYMENT_SUCCESS => 'success',
+                                ->formatStateUsing(fn(OrderStatus $state, ?Order $order) => $order->is_completed ? 'Completed' : $state->name)
+                                ->color(fn(OrderStatus $state, ?Order $record) => match ($state) {
+                                    OrderStatus::PAYMENT_SUCCESS => $record->is_completed ? 'success' : 'info',
                                     OrderStatus::PAYMENT_FAILED => 'danger',
+                                    OrderStatus::PAYMENT_PENDING => 'warning',
                                     default => 'warning',
                                 }),
                         ])->from('sm'),
@@ -275,6 +282,17 @@ class OrderResource extends Resource
                 SelectFilter::make('status')
                     ->options(OrderStatus::class)
                     ->native(false),
+                TernaryFilter::make('is_completed')
+                    ->options([
+                        true => 'Completed',
+                        false => 'Pending',
+                    ])
+                    ->queries(
+                        true: fn(Builder $query) => $query->where('is_completed', true),
+                        false: fn(Builder $query) => $query->where('is_completed', false)->where('status', OrderStatus::PAYMENT_SUCCESS),
+                        blank: fn(Builder $query) => $query, // In this example, we do not want to filter the query when it is blank.
+                    )
+                    ->native(false),
             ])
             ->recordActions([
                 ViewAction::make(),
@@ -284,9 +302,9 @@ class OrderResource extends Resource
                     ->color('success')
                     ->label('Complete order')
                     ->requiresConfirmation()
-                    ->visible(fn(Order $record) => $record->status == OrderStatus::PAYMENT_SUCCESS)
+                    ->visible(fn(Order $record) => $record->status == OrderStatus::PAYMENT_SUCCESS && !$record->is_completed)
 
-                    ->action(fn(Order $record) => $record->update(['status' => OrderStatus::COMPLETED])),
+                    ->action(fn(Order $record) => $record->update(['is_completed' => true])),
                 // EditAction::make(),
                 // DeleteAction::make(),
             ])

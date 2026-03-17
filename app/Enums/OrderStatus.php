@@ -7,5 +7,4 @@ enum OrderStatus: int
     case PAYMENT_PENDING = 1;
     case PAYMENT_SUCCESS = 2;
     case PAYMENT_FAILED = 3;
-    case COMPLETED = 4;
 }

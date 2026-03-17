@@ -73,7 +73,7 @@ class OrderService
         if ($order->status == OrderStatus::PAYMENT_FAILED) {
             throw new \Exception('Order is already cancelled');
         }
-        if ($order->status == OrderStatus::COMPLETED) {
+        if ($order->is_completed) {
             throw new \Exception('Order is already completed');
         }
         if ($order->status == OrderStatus::PAYMENT_SUCCESS) {

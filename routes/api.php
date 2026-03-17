@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\PaymentMidtransController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Models\Order;
 use App\Models\Payment;
+use Flowframe\Trend\Trend;
+use Flowframe\Trend\TrendValue;
 use Illuminate\Support\Facades\Route;
 
 // swagger
@@ -105,7 +107,21 @@ Route::get('get-gg/{order_id}', function ($order_id) {
 
 Route::get('cc', function () {
 
-    $o = Order::with('files')->find(40);
+    $data = Trend::model(Order::class)
+        ->between(
+            start: now()->startOfYear(),
+            end: now()->endOfYear(),
+        )
+        ->perMonth()
+        ->sum('pay_at_cashier');
+    return [
+        'datasets' => [
+            [
+                'label' => 'Revenue',
+                'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
 
-    return $o;
+            ],
+            'labels' => $data->map(fn(TrendValue $value) => $value->date),
+        ],
+    ];
 });
