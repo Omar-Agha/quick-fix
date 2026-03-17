@@ -23,8 +23,10 @@ class OrderDto extends JsonResource
             ],
 
             'location_address' => [
+
                 'address' => $this->locationAddress->address ?? "---",
                 'full_address' => $this->locationAddress->full_address ?? "---",
+
             ],
             'images' => $this->files->map(fn($file) => asset('storage/' . $file->path)),
             'price_summary' => [
