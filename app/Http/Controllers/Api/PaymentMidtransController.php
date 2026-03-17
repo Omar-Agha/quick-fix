@@ -33,7 +33,7 @@ class PaymentMidtransController extends Controller
         if ($order->mobile_user_id !== request()->user('customer')->id) {
             abort(403);
         }
-        if ($order->status == OrderStatus::SUCCESS) {
+        if ($order->status == OrderStatus::PAYMENT_SUCCESS) {
             return $this->responseError(['message' => 'Order already completed']);
         }
 

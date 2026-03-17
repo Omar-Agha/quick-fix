@@ -43,7 +43,7 @@ class OrderService
             'total_cost' => $pricing_result['total_cost'],
             'fees' => $pricing_result['fees'],
             'pay_at_cashier' => $pricing_result['pay_at_cashier'],
-            'status' => OrderStatus::PENDING,
+            'status' => OrderStatus::PAYMENT_PENDING,
             'description' => request('description'),
             'coupon_id' => $pricing_result['discount']['coupon_id'],
             'discount' => $pricing_result['discount']['discount'],
@@ -70,13 +70,13 @@ class OrderService
 
     public function cancelOrder(Order $order, MobileUser $mobileUser)
     {
-        if ($order->status == OrderStatus::CANCELLED) {
+        if ($order->status == OrderStatus::PAYMENT_FAILED) {
             throw new \Exception('Order is already cancelled');
         }
         if ($order->status == OrderStatus::COMPLETED) {
             throw new \Exception('Order is already completed');
         }
-        if ($order->status == OrderStatus::CONFIRMED) {
+        if ($order->status == OrderStatus::PAYMENT_SUCCESS) {
             throw new \Exception('Order is already confirmed');
         }
         if ($order->mobile_user_id !== $mobileUser->id) {
@@ -84,7 +84,7 @@ class OrderService
         }
 
 
-        $is_saved = $order->update(['status' => OrderStatus::CANCELLED]);
+        $is_saved = $order->update(['status' => OrderStatus::PAYMENT_FAILED]);
         if (!$is_saved) {
             throw new \Exception('Failed to cancel order');
         }

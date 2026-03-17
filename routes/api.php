@@ -105,9 +105,7 @@ Route::get('get-gg/{order_id}', function ($order_id) {
 
 Route::get('cc', function () {
 
-    $o = Order::first();
-    $o->update([
-        'status' => OrderStatus::SUCCESS,
-    ]);
+    $o = Order::with('files')->find(40);
+
     return $o;
 });

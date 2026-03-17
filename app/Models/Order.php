@@ -25,11 +25,13 @@ class Order extends Model
         'description',
         'coupon_id',
         'discount',
+        'is_completed',
     ];
 
     protected $casts = [
         'status' => OrderStatus::class,
         'reserve_datetime' => 'datetime',
+        'is_completed' => 'boolean',
     ];
 
     public $timestamps = true;

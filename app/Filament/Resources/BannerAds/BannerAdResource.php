@@ -23,7 +23,7 @@ class BannerAdResource extends Resource
 {
     protected static ?string $model = BannerAd::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedInformationCircle;
 
     protected static ?string $recordTitleAttribute = 'App Banners ';
 

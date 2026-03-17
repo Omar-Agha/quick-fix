@@ -26,7 +26,7 @@ class OfferResource extends Resource
 {
     protected static ?string $model = Offer::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPercentBadge;
 
     protected static ?string $recordTitleAttribute = 'App Offers';
 

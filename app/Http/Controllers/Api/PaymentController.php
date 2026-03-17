@@ -35,7 +35,7 @@ class PaymentController extends Controller
         // Example: if ($order->mobile_user_id !== auth()->id()) { abort(403); }
 
         // TODO: Validate order is in a state that allows payment
-        // Example: if ($order->status !== OrderStatus::PENDING) { ... }
+        // Example: if ($order->status !== OrderStatus::PAYMENT_PENDING) { ... }
 
         $result = $this->paymentGateway->createPaymentIntent($order);
 
