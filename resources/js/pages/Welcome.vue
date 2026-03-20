@@ -1,14 +1,34 @@
 <script setup lang="ts">
+import CheckList from '@/components/CheckList.vue';
+import FeatureLabel from '@/components/FeatureLabel.vue';
+import FindJob from '@/components/FindJob.vue';
+import MainHeading from '@/components/MainHeading.vue';
+import AppLayout from '@/layouts/app/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import ServicesImages from '../components/ServicesImages.vue'
+import ServiceCard1 from '../components/ServiceCard1.vue'
+import SectionHeading from '../components/SectionHeading.vue'
+import ServicesSection from '@/components/ServicesSection.vue';
+import HeroSection from '@/components/HeroSection.vue';
 
 
 </script>
 
 <template>
 
-    <Head title="Welcome">
-        <link rel="preconnect" href="https://rsms.me/" />
-        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-    </Head>
-    <h2>Welcome</h2>
+    <AppLayout>
+
+        <section class="image-cover hero-header">
+            <div class="container">
+                <HeroSection />
+            </div>
+
+        </section>
+        <section class="gray-simple">
+            <div class="container">
+                <ServicesSection />
+            </div>
+
+        </section>
+    </AppLayout>
 </template>

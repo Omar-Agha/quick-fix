@@ -6,6 +6,18 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { initializeTheme } from './composables/useAppearance';
 import { ZiggyVue } from 'ziggy-js';
+import "@/assets/css/styles.css";
+import "@/assets/css/colors.css";
+
+
+import "@/assets/js/jquery.min.js";
+import "@/assets/js/popper.min.js";
+import "@/assets/js/bootstrap.min.js";
+import "@/assets/js/rangeslider.js";
+import "@/assets/js/jquery.nice-select.min.js";
+import "@/assets/js/slick.js";
+import "@/assets/js/counterup.min.js";
+import "@/assets/js/custom.js";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
