@@ -6,9 +6,9 @@ import MainHeading from '@/components/MainHeading.vue';
 import AppLayout from '@/layouts/app/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import ServicesImages from '../components/ServicesImages.vue'
-import ServiceCard1 from '../components/ServiceCard1.vue'
+import ServiceCard1 from '../components/FeatureCard1.vue'
 import SectionHeading from '../components/SectionHeading.vue'
-import ServicesSection from '@/components/ServicesSection.vue';
+import FeaturesSection from '@/components/FeaturesSection.vue';
 import HeroSection from '@/components/HeroSection.vue';
 
 
@@ -26,7 +26,7 @@ import HeroSection from '@/components/HeroSection.vue';
         </section>
         <section class="gray-simple">
             <div class="container">
-                <ServicesSection />
+                <FeaturesSection />
             </div>
 
         </section>
