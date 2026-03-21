@@ -10,6 +10,7 @@ import ServiceCard1 from '../components/FeatureCard1.vue'
 import SectionHeading from '../components/SectionHeading.vue'
 import FeaturesSection from '@/components/FeaturesSection.vue';
 import HeroSection from '@/components/HeroSection.vue';
+import OurServiceSection from '@/components/OurServiceSection.vue';
 
 
 </script>
@@ -27,6 +28,12 @@ import HeroSection from '@/components/HeroSection.vue';
         <section class="gray-simple">
             <div class="container">
                 <FeaturesSection />
+            </div>
+
+        </section>
+        <section>
+            <div class="container">
+                <OurServiceSection />
             </div>
 
         </section>

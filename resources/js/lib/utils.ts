@@ -120,3 +120,9 @@ export function saveRecord(
 export function AppName(): string {
     return import.meta.env.VITE_APP_NAME
 }
+export function currencyFormat(amount: number): string {
+    return new Intl.NumberFormat(import.meta.env.VITE_APP_LOCALE, {
+        style: 'currency',
+        currency: import.meta.env.VITE_APP_CURRENCY,
+    }).format(amount);
+}

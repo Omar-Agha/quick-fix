@@ -9,8 +9,8 @@ const navigation = [
         href: '/',
     },
     {
-        name: 'About',
-        href: '/about',
+        name: 'About us',
+        href: '/about-us',
     },
     {
         name: 'Services',
@@ -21,8 +21,8 @@ const navigation = [
         href: '/contact',
     },
     {
-        name: 'Download App',
-        href: '/download-app',
+        name: 'blogs',
+        href: '/blogs',
     },
 ];
 
