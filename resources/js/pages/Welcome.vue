@@ -11,6 +11,8 @@ import SectionHeading from '../components/SectionHeading.vue'
 import FeaturesSection from '@/components/FeaturesSection.vue';
 import HeroSection from '@/components/HeroSection.vue';
 import OurServiceSection from '@/components/OurServiceSection.vue';
+import HowItWorksSection from '@/components/HowItWorksSection.vue';
+import TestimonialsSection from '@/components/TestimonialsSection.vue';
 
 
 </script>
@@ -33,9 +35,20 @@ import OurServiceSection from '@/components/OurServiceSection.vue';
         </section>
         <section>
             <div class="container">
+                <HowItWorksSection />
+            </div>
+
+        </section>
+        <section class="gray-simple">
+            <div class="container">
                 <OurServiceSection />
             </div>
 
+        </section>
+        <section>
+            <div class="container py-4 py-lg-5">
+                <TestimonialsSection />
+            </div>
         </section>
     </AppLayout>
 </template>
