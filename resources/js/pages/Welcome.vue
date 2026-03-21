@@ -13,6 +13,7 @@ import HeroSection from '@/components/HeroSection.vue';
 import OurServiceSection from '@/components/OurServiceSection.vue';
 import HowItWorksSection from '@/components/HowItWorksSection.vue';
 import TestimonialsSection from '@/components/TestimonialsSection.vue';
+import CtaSection from '@/components/CtaSection.vue';
 
 
 </script>
@@ -48,6 +49,11 @@ import TestimonialsSection from '@/components/TestimonialsSection.vue';
         <section>
             <div class="container py-4 py-lg-5">
                 <TestimonialsSection />
+            </div>
+        </section>
+        <section class="gray-simple">
+            <div class="container py-4 py-lg-5">
+                <CtaSection />
             </div>
         </section>
     </AppLayout>

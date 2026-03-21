@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { router } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 import { showAppPreloader, hideAppPreloader } from '@/lib/jquery-methods';
 import AppPreLoader from '@/components/AppPreLoader.vue';
 import AppHeader from '@/components/AppHeader.vue';
+import AppFooter from '@/components/AppFooter.vue';
 import ClearFix from '@/components/ClearFix.vue';
 onMounted(() => {
     hideAppPreloader();
@@ -12,15 +12,16 @@ onMounted(() => {
 </script>
 
 <template>
-    <div>
+    <div class="app-shell d-flex flex-column min-vh-100">
         <AppPreLoader />
 
         <AppHeader />
         <ClearFix />
-        <main>
+        <main class="flex-grow-1">
             <div id="main-wrapper">
                 <slot />
             </div>
         </main>
+        <AppFooter />
     </div>
 </template>
