@@ -1,6 +1,7 @@
 <?php
 
 use App\Settings\ContactInfoSettings;
+use App\Settings\MobileApplicationLinkSettings;
 use App\Settings\SocialMediaLinksSettings;
 
 return [
@@ -12,6 +13,7 @@ return [
     'settings' => [
         ContactInfoSettings::class,
         SocialMediaLinksSettings::class,
+        MobileApplicationLinkSettings::class,
     ],
 
     /*

@@ -117,19 +117,60 @@ export function saveRecord(
         },
     });
 }
+type SharedAppConfig = {
+    app_name: string;
+    locale: string;
+    currency: string;
+};
+
 export function AppName(): string {
+    const page = usePage<{ app_config?: SharedAppConfig }>();
 
-    const page = usePage();
-    const config = page.props.app_config;
-
-    return config.app_name;
+    return page.props.app_config?.app_name ?? (import.meta.env.VITE_APP_NAME as string) ?? 'Laravel';
 }
+
 export function currencyFormat(amount: number): string {
-    const page = usePage();
+    const page = usePage<{ app_config?: SharedAppConfig }>();
     const config = page.props.app_config;
-    console.log(config);
+
+    if (!config?.locale || !config?.currency) {
+        return String(amount);
+    }
+
     return new Intl.NumberFormat(config.locale, {
         style: 'currency',
         currency: config.currency,
     }).format(amount);
+}
+
+type MobileApplicationLinks = {
+    android_link: string;
+    ios_link: string;
+};
+
+function isValidStoreUrl(url: string | undefined): boolean {
+    return Boolean(url && url !== '#' && url.startsWith('http'));
+}
+
+export function getDownloadAppLink(): string {
+    const ua = navigator.userAgent;
+    const page = usePage<{ mobile_application_links?: MobileApplicationLinks }>();
+    const links = page.props.mobile_application_links;
+
+    if (!isValidStoreUrl(links?.android_link) || !isValidStoreUrl(links?.ios_link)) {
+        return '/download';
+    }
+
+    if (/android/i.test(ua)) {
+        return links!.android_link;
+    } else if (/iPhone|iPad|iPod/i.test(ua)) {
+        return links!.ios_link;
+    }
+
+    return '/download';
+}
+export function downloadApp(): void {
+    window.location.href = getDownloadAppLink();
+
+
 }

@@ -12,7 +12,7 @@ use UnitEnum;
 
 class ManageContactInfo extends SettingsPage
 {
-    protected static string|UnitEnum|null $navigationGroup = 'Contact Info';
+    protected static string|UnitEnum|null $navigationGroup = 'Settings';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
 

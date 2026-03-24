@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { AppName, urlIsActive } from '@/lib/utils';
+import { AppName, downloadApp, getDownloadAppLink, urlIsActive } from '@/lib/utils';
 import ActionLink from './ActionLink.vue';
+import LanguageSwitcher from './LanguageSwitcher.vue';
 import { Link } from '@inertiajs/vue3';
 
 
@@ -52,12 +53,13 @@ const navigation = [
 
                     </ul>
 
-                    <ul class="nav-menu nav-menu-social align-to-right">
-                        <li>
-                            <ActionLink href="/login" icon="fas fa-sign-in-alt" text="some action" />
+                    <ul class="nav-menu nav-menu-social align-to-right align-items-center">
+                        <li class="d-flex align-items-center">
+                            <LanguageSwitcher />
                         </li>
                         <li class="ms-2">
-                            <ActionLink href="/download-app" icon="fas fa-download" text="Download App" is_primary />
+                            <ActionLink :href="getDownloadAppLink()" icon="fas fa-download" text="Download App"
+                                is_primary />
                         </li>
                     </ul>
                 </div>

@@ -78,9 +78,21 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'id'),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Supported locales (public site language switcher)
+    |--------------------------------------------------------------------------
+    */
+    'supported_locales' => ['id', 'en'],
+
+    'locale_labels' => [
+        'id' => 'Bahasa Indonesia',
+        'en' => 'English',
+    ],
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
@@ -131,6 +143,7 @@ return [
         'supported_countries' => explode(',', env('SUPPORTED_PHONE_CODES')),
         'currency' => env('APP_CURRENCY', 'USD'),
         'locale' => env('APP_LOCALE', 'en'),
+        'devcoders_link' => env('DEVCODERS_LINK', 'https://thedevcoders.com'),
     ],
 
 ];

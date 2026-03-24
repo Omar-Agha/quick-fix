@@ -1,21 +1,25 @@
 <script setup lang="ts">
-const props = defineProps<{
-    href: string;
+defineProps<{
+    href?: string;
     icon: string;
     text: string;
     is_primary?: boolean;
+    whenClick?: () => void;
 }>();
 </script>
 
 <template>
     <li :class="is_primary ? 'primary-btn' : ''">
-        <a :href="href"><i :class="icon" class="me-2"></i>{{ text }}</a>
+        <a v-if="href" :href="href"><i :class="icon" class="me-2"></i>{{ text }}</a>
+        <button v-else type="button" class="action-link-btn" @click="whenClick">
+            <i :class="icon" class="me-2"></i>{{ text }}
+        </button>
     </li>
 </template>
 
-
 <style scoped>
-.primary-btn>a {
+.primary-btn > a,
+.primary-btn > .action-link-btn {
     display: inline-flex;
     align-items: center;
     top: 0px;
@@ -25,5 +29,13 @@ const props = defineProps<{
     position: relative;
     background: var(--maincolor);
     border: 2px solid var(--maincolor) !important;
+    cursor: pointer;
+    font: inherit;
+    line-height: inherit;
+}
+
+.action-link-btn {
+    background: var(--maincolor);
+    color: #ffffff !important;
 }
 </style>

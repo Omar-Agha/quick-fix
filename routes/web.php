@@ -4,6 +4,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ServiceController;
 use App\Models\Offer;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -32,6 +33,10 @@ Route::get('/privacy', function () {
     return Inertia::render('Privacy');
 })->name('privacy');
 
+Route::get('/download', function () {
+    return Inertia::render('Download');
+})->name('download');
+
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
 Route::get('/blogs/{article}', [BlogController::class, 'show'])->name('blogs.show');
 
@@ -39,6 +44,17 @@ Route::get('/services', [ServiceController::class, 'index'])->name('services.ind
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact.create');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+Route::get('/locale/{locale}', function (string $locale) {
+    $supported = config('app.supported_locales', ['id', 'en']);
+    if (! in_array($locale, $supported, true)) {
+        abort(404);
+    }
+    session(['locale' => $locale]);
+    App::setLocale($locale);
+
+    return back();
+})->name('locale.switch');
 
 // Route::middleware(['auth', 'verified'])->group(function () {
 

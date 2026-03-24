@@ -13,7 +13,7 @@ const mainNav = [
 const accountLinks = [
 
 
-    { name: 'Download app', href: '/download-app' },
+    { name: 'Download app', href: '/download' },
 ] as const;
 
 const contactInfo = usePage<{ contact_info: { email: string; phone: string; address: string } }>().props.contact_info;
@@ -94,7 +94,7 @@ const year = new Date().getFullYear();
                                 <i class="fa-solid fa-phone" />
                             </span>
                             <a :href="`tel:${contactInfo.phone}`" class="app-footer__link-inline">{{ contactInfo.phone
-                            }}</a>
+                                }}</a>
                         </li>
                     </ul>
                 </div>
@@ -104,11 +104,15 @@ const year = new Date().getFullYear();
                 class="app-footer__bottom d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 pt-4 mt-5">
                 <p class="mb-0 small">
                     © {{ year }} {{ AppName() }}. All rights reserved.
+                    <br />
+                    <span class="small">
+                        Powered by <a href="https://www.linkedin.com/in/ahmad-khalid-746b46200/"
+                            target="_blank">devcoders</a>
+                    </span>
                 </p>
                 <nav class="app-footer__legal d-flex flex-wrap justify-content-center gap-3 small" aria-label="Legal">
                     <Link href="/privacy" class="app-footer__link-inline">Privacy</Link>
-                    <!-- <a href="#" class="app-footer__link-inline">Terms</a>
-                    <a href="#" class="app-footer__link-inline">Cookies</a> -->
+
                 </nav>
             </div>
         </div>

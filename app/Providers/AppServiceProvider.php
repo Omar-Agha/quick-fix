@@ -9,6 +9,7 @@ use App\Payments\Gateways\DanaHostedCheckoutGateway;
 use App\Payments\Gateways\MidtransSnapGateway;
 use App\Payments\Midtrans\MidtransClient;
 use App\Settings\ContactInfoSettings;
+use App\Settings\MobileApplicationLinkSettings;
 use App\Settings\SocialMediaLinksSettings;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -82,6 +83,10 @@ class AppServiceProvider extends ServiceProvider
                     'linkedin' => '#',
                     'instagram' => '#',
                 ],
+                'mobile_application_links' => [
+                    'android_link' => '#',
+                    'ios_link' => '#',
+                ],
             ]);
 
             return;
@@ -99,6 +104,10 @@ class AppServiceProvider extends ServiceProvider
                 'twitter' => app(SocialMediaLinksSettings::class)->twitter,
                 'linkedin' => app(SocialMediaLinksSettings::class)->linkedin,
                 'instagram' => app(SocialMediaLinksSettings::class)->instagram,
+            ],
+            'mobile_application_links' => [
+                'android_link' => app(MobileApplicationLinkSettings::class)->android_link,
+                'ios_link' => app(MobileApplicationLinkSettings::class)->ios_link,
             ],
         ]);
     }

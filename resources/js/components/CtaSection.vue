@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { getDownloadAppLink } from '@/lib/utils';
 import { Link } from '@inertiajs/vue3';
 
 withDefaults(
@@ -38,31 +39,24 @@ const trustPoints = [
                         <h2 class="cta-section__title mb-3">{{ title }}</h2>
                         <p class="cta-section__subtitle mb-4 mb-lg-4">{{ subtitle }}</p>
                         <ul
-                            class="cta-section__trust list-unstyled d-flex flex-wrap justify-content-center justify-content-lg-start gap-3 mb-0"
-                        >
-                            <li
-                                v-for="point in trustPoints"
-                                :key="point"
-                                class="cta-section__trust-item small d-flex align-items-center gap-2"
-                            >
+                            class="cta-section__trust list-unstyled d-flex flex-wrap justify-content-center justify-content-lg-start gap-3 mb-0">
+                            <li v-for="point in trustPoints" :key="point"
+                                class="cta-section__trust-item small d-flex align-items-center gap-2">
                                 <i class="fa-solid fa-circle-check" aria-hidden="true" />
                                 <span>{{ point }}</span>
                             </li>
                         </ul>
                     </div>
                     <div class="col-lg-5 text-center text-lg-end">
-                        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-lg-end gap-2 gap-sm-3">
-                            <Link
-                                :href="primaryHref"
-                                class="btn btn-light btn-lg px-4 shadow-sm cta-section__btn-primary"
-                            >
+                        <div
+                            class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-lg-end gap-2 gap-sm-3">
+                            <Link :href="getDownloadAppLink()"
+                                class="btn btn-light btn-lg px-4 shadow-sm cta-section__btn-primary">
                                 {{ primaryLabel }}
                                 <i class="fa-solid fa-arrow-right ms-2" aria-hidden="true" />
                             </Link>
-                            <Link
-                                :href="secondaryHref"
-                                class="btn btn-outline-light btn-lg px-4 cta-section__btn-secondary"
-                            >
+                            <Link :href="secondaryHref"
+                                class="btn btn-outline-light btn-lg px-4 cta-section__btn-secondary">
                                 {{ secondaryLabel }}
                             </Link>
                         </div>
@@ -75,12 +69,10 @@ const trustPoints = [
 
 <style scoped>
 .cta-section__panel {
-    background: linear-gradient(
-        135deg,
-        var(--maincolor) 0%,
-        color-mix(in srgb, var(--maincolor) 75%, #042e24) 55%,
-        #04251c 100%
-    );
+    background: linear-gradient(135deg,
+            var(--maincolor) 0%,
+            color-mix(in srgb, var(--maincolor) 75%, #042e24) 55%,
+            #04251c 100%);
     box-shadow:
         0 12px 40px rgba(11, 130, 96, 0.35),
         0 2px 8px rgba(0, 0, 0, 0.08);
@@ -127,6 +119,7 @@ const trustPoints = [
     line-height: 1.65;
     margin-bottom: 0;
 }
+
 .cta-section__trust-item {
     color: rgba(255, 255, 255, 0.92);
 }
@@ -166,6 +159,7 @@ const trustPoints = [
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .cta-section__btn-primary,
     .cta-section__btn-secondary {
         transition: none;

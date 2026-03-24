@@ -19,7 +19,7 @@ const features = [
             <MainHeading title="Easiest Way To Fix & Upgrade Your Home"
                 description="Need repair, installation, or maintenance? Instantly find qualified local experts for plumbing, electrical work, and more—all at your fingertips." />
             <CheckList :features="features" />
-            <FindJob />
+            <!-- <FindJob /> -->
         </div>
 
         <div class="col-xl-5 col-lg-5 col-md-12 col-sm-12">

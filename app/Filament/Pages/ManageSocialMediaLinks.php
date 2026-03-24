@@ -16,7 +16,7 @@ class ManageSocialMediaLinks extends SettingsPage
 
     protected static string $settings = SocialMediaLinksSettings::class;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Contact Info';
+    protected static string|UnitEnum|null $navigationGroup = 'Settings';
 
     public function form(Schema $schema): Schema
     {

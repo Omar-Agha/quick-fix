@@ -38,9 +38,20 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $supported = config('app.supported_locales', ['id', 'en']);
+        $labels = config('app.locale_labels', []);
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'locale' => app()->getLocale(),
+            'availableLocales' => collect($supported)
+                ->map(fn (string $code): array => [
+                    'code' => $code,
+                    'label' => $labels[$code] ?? strtoupper($code),
+                ])
+                ->values()
+                ->all(),
             'flash' => [
                 'success' => $request->session()->get('success'),
             ],
