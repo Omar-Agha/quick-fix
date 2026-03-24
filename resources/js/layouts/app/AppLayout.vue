@@ -13,7 +13,7 @@ onMounted(() => {
 
 <template>
     <div class="app-shell d-flex flex-column min-vh-100">
-        <!-- <AppPreLoader /> -->t
+        <!-- <AppPreLoader /> -->
 
         <AppHeader />
         <ClearFix />

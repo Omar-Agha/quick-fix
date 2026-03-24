@@ -81,7 +81,7 @@ function formatDate(iso: string | null): string {
                                     {{ formatDate(article.published_at) }}
                                 </time>
                                 <h2 class="blog-card__title h5 mb-3">
-                                    <h2> hi :{{ article.id }}</h2>
+
                                     <Link :href="`/blogs/${article.id}`"
                                         class="blog-card__title-link stretched-link text-decoration-none">
                                         {{ article.title }}

@@ -8,6 +8,9 @@ use App\Payments\Dana\DanaKeyHelper;
 use App\Payments\Gateways\DanaHostedCheckoutGateway;
 use App\Payments\Gateways\MidtransSnapGateway;
 use App\Payments\Midtrans\MidtransClient;
+use App\Settings\ContactInfoSettings;
+use App\Settings\SocialMediaLinksSettings;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 
@@ -63,8 +66,40 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $settingsTable = config('settings.repositories.database.table') ?: 'settings';
+
+        if (! Schema::hasTable($settingsTable)) {
+            Inertia::share([
+                'app_config' => config('app.app_config'),
+                'contact_info' => [
+                    'email' => '',
+                    'phone' => '',
+                    'address' => '',
+                ],
+                'social_media_links' => [
+                    'facebook' => '#',
+                    'twitter' => '#',
+                    'linkedin' => '#',
+                    'instagram' => '#',
+                ],
+            ]);
+
+            return;
+        }
+
         Inertia::share([
             'app_config' => config('app.app_config'),
+            'contact_info' => [
+                'email' => app(ContactInfoSettings::class)->email,
+                'phone' => app(ContactInfoSettings::class)->phone,
+                'address' => app(ContactInfoSettings::class)->address,
+            ],
+            'social_media_links' => [
+                'facebook' => app(SocialMediaLinksSettings::class)->facebook,
+                'twitter' => app(SocialMediaLinksSettings::class)->twitter,
+                'linkedin' => app(SocialMediaLinksSettings::class)->linkedin,
+                'instagram' => app(SocialMediaLinksSettings::class)->instagram,
+            ],
         ]);
     }
 }

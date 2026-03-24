@@ -25,8 +25,12 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/about-us', function () {
-    return Inertia::render('About', []);
+    return Inertia::render('About');
 })->name('about');
+
+Route::get('/privacy', function () {
+    return Inertia::render('Privacy');
+})->name('privacy');
 
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
 Route::get('/blogs/{article}', [BlogController::class, 'show'])->name('blogs.show');

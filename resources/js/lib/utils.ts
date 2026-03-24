@@ -122,7 +122,7 @@ export function AppName(): string {
     const page = usePage();
     const config = page.props.app_config;
 
-    return config.name;
+    return config.app_name;
 }
 export function currencyFormat(amount: number): string {
     const page = usePage();

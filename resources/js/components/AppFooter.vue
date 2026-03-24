@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { AppName } from '@/lib/utils';
 
 const mainNav = [
@@ -11,17 +11,20 @@ const mainNav = [
 ] as const;
 
 const accountLinks = [
-    { name: 'Sign in', href: '/login' },
-    { name: 'Create account', href: '/register' },
+
+
     { name: 'Download app', href: '/download-app' },
 ] as const;
 
+const contactInfo = usePage<{ contact_info: { email: string; phone: string; address: string } }>().props.contact_info;
+const socialMediaLinks = usePage<{ social_media_links: { facebook: string; twitter: string; linkedin: string; instagram: string } }>().props.social_media_links;
 const socialLinks = [
-    { name: 'Facebook', href: '#', icon: 'fa-brands fa-facebook-f' },
-    { name: 'X', href: '#', icon: 'fa-brands fa-twitter' },
-    { name: 'LinkedIn', href: '#', icon: 'fa-brands fa-linkedin-in' },
-    { name: 'Instagram', href: '#', icon: 'fa-brands fa-instagram' },
+    { name: 'Facebook', href: socialMediaLinks.facebook, icon: 'fa-brands fa-facebook-f' },
+    { name: 'X', href: socialMediaLinks.twitter, icon: 'fa-brands fa-twitter' },
+    { name: 'LinkedIn', href: socialMediaLinks.linkedin, icon: 'fa-brands fa-linkedin-in' },
+    { name: 'Instagram', href: socialMediaLinks.instagram, icon: 'fa-brands fa-instagram' },
 ] as const;
+
 
 const year = new Date().getFullYear();
 </script>
@@ -32,28 +35,19 @@ const year = new Date().getFullYear();
             <div class="row gy-5 gy-lg-4">
                 <div class="col-lg-4 col-md-12">
                     <Link href="/" class="d-inline-block mb-3 app-footer__brand-link">
-                        <img
-                            src="@/assets/img/logo.png"
-                            class="app-footer__logo"
-                            :alt="AppName()"
-                            width="180"
-                            height="48"
-                            loading="lazy"
-                        />
+                        <img src="@/assets/img/logo.png" class="app-footer__logo" :alt="AppName()" width="180"
+                            height="48" loading="lazy" />
                     </Link>
                     <p class="app-footer__lead mb-4">
-                        Trusted home repairs and upgrades—book verified pros for plumbing, electrical, handyman work, and
+                        Trusted home repairs and upgrades—book verified pros for plumbing, electrical, handyman work,
+                        and
                         more in a few clicks.
                     </p>
                     <div class="foot-socials">
                         <ul>
                             <li v-for="item in socialLinks" :key="item.name">
-                                <a
-                                    :href="item.href"
-                                    class="app-footer__social-link"
-                                    :aria-label="item.name"
-                                    rel="noopener noreferrer"
-                                >
+                                <a :href="item.href" class="app-footer__social-link" :aria-label="item.name"
+                                    rel="noopener noreferrer">
                                     <i :class="item.icon" aria-hidden="true" />
                                 </a>
                             </li>
@@ -71,7 +65,7 @@ const year = new Date().getFullYear();
                 </div>
 
                 <div class="col-6 col-lg-2 col-md-4">
-                    <h4 class="widget-title">Account</h4>
+                    <h4 class="widget-title">Application</h4>
                     <ul class="list-unstyled app-footer__list mb-0">
                         <li v-for="item in accountLinks" :key="item.href">
                             <Link :href="item.href" class="app-footer__link">{{ item.name }}</Link>
@@ -86,34 +80,35 @@ const year = new Date().getFullYear();
                             <span class="app-footer__contact-icon" aria-hidden="true">
                                 <i class="fa-solid fa-location-dot" />
                             </span>
-                            <span>Your city &amp; surrounding areas — we’re expanding weekly.</span>
+                            <span>{{ contactInfo.address }}</span>
                         </li>
                         <li class="d-flex gap-3 mb-3">
                             <span class="app-footer__contact-icon" aria-hidden="true">
                                 <i class="fa-solid fa-envelope" />
                             </span>
-                            <a href="mailto:support@example.com" class="app-footer__link-inline">support@example.com</a>
+                            <a :href="`mailto:${contactInfo.email}`" class="app-footer__link-inline">{{
+                                contactInfo.email }}</a>
                         </li>
                         <li class="d-flex gap-3">
                             <span class="app-footer__contact-icon" aria-hidden="true">
                                 <i class="fa-solid fa-phone" />
                             </span>
-                            <a href="tel:+18005550199" class="app-footer__link-inline">+1 (800) 555-0199</a>
+                            <a :href="`tel:${contactInfo.phone}`" class="app-footer__link-inline">{{ contactInfo.phone
+                            }}</a>
                         </li>
                     </ul>
                 </div>
             </div>
 
             <div
-                class="app-footer__bottom d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 pt-4 mt-5"
-            >
+                class="app-footer__bottom d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 pt-4 mt-5">
                 <p class="mb-0 small">
                     © {{ year }} {{ AppName() }}. All rights reserved.
                 </p>
                 <nav class="app-footer__legal d-flex flex-wrap justify-content-center gap-3 small" aria-label="Legal">
-                    <a href="#" class="app-footer__link-inline">Privacy</a>
-                    <a href="#" class="app-footer__link-inline">Terms</a>
-                    <a href="#" class="app-footer__link-inline">Cookies</a>
+                    <Link href="/privacy" class="app-footer__link-inline">Privacy</Link>
+                    <!-- <a href="#" class="app-footer__link-inline">Terms</a>
+                    <a href="#" class="app-footer__link-inline">Cookies</a> -->
                 </nav>
             </div>
         </div>
@@ -150,7 +145,7 @@ const year = new Date().getFullYear();
     max-width: 26rem;
 }
 
-.app-footer__list li + li {
+.app-footer__list li+li {
     margin-top: 0.65rem;
 }
 

@@ -1,7 +1,5 @@
 <?php
 
-use App\Enums\OrderStatus;
-use App\Enums\PaymentStatus;
 use App\Http\Controllers\Api\MobileAppApiController;
 use App\Http\Controllers\Api\MobileUserApiController;
 use App\Http\Controllers\Api\OrderApiController;
@@ -10,8 +8,7 @@ use App\Http\Controllers\Api\PaymentMidtransController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Models\Order;
 use App\Models\Payment;
-use Flowframe\Trend\Trend;
-use Flowframe\Trend\TrendValue;
+use App\Settings\ContactInfoSettings;
 use Illuminate\Support\Facades\Route;
 
 // swagger
@@ -99,29 +96,14 @@ Route::prefix('payments')->group(function () {
 Route::get('get-gg/{order_id}', function ($order_id) {
 
     $payments = Payment::where('order_id', $order_id)->get();
+
     return response()->json([
         'payments' => $payments,
-        'order' => Order::find($order_id)
+        'order' => Order::find($order_id),
     ]);
 });
 
 Route::get('cc', function () {
 
-    $data = Trend::model(Order::class)
-        ->between(
-            start: now()->startOfYear(),
-            end: now()->endOfYear(),
-        )
-        ->perMonth()
-        ->sum('pay_at_cashier');
-    return [
-        'datasets' => [
-            [
-                'label' => 'Revenue',
-                'data' => $data->map(fn(TrendValue $value) => $value->aggregate),
-
-            ],
-            'labels' => $data->map(fn(TrendValue $value) => $value->date),
-        ],
-    ];
+    return config('app.app_config');
 });

@@ -127,6 +127,7 @@ return [
     'supported_countries' => explode(',', env('SUPPORTED_PHONE_CODES')),
 
     'app_config' => [
+        'app_name' => env('APP_NAME', 'Laravel'),
         'supported_countries' => explode(',', env('SUPPORTED_PHONE_CODES')),
         'currency' => env('APP_CURRENCY', 'USD'),
         'locale' => env('APP_LOCALE', 'en'),

@@ -5,6 +5,8 @@ import SectionHeading from '@/components/SectionHeading.vue';
 import { AppName } from '@/lib/utils';
 import { Head, Link } from '@inertiajs/vue3';
 
+
+
 const values = [
     {
         title: 'Trust first',
@@ -36,6 +38,7 @@ const stats = [
 </script>
 
 <template>
+
     <Head :title="`About us — ${AppName()}`" />
 
     <AppLayout>
@@ -69,14 +72,9 @@ const stats = [
                 <div class="row align-items-center gy-5">
                     <div class="col-lg-6 order-lg-2">
                         <div class="about-story__figure rounded-4 overflow-hidden shadow-sm">
-                            <img
-                                src="https://placehold.co/640x480/e8f4f1/0b8260?text=Our+team"
-                                class="img-fluid w-100"
-                                alt="Team collaborating on home service planning"
-                                loading="lazy"
-                                width="640"
-                                height="480"
-                            />
+                            <img src="https://placehold.co/640x480/e8f4f1/0b8260?text=Our+team" class="img-fluid w-100"
+                                alt="Team collaborating on home service planning" loading="lazy" width="640"
+                                height="480" />
                         </div>
                     </div>
                     <div class="col-lg-6 order-lg-1">
@@ -88,7 +86,8 @@ const stats = [
                             your life—not the other way around.
                         </p>
                         <p class="text-body-secondary mb-0">
-                            Today we partner with skilled tradespeople who take pride in their work, and we invest in tools
+                            Today we partner with skilled tradespeople who take pride in their work, and we invest in
+                            tools
                             and support so every visit feels professional from start to finish.
                         </p>
                     </div>
@@ -129,10 +128,8 @@ const stats = [
 
         <section class="py-5 py-lg-5">
             <div class="container">
-                <SectionHeading
-                    title="What guides us"
-                    description="Principles we use every day when we build features, onboard pros, and support customers."
-                />
+                <SectionHeading title="What guides us"
+                    description="Principles we use every day when we build features, onboard pros, and support customers." />
                 <div class="row g-4 mt-1 justify-content-center">
                     <div v-for="item in values" :key="item.title" class="col-xl-3 col-lg-6 col-md-6">
                         <div class="about-value card border-0 rounded-4 h-100 p-4 text-center">
@@ -260,6 +257,7 @@ const stats = [
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     .about-pillar,
     .about-value {
         transition: none;

@@ -7,7 +7,11 @@ import { computed } from 'vue';
 const page = usePage<{ flash?: { success?: string | null } }>();
 
 const flashSuccess = computed(() => page.props.flash?.success ?? null);
-
+defineProps<{
+    email: string;
+    phone: string;
+    address: string;
+}>();
 const form = useForm({
     name: '',
     email: '',
@@ -27,6 +31,7 @@ function submit(): void {
 </script>
 
 <template>
+
     <Head :title="`Contact — ${AppName()}`" />
 
     <AppLayout>
@@ -47,7 +52,8 @@ function submit(): void {
                         </div>
                         <h1 class="ipt-title">Contact us</h1>
                         <p class="contact-hero__lead mb-0">
-                            Questions about booking, pricing, or a job in progress? Send us a note—we typically reply within
+                            Questions about booking, pricing, or a job in progress? Send us a note—we typically reply
+                            within
                             one business day.
                         </p>
                     </div>
@@ -65,7 +71,8 @@ function submit(): void {
                     <div class="col-lg-5">
                         <h2 class="h4 fw-bold mb-3">Get in touch</h2>
                         <p class="text-body-secondary mb-4">
-                            Prefer email or phone? Use the details below. For new bookings, you can also create an account
+                            Prefer email or phone? Use the details below. For new bookings, you can also create an
+                            account
                             and schedule online.
                         </p>
                         <ul class="list-unstyled contact-aside mb-0">
@@ -75,9 +82,7 @@ function submit(): void {
                                 </span>
                                 <div>
                                     <span class="small text-body-secondary d-block">Email</span>
-                                    <a href="mailto:support@example.com" class="fw-medium text-decoration-none"
-                                        >support@example.com</a
-                                    >
+                                    <a :href="`mailto:${email}`" class="fw-medium text-decoration-none">{{ email }}</a>
                                 </div>
                             </li>
                             <li class="d-flex gap-3 mb-3">
@@ -86,16 +91,16 @@ function submit(): void {
                                 </span>
                                 <div>
                                     <span class="small text-body-secondary d-block">Phone</span>
-                                    <a href="tel:+18005550199" class="fw-medium text-decoration-none">+1 (800) 555-0199</a>
+                                    <a :href="`tel:${phone}`" class="fw-medium text-decoration-none">{{ phone }}</a>
                                 </div>
                             </li>
                             <li class="d-flex gap-3">
                                 <span class="contact-aside__icon text-main" aria-hidden="true">
-                                    <i class="fa-solid fa-clock" />
+                                    <i class="fa-solid fa-location-dot" />
                                 </span>
                                 <div>
-                                    <span class="small text-body-secondary d-block">Hours</span>
-                                    <span class="fw-medium">Mon–Sat, 8am–8pm local time</span>
+                                    <span class="small text-body-secondary d-block">Address</span>
+                                    <span class="fw-medium">{{ address }}</span>
                                 </div>
                             </li>
                         </ul>
@@ -108,58 +113,34 @@ function submit(): void {
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label for="contact-name" class="form-label">Name</label>
-                                        <input
-                                            id="contact-name"
-                                            v-model="form.name"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{ 'is-invalid': form.errors.name }"
-                                            required
-                                            autocomplete="name"
-                                        />
+                                        <input id="contact-name" v-model="form.name" type="text" class="form-control"
+                                            :class="{ 'is-invalid': form.errors.name }" required autocomplete="name" />
                                         <div v-if="form.errors.name" class="invalid-feedback d-block">
                                             {{ form.errors.name }}
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="contact-email" class="form-label">Email</label>
-                                        <input
-                                            id="contact-email"
-                                            v-model="form.email"
-                                            type="email"
-                                            class="form-control"
-                                            :class="{ 'is-invalid': form.errors.email }"
-                                            required
-                                            autocomplete="email"
-                                        />
+                                        <input id="contact-email" v-model="form.email" type="email" class="form-control"
+                                            :class="{ 'is-invalid': form.errors.email }" required
+                                            autocomplete="email" />
                                         <div v-if="form.errors.email" class="invalid-feedback d-block">
                                             {{ form.errors.email }}
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <label for="contact-subject" class="form-label">Subject</label>
-                                        <input
-                                            id="contact-subject"
-                                            v-model="form.subject"
-                                            type="text"
-                                            class="form-control"
-                                            :class="{ 'is-invalid': form.errors.subject }"
-                                            required
-                                        />
+                                        <input id="contact-subject" v-model="form.subject" type="text"
+                                            class="form-control" :class="{ 'is-invalid': form.errors.subject }"
+                                            required />
                                         <div v-if="form.errors.subject" class="invalid-feedback d-block">
                                             {{ form.errors.subject }}
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <label for="contact-message" class="form-label">Message</label>
-                                        <textarea
-                                            id="contact-message"
-                                            v-model="form.message"
-                                            class="form-control"
-                                            :class="{ 'is-invalid': form.errors.message }"
-                                            rows="5"
-                                            required
-                                        />
+                                        <textarea id="contact-message" v-model="form.message" class="form-control"
+                                            :class="{ 'is-invalid': form.errors.message }" rows="5" required />
                                         <div v-if="form.errors.message" class="invalid-feedback d-block">
                                             {{ form.errors.message }}
                                         </div>
