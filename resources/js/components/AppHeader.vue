@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { AppName, urlIsActive } from '@/lib/utils';
 import ActionLink from './ActionLink.vue';
+import { Link } from '@inertiajs/vue3';
 
 
 const navigation = [
@@ -45,7 +46,8 @@ const navigation = [
 
                         <li :class="urlIsActive(item.href, $page.url) ? 'active' : ''" v-for="item in navigation"
                             :key="item.href">
-                            <a :href="item.href">{{ item.name }}<span class="submenu-indicator"></span></a>
+                            <Link :href="item.href">{{ item.name }}<span class="submenu-indicator"></span></Link>
+                            <!-- <a :href="item.href">{{ item.name }}<span class="submenu-indicator"></span></a> -->
                         </li>
 
                     </ul>

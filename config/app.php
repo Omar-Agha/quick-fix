@@ -123,8 +123,13 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-
     'currency' => env('APP_CURRENCY', 'USD'),
-    'supported_countries' => explode(',', env('SUPPORTED_PHONE_CODES'))
+    'supported_countries' => explode(',', env('SUPPORTED_PHONE_CODES')),
+
+    'app_config' => [
+        'supported_countries' => explode(',', env('SUPPORTED_PHONE_CODES')),
+        'currency' => env('APP_CURRENCY', 'USD'),
+        'locale' => env('APP_LOCALE', 'en'),
+    ],
 
 ];

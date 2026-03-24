@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Traits\HasFiles;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Service extends Model
 {
+    use HasFactory;
     use HasFiles;
 
     protected $fillable = [
@@ -26,6 +27,6 @@ class Service extends Model
 
     public function getImageAttribute($value)
     {
-        return asset('storage/' . $value);
+        return asset('storage/'.$value);
     }
 }

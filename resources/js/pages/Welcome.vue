@@ -14,8 +14,16 @@ import OurServiceSection from '@/components/OurServiceSection.vue';
 import HowItWorksSection from '@/components/HowItWorksSection.vue';
 import TestimonialsSection from '@/components/TestimonialsSection.vue';
 import CtaSection from '@/components/CtaSection.vue';
+import OffersTape from '@/components/OffersTape.vue';
 
-
+withDefaults(
+    defineProps<{
+        offers?: Array<{ id: number; name: string; image: string }>;
+    }>(),
+    {
+        offers: () => [],
+    },
+);
 </script>
 
 <template>
@@ -28,6 +36,7 @@ import CtaSection from '@/components/CtaSection.vue';
             </div>
 
         </section>
+        <OffersTape :offers="offers" />
         <section class="gray-simple">
             <div class="container">
                 <FeaturesSection />

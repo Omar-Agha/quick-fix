@@ -6,14 +6,14 @@ import AppHeader from '@/components/AppHeader.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import ClearFix from '@/components/ClearFix.vue';
 onMounted(() => {
-    hideAppPreloader();
+    // hideAppPreloader();
 
 });
 </script>
 
 <template>
     <div class="app-shell d-flex flex-column min-vh-100">
-        <AppPreLoader />
+        <!-- <AppPreLoader /> -->t
 
         <AppHeader />
         <ClearFix />

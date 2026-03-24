@@ -1,4 +1,4 @@
-import { InertiaLinkProps, router } from '@inertiajs/vue3';
+import { InertiaLinkProps, router, usePage } from '@inertiajs/vue3';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { h } from 'vue';
@@ -118,11 +118,18 @@ export function saveRecord(
     });
 }
 export function AppName(): string {
-    return import.meta.env.VITE_APP_NAME
+
+    const page = usePage();
+    const config = page.props.app_config;
+
+    return config.name;
 }
 export function currencyFormat(amount: number): string {
-    return new Intl.NumberFormat(import.meta.env.VITE_APP_LOCALE, {
+    const page = usePage();
+    const config = page.props.app_config;
+    console.log(config);
+    return new Intl.NumberFormat(config.locale, {
         style: 'currency',
-        currency: import.meta.env.VITE_APP_CURRENCY,
+        currency: config.currency,
     }).format(amount);
 }
