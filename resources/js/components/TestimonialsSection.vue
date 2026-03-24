@@ -1,43 +1,44 @@
 <script lang="ts" setup>
+import { useTranslations } from '@/composables/useTranslations';
 import SectionHeading from './SectionHeading.vue';
 import TestimonialCard from './TestimonialCard.vue';
+import { computed } from 'vue';
 
-const testimonials = [
+const { t } = useTranslations();
+
+const testimonials = computed(() => [
     {
-        quote:
-            'Booking a plumber took two minutes. The pro showed up on time, fixed the leak, and explained everything clearly. I will use Quick Fix again.',
-        authorName: 'Sarah M.',
-        authorRole: 'Homeowner · Seattle',
+        quote: t('testimonials_section.items.one.quote'),
+        authorName: t('testimonials_section.items.one.author_name'),
+        authorRole: t('testimonials_section.items.one.author_role'),
         avatarUrl: 'https://placehold.co/104x104/e8f7f3/1f2937?text=SM',
         rating: 5,
         accent: true,
     },
     {
-        quote:
-            'Transparent pricing and polite technicians. The electrical work was done safely and the place was left tidy. Exactly what I needed.',
-        authorName: 'James R.',
-        authorRole: 'Apartment renter · Portland',
+        quote: t('testimonials_section.items.two.quote'),
+        authorName: t('testimonials_section.items.two.author_name'),
+        authorRole: t('testimonials_section.items.two.author_role'),
         avatarUrl: 'https://placehold.co/104x104/f0f4f8/1f2937?text=JR',
         rating: 5,
         accent: false,
     },
     {
-        quote:
-            'I had an urgent handyman request and got a same-day slot. Great communication from start to finish. Highly recommend for busy families.',
-        authorName: 'Elena V.',
-        authorRole: 'Parent of two · Denver',
+        quote: t('testimonials_section.items.three.quote'),
+        authorName: t('testimonials_section.items.three.author_name'),
+        authorRole: t('testimonials_section.items.three.author_role'),
         avatarUrl: 'https://placehold.co/104x104/fdf6e8/1f2937?text=EV',
         rating: 5,
         accent: false,
     },
-];
+]);
 </script>
 
 <template>
     <div>
         <SectionHeading
-            title="What Customers Say"
-            description="Real feedback from homeowners who booked trusted help through our platform."
+            :title="t('testimonials_section.title')"
+            :description="t('testimonials_section.description')"
         />
 
         <div class="row justify-content-center gx-xl-3 gx-3 gy-4 mt-1">

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -52,6 +53,7 @@ class HandleInertiaRequests extends Middleware
                 ])
                 ->values()
                 ->all(),
+            'translations' => Lang::get('ui'),
             'flash' => [
                 'success' => $request->session()->get('success'),
             ],

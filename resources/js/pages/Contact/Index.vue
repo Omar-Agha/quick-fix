@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/app/AppLayout.vue';
+import { useTranslations } from '@/composables/useTranslations';
 import { AppName } from '@/lib/utils';
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+
+const { t } = useTranslations();
 
 const page = usePage<{ flash?: { success?: string | null } }>();
 
@@ -32,7 +35,7 @@ function submit(): void {
 
 <template>
 
-    <Head :title="`Contact — ${AppName()}`" />
+    <Head :title="t('meta.contact', { name: AppName() })" />
 
     <AppLayout>
         <section class="contact-hero page-title position-relative">
@@ -41,20 +44,19 @@ function submit(): void {
                 <div class="row">
                     <div class="col-xl-8 col-lg-10">
                         <div class="breadcrumbs light mb-3">
-                            <nav aria-label="Breadcrumb">
+                            <nav :aria-label="t('breadcrumb.label')">
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item">
-                                        <Link href="/">Home</Link>
+                                        <Link href="/">{{ t('breadcrumb.home') }}</Link>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Contact</li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ t('contact.breadcrumb')
+                                        }}</li>
                                 </ol>
                             </nav>
                         </div>
-                        <h1 class="ipt-title">Contact us</h1>
+                        <h1 class="ipt-title">{{ t('contact.hero_title') }}</h1>
                         <p class="contact-hero__lead mb-0">
-                            Questions about booking, pricing, or a job in progress? Send us a note—we typically reply
-                            within
-                            one business day.
+                            {{ t('contact.hero_lead') }}
                         </p>
                     </div>
                 </div>
@@ -69,11 +71,9 @@ function submit(): void {
 
                 <div class="row gy-5 align-items-start">
                     <div class="col-lg-5">
-                        <h2 class="h4 fw-bold mb-3">Get in touch</h2>
+                        <h2 class="h4 fw-bold mb-3">{{ t('contact.aside_title') }}</h2>
                         <p class="text-body-secondary mb-4">
-                            Prefer email or phone? Use the details below. For new bookings, you can also create an
-                            account
-                            and schedule online.
+                            {{ t('contact.aside_body') }}
                         </p>
                         <ul class="list-unstyled contact-aside mb-0">
                             <li class="d-flex gap-3 mb-3">
@@ -81,7 +81,8 @@ function submit(): void {
                                     <i class="fa-solid fa-envelope" />
                                 </span>
                                 <div>
-                                    <span class="small text-body-secondary d-block">Email</span>
+                                    <span class="small text-body-secondary d-block">{{ t('contact.labels.email')
+                                        }}</span>
                                     <a :href="`mailto:${email}`" class="fw-medium text-decoration-none">{{ email }}</a>
                                 </div>
                             </li>
@@ -90,7 +91,8 @@ function submit(): void {
                                     <i class="fa-solid fa-phone" />
                                 </span>
                                 <div>
-                                    <span class="small text-body-secondary d-block">Phone</span>
+                                    <span class="small text-body-secondary d-block">{{ t('contact.labels.phone')
+                                        }}</span>
                                     <a :href="`tel:${phone}`" class="fw-medium text-decoration-none">{{ phone }}</a>
                                 </div>
                             </li>
@@ -99,7 +101,8 @@ function submit(): void {
                                     <i class="fa-solid fa-location-dot" />
                                 </span>
                                 <div>
-                                    <span class="small text-body-secondary d-block">Address</span>
+                                    <span class="small text-body-secondary d-block">{{ t('contact.labels.address')
+                                        }}</span>
                                     <span class="fw-medium">{{ address }}</span>
                                 </div>
                             </li>
@@ -108,11 +111,12 @@ function submit(): void {
 
                     <div class="col-lg-7">
                         <div class="contact-form card border-0 rounded-4 shadow-sm p-4 p-lg-5">
-                            <h2 class="h5 fw-bold mb-4">Send a message</h2>
+                            <h2 class="h5 fw-bold mb-4">{{ t('contact.form_title') }}</h2>
                             <form @submit.prevent="submit">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label for="contact-name" class="form-label">Name</label>
+                                        <label for="contact-name" class="form-label">{{ t('contact.fields.name')
+                                            }}</label>
                                         <input id="contact-name" v-model="form.name" type="text" class="form-control"
                                             :class="{ 'is-invalid': form.errors.name }" required autocomplete="name" />
                                         <div v-if="form.errors.name" class="invalid-feedback d-block">
@@ -120,7 +124,8 @@ function submit(): void {
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="contact-email" class="form-label">Email</label>
+                                        <label for="contact-email" class="form-label">{{ t('contact.fields.email')
+                                            }}</label>
                                         <input id="contact-email" v-model="form.email" type="email" class="form-control"
                                             :class="{ 'is-invalid': form.errors.email }" required
                                             autocomplete="email" />
@@ -129,7 +134,8 @@ function submit(): void {
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <label for="contact-subject" class="form-label">Subject</label>
+                                        <label for="contact-subject" class="form-label">{{ t('contact.fields.subject')
+                                            }}</label>
                                         <input id="contact-subject" v-model="form.subject" type="text"
                                             class="form-control" :class="{ 'is-invalid': form.errors.subject }"
                                             required />
@@ -138,7 +144,8 @@ function submit(): void {
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <label for="contact-message" class="form-label">Message</label>
+                                        <label for="contact-message" class="form-label">{{ t('contact.fields.message')
+                                            }}</label>
                                         <textarea id="contact-message" v-model="form.message" class="form-control"
                                             :class="{ 'is-invalid': form.errors.message }" rows="5" required />
                                         <div v-if="form.errors.message" class="invalid-feedback d-block">
@@ -148,8 +155,8 @@ function submit(): void {
                                 </div>
                                 <div class="mt-4">
                                     <button type="submit" class="btn btn-main px-4" :disabled="form.processing">
-                                        <span v-if="form.processing">Sending…</span>
-                                        <span v-else>Send message</span>
+                                        <span v-if="form.processing">{{ t('contact.sending') }}</span>
+                                        <span v-else>{{ t('contact.submit') }}</span>
                                     </button>
                                 </div>
                             </form>

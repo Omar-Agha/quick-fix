@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/app/AppLayout.vue';
+import { useTranslations } from '@/composables/useTranslations';
 import { AppName } from '@/lib/utils';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -14,13 +15,17 @@ const props = defineProps<{
     };
 }>();
 
-const pageTitle = computed(() => `${props.article.title} — ${AppName()}`);
+const { t } = useTranslations();
+
+const page = usePage<{ locale: string }>();
+
+const pageTitle = computed(() => t('meta.blog_article', { title: props.article.title, name: AppName() }));
 
 function formatDate(iso: string | null): string {
     if (!iso) {
         return '';
     }
-    return new Intl.DateTimeFormat(undefined, {
+    return new Intl.DateTimeFormat(page.props.locale, {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -40,13 +45,13 @@ function formatDate(iso: string | null): string {
                     <div class="row justify-content-center">
                         <div class="col-xl-9 col-lg-10">
                             <div class="breadcrumbs light mb-3">
-                                <nav aria-label="Breadcrumb">
+                                <nav :aria-label="t('breadcrumb.label')">
                                     <ol class="breadcrumb mb-0">
                                         <li class="breadcrumb-item">
-                                            <Link href="/">Home</Link>
+                                            <Link href="/">{{ t('breadcrumb.home') }}</Link>
                                         </li>
                                         <li class="breadcrumb-item">
-                                            <Link href="/blogs">Blog</Link>
+                                            <Link href="/blogs">{{ t('blog.breadcrumb') }}</Link>
                                         </li>
                                         <li class="breadcrumb-item active text-truncate" aria-current="page">
                                             {{ article.title }}
@@ -79,7 +84,7 @@ function formatDate(iso: string | null): string {
                         <div class="blog-article__footer mt-5 pt-4 border-top">
                             <Link href="/blogs" class="btn btn-main">
                                 <i class="fa-solid fa-arrow-left-long me-2" aria-hidden="true" />
-                                Back to blog
+                                {{ t('blog.back') }}
                             </Link>
                         </div>
                     </div>

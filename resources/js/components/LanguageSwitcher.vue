@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTranslations } from '@/composables/useTranslations';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -6,6 +7,8 @@ type LocaleItem = {
     code: string;
     label: string;
 };
+
+const { t } = useTranslations();
 
 const page = usePage<{
     locale: string;
@@ -17,8 +20,8 @@ const availableLocales = computed(() => page.props.availableLocales ?? []);
 </script>
 
 <template>
-    <div class="lang-switcher" role="navigation" aria-label="Language">
-        <span class="lang-switcher__label text-muted small d-none d-md-inline">Lang</span>
+    <div class="lang-switcher" role="navigation" :aria-label="t('language.nav_label')">
+        <span class="lang-switcher__label text-muted small d-none d-md-inline">{{ t('language.short_label') }}</span>
         <div class="lang-switcher__group" role="group">
             <Link
                 v-for="item in availableLocales"
@@ -27,7 +30,7 @@ const availableLocales = computed(() => page.props.availableLocales ?? []);
                 class="lang-switcher__btn"
                 :class="{ 'lang-switcher__btn--active': item.code === locale }"
                 :title="item.label"
-                :aria-label="`Switch to ${item.label}`"
+                :aria-label="t('language.switch_to', { label: item.label })"
                 :aria-current="item.code === locale ? 'true' : undefined"
                 preserve-scroll
             >

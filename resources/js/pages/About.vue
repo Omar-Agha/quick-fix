@@ -2,44 +2,46 @@
 import AppLayout from '@/layouts/app/AppLayout.vue';
 import CtaSection from '@/components/CtaSection.vue';
 import SectionHeading from '@/components/SectionHeading.vue';
+import { useTranslations } from '@/composables/useTranslations';
 import { AppName } from '@/lib/utils';
 import { Head, Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
+const { t } = useTranslations();
 
-
-const values = [
+const values = computed(() => [
     {
-        title: 'Trust first',
-        description: 'We verify pros and surface honest reviews so you can book with confidence.',
+        title: t('about.values.trust.title'),
+        description: t('about.values.trust.description'),
         icon: 'fa-solid fa-shield-halved',
     },
     {
-        title: 'Clarity',
-        description: 'Upfront scope and pricing—no surprise fees after the job is done.',
+        title: t('about.values.clarity.title'),
+        description: t('about.values.clarity.description'),
         icon: 'fa-solid fa-eye',
     },
     {
-        title: 'Speed',
-        description: 'From search to scheduled visit in minutes, with reminders that keep you in the loop.',
+        title: t('about.values.speed.title'),
+        description: t('about.values.speed.description'),
         icon: 'fa-solid fa-bolt',
     },
     {
-        title: 'Care',
-        description: 'Our support team is here when plans change or questions come up.',
+        title: t('about.values.care.title'),
+        description: t('about.values.care.description'),
         icon: 'fa-solid fa-heart',
     },
-] as const;
+]);
 
-const stats = [
-    { value: '15k+', label: 'Completed bookings' },
-    { value: '4.9', label: 'Average rating' },
-    { value: '500+', label: 'Verified pros' },
-] as const;
+const stats = computed(() => [
+    { value: '15k+', label: t('about.stats.bookings') },
+    { value: '4.9', label: t('about.stats.rating') },
+    { value: '500+', label: t('about.stats.pros') },
+]);
 </script>
 
 <template>
 
-    <Head :title="`About us — ${AppName()}`" />
+    <Head :title="t('meta.about', { name: AppName() })" />
 
     <AppLayout>
         <section class="about-hero page-title position-relative">
@@ -48,19 +50,19 @@ const stats = [
                 <div class="row">
                     <div class="col-xl-8 col-lg-10">
                         <div class="breadcrumbs light mb-3">
-                            <nav aria-label="Breadcrumb">
+                            <nav :aria-label="t('breadcrumb.label')">
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item">
-                                        <Link href="/">Home</Link>
+                                        <Link href="/">{{ t('breadcrumb.home') }}</Link>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">About us</li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ t('about.breadcrumb')
+                                        }}</li>
                                 </ol>
                             </nav>
                         </div>
-                        <h1 class="ipt-title">We’re here to make home repairs simple</h1>
+                        <h1 class="ipt-title">{{ t('about.hero_title') }}</h1>
                         <p class="about-hero__lead mb-0">
-                            {{ AppName() }} connects busy homeowners with background-checked professionals for plumbing,
-                            electrical, handyman work, and more—book online, stay informed, and get back to your day.
+                            {{ t('about.hero_lead', { name: AppName() }) }}
                         </p>
                     </div>
                 </div>
@@ -73,22 +75,19 @@ const stats = [
                     <div class="col-lg-6 order-lg-2">
                         <div class="about-story__figure rounded-4 overflow-hidden shadow-sm">
                             <img src="https://placehold.co/640x480/e8f4f1/0b8260?text=Our+team" class="img-fluid w-100"
-                                alt="Team collaborating on home service planning" loading="lazy" width="640"
+                                :alt="t('about.story_image_alt')" loading="lazy" width="640"
                                 height="480" />
                         </div>
                     </div>
                     <div class="col-lg-6 order-lg-1">
-                        <span class="about-kicker text-main fw-semibold d-block mb-2">Our story</span>
-                        <h2 class="h3 fw-bold mb-3">Built for real homes and real schedules</h2>
+                        <span class="about-kicker text-main fw-semibold d-block mb-2">{{ t('about.story_kicker')
+                            }}</span>
+                        <h2 class="h3 fw-bold mb-3">{{ t('about.story_title') }}</h2>
                         <p class="text-body-secondary mb-3">
-                            Home issues rarely arrive on a convenient timeline. We started {{ AppName() }} to remove the
-                            friction of finding someone reliable: clear profiles, fair pricing, and scheduling that fits
-                            your life—not the other way around.
+                            {{ t('about.story_p1', { name: AppName() }) }}
                         </p>
                         <p class="text-body-secondary mb-0">
-                            Today we partner with skilled tradespeople who take pride in their work, and we invest in
-                            tools
-                            and support so every visit feels professional from start to finish.
+                            {{ t('about.story_p2') }}
                         </p>
                     </div>
                 </div>
@@ -103,10 +102,9 @@ const stats = [
                             <div class="about-pillar__icon mb-3 text-main">
                                 <i class="fa-solid fa-bullseye fs-2" aria-hidden="true" />
                             </div>
-                            <h3 class="h5 fw-bold mb-3">Mission</h3>
+                            <h3 class="h5 fw-bold mb-3">{{ t('about.mission_title') }}</h3>
                             <p class="text-body-secondary mb-0">
-                                Help every homeowner book quality home services quickly—with transparency, respect, and
-                                outcomes they can feel good about.
+                                {{ t('about.mission_body') }}
                             </p>
                         </div>
                     </div>
@@ -115,10 +113,9 @@ const stats = [
                             <div class="about-pillar__icon mb-3 text-main">
                                 <i class="fa-solid fa-compass fs-2" aria-hidden="true" />
                             </div>
-                            <h3 class="h5 fw-bold mb-3">Vision</h3>
+                            <h3 class="h5 fw-bold mb-3">{{ t('about.vision_title') }}</h3>
                             <p class="text-body-secondary mb-0">
-                                A trusted default for home care: one place to find pros, track jobs, and keep your home
-                                running smoothly year after year.
+                                {{ t('about.vision_body') }}
                             </p>
                         </div>
                     </div>
@@ -128,8 +125,8 @@ const stats = [
 
         <section class="py-5 py-lg-5">
             <div class="container">
-                <SectionHeading title="What guides us"
-                    description="Principles we use every day when we build features, onboard pros, and support customers." />
+                <SectionHeading :title="t('about.values_heading_title')"
+                    :description="t('about.values_heading_description')" />
                 <div class="row g-4 mt-1 justify-content-center">
                     <div v-for="item in values" :key="item.title" class="col-xl-3 col-lg-6 col-md-6">
                         <div class="about-value card border-0 rounded-4 h-100 p-4 text-center">

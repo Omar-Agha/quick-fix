@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/app/AppLayout.vue';
+import { useTranslations } from '@/composables/useTranslations';
 import { AppName } from '@/lib/utils';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 
 export type BlogListArticle = {
     id: number;
@@ -15,11 +16,15 @@ defineProps<{
     articles: BlogListArticle[];
 }>();
 
+const { t } = useTranslations();
+
+const page = usePage<{ locale: string }>();
+
 function formatDate(iso: string | null): string {
     if (!iso) {
         return '';
     }
-    return new Intl.DateTimeFormat(undefined, {
+    return new Intl.DateTimeFormat(page.props.locale, {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -29,7 +34,7 @@ function formatDate(iso: string | null): string {
 
 <template>
 
-    <Head :title="`Blog — ${AppName()}`" />
+    <Head :title="t('meta.blog', { name: AppName() })" />
 
     <AppLayout>
         <section class="blog-hero page-title position-relative">
@@ -38,18 +43,19 @@ function formatDate(iso: string | null): string {
                 <div class="row">
                     <div class="col-xl-8 col-lg-10">
                         <div class="breadcrumbs light mb-3">
-                            <nav aria-label="Breadcrumb">
+                            <nav :aria-label="t('breadcrumb.label')">
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item">
-                                        <Link href="/">Home</Link>
+                                        <Link href="/">{{ t('breadcrumb.home') }}</Link>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Blog</li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ t('blog.breadcrumb')
+                                        }}</li>
                                 </ol>
                             </nav>
                         </div>
-                        <h1 class="ipt-title">Blog</h1>
+                        <h1 class="ipt-title">{{ t('blog.hero_title') }}</h1>
                         <p class="blog-hero__lead mb-0">
-                            Tips, guides, and updates on home repairs, maintenance, and booking trusted help.
+                            {{ t('blog.hero_lead') }}
                         </p>
                     </div>
                 </div>
@@ -62,9 +68,9 @@ function formatDate(iso: string | null): string {
                     <div class="blog-empty__icon text-main mb-3">
                         <i class="fa-solid fa-newspaper fs-1" aria-hidden="true" />
                     </div>
-                    <h2 class="h5 fw-bold mb-2">No articles yet</h2>
+                    <h2 class="h5 fw-bold mb-2">{{ t('blog.empty_title') }}</h2>
                     <p class="text-body-secondary mb-0">
-                        Check back soon for new posts—our team is preparing helpful content for homeowners.
+                        {{ t('blog.empty_body') }}
                     </p>
                 </div>
 
@@ -90,7 +96,8 @@ function formatDate(iso: string | null): string {
                                 <p class="blog-card__excerpt text-body-secondary small mb-4 flex-grow-1">
                                     {{ article.excerpt }}
                                 </p>
-                                <span class="blog-card__cta text-main fw-semibold small"> Read more </span>
+                                <span class="blog-card__cta text-main fw-semibold small"> {{ t('blog.read_more') }}
+                                </span>
                             </div>
                         </article>
                     </div>

@@ -27,6 +27,6 @@ class ContactController extends Controller
 
         return redirect()
             ->route('contact.create')
-            ->with('success', __('Thank you for your message. We will get back to you soon.'));
+            ->with('success', __('ui.contact.form.success'));
     }
 }

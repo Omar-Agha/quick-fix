@@ -1,8 +1,10 @@
 <script lang="ts" setup>
+import { useTranslations } from '@/composables/useTranslations';
 import { getDownloadAppLink } from '@/lib/utils';
 import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
-withDefaults(
+const props = withDefaults(
     defineProps<{
         title?: string;
         subtitle?: string;
@@ -12,21 +14,27 @@ withDefaults(
         secondaryHref?: string;
     }>(),
     {
-        title: 'Ready to get your home fixed the easy way?',
-        subtitle:
-            'Create an account in minutes, browse verified professionals, and book a time that fits your schedule—no guesswork, no runaround.',
-        primaryLabel: 'Get started',
+        title: undefined,
+        subtitle: undefined,
+        primaryLabel: undefined,
         primaryHref: '/register',
-        secondaryLabel: 'Browse services',
+        secondaryLabel: undefined,
         secondaryHref: '/services',
     },
 );
 
-const trustPoints = [
-    'Verified local pros',
-    'Upfront pricing',
-    'Flexible scheduling',
-] as const;
+const { t } = useTranslations();
+
+const displayTitle = computed(() => props.title ?? t('cta.title'));
+const displaySubtitle = computed(() => props.subtitle ?? t('cta.subtitle'));
+const displayPrimaryLabel = computed(() => props.primaryLabel ?? t('cta.primary'));
+const displaySecondaryLabel = computed(() => props.secondaryLabel ?? t('cta.secondary'));
+
+const trustPoints = computed(() => [
+    t('cta.trust.verified'),
+    t('cta.trust.pricing'),
+    t('cta.trust.scheduling'),
+]);
 </script>
 
 <template>
@@ -36,8 +44,8 @@ const trustPoints = [
             <div class="cta-section__inner position-relative">
                 <div class="row align-items-center gy-4">
                     <div class="col-lg-7 text-center text-lg-start">
-                        <h2 class="cta-section__title mb-3">{{ title }}</h2>
-                        <p class="cta-section__subtitle mb-4 mb-lg-4">{{ subtitle }}</p>
+                        <h2 class="cta-section__title mb-3">{{ displayTitle }}</h2>
+                        <p class="cta-section__subtitle mb-4 mb-lg-4">{{ displaySubtitle }}</p>
                         <ul
                             class="cta-section__trust list-unstyled d-flex flex-wrap justify-content-center justify-content-lg-start gap-3 mb-0">
                             <li v-for="point in trustPoints" :key="point"
@@ -52,12 +60,12 @@ const trustPoints = [
                             class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center justify-content-lg-end gap-2 gap-sm-3">
                             <Link :href="getDownloadAppLink()"
                                 class="btn btn-light btn-lg px-4 shadow-sm cta-section__btn-primary">
-                                {{ primaryLabel }}
+                                {{ displayPrimaryLabel }}
                                 <i class="fa-solid fa-arrow-right ms-2" aria-hidden="true" />
                             </Link>
-                            <Link :href="secondaryHref"
+                            <Link :href="props.secondaryHref"
                                 class="btn btn-outline-light btn-lg px-4 cta-section__btn-secondary">
-                                {{ secondaryLabel }}
+                                {{ displaySecondaryLabel }}
                             </Link>
                         </div>
                     </div>

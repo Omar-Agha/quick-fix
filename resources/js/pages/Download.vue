@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/app/AppLayout.vue';
+import { useTranslations } from '@/composables/useTranslations';
 import { AppName } from '@/lib/utils';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+
+const { t } = useTranslations();
 
 const page = usePage<{
     mobile_application_links: {
@@ -23,7 +26,7 @@ function qrImageUrl(targetUrl: string): string {
 </script>
 
 <template>
-    <Head :title="`Download app — ${AppName()}`" />
+    <Head :title="t('meta.download', { name: AppName() })" />
 
     <AppLayout>
         <section class="download-hero page-title position-relative">
@@ -32,18 +35,19 @@ function qrImageUrl(targetUrl: string): string {
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
                         <div class="breadcrumbs light mb-3 text-start">
-                            <nav aria-label="Breadcrumb">
+                            <nav :aria-label="t('breadcrumb.label')">
                                 <ol class="breadcrumb mb-0 justify-content-center justify-content-lg-start">
                                     <li class="breadcrumb-item">
-                                        <Link href="/">Home</Link>
+                                        <Link href="/">{{ t('breadcrumb.home') }}</Link>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Download app</li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ t('download.breadcrumb')
+                                        }}</li>
                                 </ol>
                             </nav>
                         </div>
-                        <h1 class="ipt-title">Get the {{ AppName() }} app</h1>
+                        <h1 class="ipt-title">{{ t('download.hero_title', { name: AppName() }) }}</h1>
                         <p class="download-hero__lead mb-0 mx-auto">
-                            Scan the QR code for your device to open the store, or use the buttons below.
+                            {{ t('download.hero_lead') }}
                         </p>
                     </div>
                 </div>
@@ -58,7 +62,7 @@ function qrImageUrl(targetUrl: string): string {
                             <div class="download-card__icon text-main mb-3">
                                 <i class="fa-brands fa-google-play fs-2" aria-hidden="true" />
                             </div>
-                            <h2 class="h5 fw-bold mb-4">Google Play</h2>
+                            <h2 class="h5 fw-bold mb-4">{{ t('download.google_play') }}</h2>
                             <div class="download-card__qr mx-auto mb-4">
                                 <img
                                     v-if="qrImageUrl(androidUrl)"
@@ -66,7 +70,7 @@ function qrImageUrl(targetUrl: string): string {
                                     width="220"
                                     height="220"
                                     class="img-fluid rounded-3 border border-light-subtle"
-                                    alt="QR code to open Google Play"
+                                    :alt="t('download.qr_android_alt')"
                                     loading="lazy"
                                 />
                             </div>
@@ -76,7 +80,7 @@ function qrImageUrl(targetUrl: string): string {
                                 rel="noopener noreferrer"
                                 target="_blank"
                             >
-                                Open Google Play
+                                {{ t('download.open_google_play') }}
                             </a>
                         </div>
                     </div>
@@ -85,7 +89,7 @@ function qrImageUrl(targetUrl: string): string {
                             <div class="download-card__icon text-main mb-3">
                                 <i class="fa-brands fa-apple fs-2" aria-hidden="true" />
                             </div>
-                            <h2 class="h5 fw-bold mb-4">App Store</h2>
+                            <h2 class="h5 fw-bold mb-4">{{ t('download.app_store') }}</h2>
                             <div class="download-card__qr mx-auto mb-4">
                                 <img
                                     v-if="qrImageUrl(iosUrl)"
@@ -93,7 +97,7 @@ function qrImageUrl(targetUrl: string): string {
                                     width="220"
                                     height="220"
                                     class="img-fluid rounded-3 border border-light-subtle"
-                                    alt="QR code to open App Store"
+                                    :alt="t('download.qr_ios_alt')"
                                     loading="lazy"
                                 />
                             </div>
@@ -103,7 +107,7 @@ function qrImageUrl(targetUrl: string): string {
                                 rel="noopener noreferrer"
                                 target="_blank"
                             >
-                                Open App Store
+                                {{ t('download.open_app_store') }}
                             </a>
                         </div>
                     </div>

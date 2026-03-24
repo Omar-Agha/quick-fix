@@ -1,34 +1,35 @@
 <script setup lang="ts">
-import { AppName, downloadApp, getDownloadAppLink, urlIsActive } from '@/lib/utils';
+import { AppName, getDownloadAppLink, urlIsActive } from '@/lib/utils';
 import ActionLink from './ActionLink.vue';
 import LanguageSwitcher from './LanguageSwitcher.vue';
+import { useTranslations } from '@/composables/useTranslations';
 import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
+const { t } = useTranslations();
 
-const navigation = [
+const navigation = computed(() => [
     {
-        name: 'Home',
+        name: t('nav.home'),
         href: '/',
     },
     {
-        name: 'About us',
+        name: t('nav.about'),
         href: '/about-us',
     },
     {
-        name: 'Services',
+        name: t('nav.services'),
         href: '/services',
     },
     {
-        name: 'Contact',
+        name: t('nav.contact'),
         href: '/contact',
     },
     {
-        name: 'blogs',
+        name: t('nav.blogs'),
         href: '/blogs',
     },
-];
-
-
+]);
 </script>
 
 <template>
@@ -58,7 +59,7 @@ const navigation = [
                             <LanguageSwitcher />
                         </li>
                         <li class="ms-2">
-                            <ActionLink :href="getDownloadAppLink()" icon="fas fa-download" text="Download App"
+                            <ActionLink :href="getDownloadAppLink()" icon="fas fa-download" :text="t('nav.download_app')"
                                 is_primary />
                         </li>
                     </ul>

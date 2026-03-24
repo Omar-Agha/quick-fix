@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+import { useTranslations } from '@/composables/useTranslations';
 import { currencyFormat } from '@/lib/utils';
+
+const { t } = useTranslations();
 
 defineProps<{
     title: string;
@@ -16,7 +19,7 @@ defineProps<{
             <img :src="image" :alt="title" class="service-card__img img-fluid w-100" loading="lazy" decoding="async" />
             <div v-if="bookings > 0"
                 class="service-card__badge position-absolute top-0 end-0 m-3 px-2 py-1 rounded-pill small fw-medium">
-                {{ bookings }} Bookings
+                {{ t('service_card.bookings', { count: String(bookings) }) }}
             </div>
         </div>
         <div class="service-card__body p-4 d-flex flex-column flex-grow-1">
@@ -24,7 +27,7 @@ defineProps<{
             <p class="mb-4 text-body-secondary flex-grow-1">{{ description }}</p>
             <div class="d-flex align-items-center justify-content-between gap-2 pt-1 border-top border-light-subtle">
                 <span class="text-main fw-semibold mb-0">{{ currencyFormat(cost) }} </span>
-                <span class="service-card__hint small text-body-secondary mb-0">Book now</span>
+                <span class="service-card__hint small text-body-secondary mb-0">{{ t('service_card.book_now') }}</span>
             </div>
         </div>
     </article>

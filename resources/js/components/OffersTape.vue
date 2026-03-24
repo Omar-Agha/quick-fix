@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import { useTranslations } from '@/composables/useTranslations';
+
 export type OfferTapeItem = {
     id: number;
     name: string;
     image: string;
 };
+
+const { t } = useTranslations();
 
 const props = defineProps<{
     offers: OfferTapeItem[];
@@ -13,7 +17,7 @@ const trackOffers = () => [...props.offers, ...props.offers];
 </script>
 
 <template>
-    <section v-if="offers.length > 0" class="offers-tape" aria-label="Promotional offers">
+    <section v-if="offers.length > 0" class="offers-tape" :aria-label="t('offers_tape.aria')">
         <div class="offers-tape__fade offers-tape__fade--start" aria-hidden="true" />
         <div class="offers-tape__fade offers-tape__fade--end" aria-hidden="true" />
         <div class="offers-tape__viewport">

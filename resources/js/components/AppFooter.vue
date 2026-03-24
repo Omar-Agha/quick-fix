@@ -1,20 +1,20 @@
 <script setup lang="ts">
+import { useTranslations } from '@/composables/useTranslations';
 import { Link, usePage } from '@inertiajs/vue3';
 import { AppName } from '@/lib/utils';
+import { computed } from 'vue';
 
-const mainNav = [
-    { name: 'Home', href: '/' },
-    { name: 'About us', href: '/about-us' },
-    { name: 'Services', href: '/services' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'Blogs', href: '/blogs' },
-] as const;
+const { t } = useTranslations();
 
-const accountLinks = [
+const mainNav = computed(() => [
+    { name: t('nav.home'), href: '/' },
+    { name: t('nav.about'), href: '/about-us' },
+    { name: t('nav.services'), href: '/services' },
+    { name: t('nav.contact'), href: '/contact' },
+    { name: t('nav.blogs'), href: '/blogs' },
+]);
 
-
-    { name: 'Download app', href: '/download' },
-] as const;
+const accountLinks = computed(() => [{ name: t('footer.download_app'), href: '/download' }]);
 
 const contactInfo = usePage<{ contact_info: { email: string; phone: string; address: string } }>().props.contact_info;
 const socialMediaLinks = usePage<{ social_media_links: { facebook: string; twitter: string; linkedin: string; instagram: string } }>().props.social_media_links;
@@ -39,9 +39,7 @@ const year = new Date().getFullYear();
                             height="48" loading="lazy" />
                     </Link>
                     <p class="app-footer__lead mb-4">
-                        Trusted home repairs and upgrades—book verified pros for plumbing, electrical, handyman work,
-                        and
-                        more in a few clicks.
+                        {{ t('footer.lead') }}
                     </p>
                     <div class="foot-socials">
                         <ul>
@@ -56,7 +54,7 @@ const year = new Date().getFullYear();
                 </div>
 
                 <div class="col-6 col-lg-2 col-md-4">
-                    <h4 class="widget-title">Explore</h4>
+                    <h4 class="widget-title">{{ t('footer.explore') }}</h4>
                     <ul class="list-unstyled app-footer__list mb-0">
                         <li v-for="item in mainNav" :key="item.href">
                             <Link :href="item.href" class="app-footer__link">{{ item.name }}</Link>
@@ -65,7 +63,7 @@ const year = new Date().getFullYear();
                 </div>
 
                 <div class="col-6 col-lg-2 col-md-4">
-                    <h4 class="widget-title">Application</h4>
+                    <h4 class="widget-title">{{ t('footer.application') }}</h4>
                     <ul class="list-unstyled app-footer__list mb-0">
                         <li v-for="item in accountLinks" :key="item.href">
                             <Link :href="item.href" class="app-footer__link">{{ item.name }}</Link>
@@ -74,7 +72,7 @@ const year = new Date().getFullYear();
                 </div>
 
                 <div class="col-lg-4 col-md-4">
-                    <h4 class="widget-title">Get in touch</h4>
+                    <h4 class="widget-title">{{ t('footer.get_in_touch') }}</h4>
                     <ul class="list-unstyled app-footer__contact mb-0">
                         <li class="d-flex gap-3 mb-3">
                             <span class="app-footer__contact-icon" aria-hidden="true">
@@ -103,15 +101,16 @@ const year = new Date().getFullYear();
             <div
                 class="app-footer__bottom d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 pt-4 mt-5">
                 <p class="mb-0 small">
-                    © {{ year }} {{ AppName() }}. All rights reserved.
+                    © {{ year }} {{ AppName() }}. {{ t('footer.rights') }}
                     <br />
                     <span class="small">
-                        Powered by <a href="https://www.linkedin.com/in/ahmad-khalid-746b46200/"
+                        {{ t('footer.powered_by_prefix') }}<a href="https://www.linkedin.com/in/ahmad-khalid-746b46200/"
                             target="_blank">devcoders</a>
                     </span>
                 </p>
-                <nav class="app-footer__legal d-flex flex-wrap justify-content-center gap-3 small" aria-label="Legal">
-                    <Link href="/privacy" class="app-footer__link-inline">Privacy</Link>
+                <nav class="app-footer__legal d-flex flex-wrap justify-content-center gap-3 small"
+                    :aria-label="t('footer.legal_nav')">
+                    <Link href="/privacy" class="app-footer__link-inline">{{ t('footer.privacy') }}</Link>
 
                 </nav>
             </div>

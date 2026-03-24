@@ -1,39 +1,31 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { useTranslations } from '@/composables/useTranslations';
 import SectionHeading from './SectionHeading.vue';
 import ServiceCard from './ServiceCard.vue';
+import { computed } from 'vue';
 
-const GridItemClass = "col-xl-3 col-lg-4 col-md-6 col-sm-12"
-const listOfService = ref([
-    {
-        name: "Plumping",
-        description: "Plumbing services for your home",
-        image: "https://placehold.co/500x500",
+const GridItemClass = "col-xl-3 col-lg-4 col-md-6 col-sm-12";
+
+const { t } = useTranslations();
+
+const serviceKeys = ['plumbing', 'electricity', 'painting'] as const;
+
+const listOfService = computed(() =>
+    serviceKeys.map((key) => ({
+        name: t(`our_services_section.services.${key}.name`),
+        description: t(`our_services_section.services.${key}.description`),
+        image: 'https://placehold.co/500x500',
         cost: 50,
-        bookings: 20
-    },
-    {
-        name: "Electricity",
-        description: "Electricity services for your home",
-        image: "https://placehold.co/500x500",
-        cost: 50,
-        bookings: 4
-    },
-    {
-        name: "Painting",
-        description: "Painting services for your home",
-        image: "https://placehold.co/500x500",
-        cost: 50,
-        bookings: 0
-    }
-])
+        bookings: key === 'plumbing' ? 20 : key === 'electricity' ? 4 : 0,
+    })),
+);
 </script>
 <template>
-    <SectionHeading class="" title="Our Home Services"
-        description="Browse and request trusted services for your home, from plumbing to electrical and handy repairs." />
+    <SectionHeading :title="t('our_services_section.title')"
+        :description="t('our_services_section.description')" />
 
     <div class="row justify-content-center gx-xl-3 gx-3 gy-4 gap-1.5">
-        <div :class="GridItemClass" v-for="service in listOfService">
+        <div :class="GridItemClass" v-for="service in listOfService" :key="service.name">
             <ServiceCard :title="service.name" :description="service.description" :image="service.image"
                 :cost="service.cost" :bookings="service.bookings" />
         </div>

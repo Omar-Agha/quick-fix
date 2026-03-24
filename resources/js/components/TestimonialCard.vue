@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+import { useTranslations } from '@/composables/useTranslations';
 import { computed } from 'vue';
+
+const { t } = useTranslations();
 
 const props = withDefaults(
     defineProps<{
@@ -27,7 +30,7 @@ const starCount = computed(() => Math.min(5, Math.max(0, Math.round(props.rating
         <div class="testimonial-card__deco" aria-hidden="true">
             <i class="fa-solid fa-quote-right"></i>
         </div>
-        <div class="testimonial-card__stars mb-3" :aria-label="`Rating: ${starCount} out of 5`">
+        <div class="testimonial-card__stars mb-3" :aria-label="t('testimonial.rating_aria', { count: String(starCount) })">
             <i
                 v-for="n in 5"
                 :key="n"
@@ -49,7 +52,7 @@ const starCount = computed(() => Math.min(5, Math.max(0, Math.round(props.rating
                 height="52"
                 loading="lazy"
                 decoding="async"
-                :alt="`${authorName} photo`"
+                :alt="t('testimonial.photo_alt', { name: authorName })"
             />
             <div class="text-start min-w-0">
                 <cite class="testimonial-card__name d-block fst-normal fw-semibold mb-0">{{ authorName }}</cite>

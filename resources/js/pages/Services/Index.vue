@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ServiceListCard from '@/components/ServiceListCard.vue';
 import AppLayout from '@/layouts/app/AppLayout.vue';
+import { useTranslations } from '@/composables/useTranslations';
 import { AppName } from '@/lib/utils';
 import { Head, Link } from '@inertiajs/vue3';
 
@@ -14,10 +15,12 @@ export type ServiceListItem = {
 defineProps<{
     services: ServiceListItem[];
 }>();
+
+const { t } = useTranslations();
 </script>
 
 <template>
-    <Head :title="`Services — ${AppName()}`" />
+    <Head :title="t('meta.services', { name: AppName() })" />
 
     <AppLayout>
         <section class="services-hero page-title position-relative">
@@ -26,18 +29,19 @@ defineProps<{
                 <div class="row">
                     <div class="col-xl-8 col-lg-10">
                         <div class="breadcrumbs light mb-3">
-                            <nav aria-label="Breadcrumb">
+                            <nav :aria-label="t('breadcrumb.label')">
                                 <ol class="breadcrumb mb-0">
                                     <li class="breadcrumb-item">
-                                        <Link href="/">Home</Link>
+                                        <Link href="/">{{ t('breadcrumb.home') }}</Link>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Services</li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{
+                                        t('services_page.breadcrumb') }}</li>
                                 </ol>
                             </nav>
                         </div>
-                        <h1 class="ipt-title">Our services</h1>
+                        <h1 class="ipt-title">{{ t('services_page.hero_title') }}</h1>
                         <p class="services-hero__lead mb-0">
-                            From quick fixes to full projects—explore what we offer and find the right help for your home.
+                            {{ t('services_page.hero_lead') }}
                         </p>
                     </div>
                 </div>
@@ -50,9 +54,9 @@ defineProps<{
                     <div class="services-empty__icon text-main mb-3">
                         <i class="fa-solid fa-screwdriver-wrench fs-1" aria-hidden="true" />
                     </div>
-                    <h2 class="h5 fw-bold mb-2">No services listed yet</h2>
+                    <h2 class="h5 fw-bold mb-2">{{ t('services_page.empty_title') }}</h2>
                     <p class="text-body-secondary mb-0">
-                        We’re updating our catalog—please check back soon.
+                        {{ t('services_page.empty_body') }}
                     </p>
                 </div>
 

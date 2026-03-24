@@ -1,29 +1,29 @@
 <script lang="ts" setup>
+import { useTranslations } from '@/composables/useTranslations';
 import SectionHeading from './SectionHeading.vue';
 import HowItWorksStepCard from './HowItWorksStepCard.vue';
+import { computed } from 'vue';
 
-const steps = [
-    {
-        title: 'Choose a Service',
-        desc: 'Browse and select the service you need',
-        icon: 'fa-solid fa-magnifying-glass',
-    },
-    {
-        title: 'Book a Time',
-        desc: 'Pick a time that works for you',
-        icon: 'fa-solid fa-calendar-days',
-    },
-    {
-        title: 'Get It Done',
-        desc: 'A professional arrives and completes the job',
-        icon: 'fa-solid fa-circle-check',
-    },
-];
+const { t } = useTranslations();
+
+const stepKeys = [
+    { key: 'choose', icon: 'fa-solid fa-magnifying-glass' },
+    { key: 'book', icon: 'fa-solid fa-calendar-days' },
+    { key: 'done', icon: 'fa-solid fa-circle-check' },
+] as const;
+
+const steps = computed(() =>
+    stepKeys.map((item) => ({
+        title: t(`how_it_works.steps.${item.key}.title`),
+        desc: t(`how_it_works.steps.${item.key}.description`),
+        icon: item.icon,
+    })),
+);
 </script>
 
 <template>
     <div>
-        <SectionHeading title="How It Works" description="Get your service done in just a few simple steps" />
+        <SectionHeading :title="t('how_it_works.title')" :description="t('how_it_works.description')" />
 
         <div class="how-it-works-flow py-4 py-md-5">
             <div class="how-it-works-flow__inner">
