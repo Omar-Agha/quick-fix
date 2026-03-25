@@ -9,6 +9,10 @@ import { computed } from 'vue';
 
 const { t } = useTranslations();
 
+
+defineOptions({ layout: AppLayout })
+
+
 const values = computed(() => [
     {
         title: t('about.values.trust.title'),
@@ -43,123 +47,122 @@ const stats = computed(() => [
 
     <Head :title="t('meta.about', { name: AppName() })" />
 
-    <AppLayout>
-        <section class="about-hero page-title position-relative">
-            <div class="about-hero__overlay" aria-hidden="true" />
-            <div class="container position-relative">
-                <div class="row">
-                    <div class="col-xl-8 col-lg-10">
-                        <div class="breadcrumbs light mb-3">
-                            <nav :aria-label="t('breadcrumb.label')">
-                                <ol class="breadcrumb mb-0">
-                                    <li class="breadcrumb-item">
-                                        <Link href="/">{{ t('breadcrumb.home') }}</Link>
-                                    </li>
-                                    <li class="breadcrumb-item active" aria-current="page">{{ t('about.breadcrumb')
-                                        }}</li>
-                                </ol>
-                            </nav>
-                        </div>
-                        <h1 class="ipt-title">{{ t('about.hero_title') }}</h1>
-                        <p class="about-hero__lead mb-0">
-                            {{ t('about.hero_lead', { name: AppName() }) }}
-                        </p>
+
+    <section class="about-hero page-title position-relative">
+        <div class="about-hero__overlay" aria-hidden="true" />
+        <div class="container position-relative">
+            <div class="row">
+                <div class="col-xl-8 col-lg-10">
+                    <div class="breadcrumbs light mb-3">
+                        <nav :aria-label="t('breadcrumb.label')">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <Link href="/">{{ t('breadcrumb.home') }}</Link>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ t('about.breadcrumb')
+                                    }}</li>
+                            </ol>
+                        </nav>
                     </div>
+                    <h1 class="ipt-title">{{ t('about.hero_title') }}</h1>
+                    <p class="about-hero__lead mb-0">
+                        {{ t('about.hero_lead', { name: AppName() }) }}
+                    </p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="py-5 py-lg-5">
-            <div class="container">
-                <div class="row align-items-center gy-5">
-                    <div class="col-lg-6 order-lg-2">
-                        <div class="about-story__figure rounded-4 overflow-hidden shadow-sm">
-                            <img src="https://placehold.co/640x480/e8f4f1/0b8260?text=Our+team" class="img-fluid w-100"
-                                :alt="t('about.story_image_alt')" loading="lazy" width="640"
-                                height="480" />
-                        </div>
+    <section class="py-5 py-lg-5">
+        <div class="container">
+            <div class="row align-items-center gy-5">
+                <div class="col-lg-6 order-lg-2">
+                    <div class="about-story__figure rounded-4 overflow-hidden shadow-sm">
+                        <img src="https://placehold.co/640x480/e8f4f1/0b8260?text=Our+team" class="img-fluid w-100"
+                            :alt="t('about.story_image_alt')" loading="lazy" width="640" height="480" />
                     </div>
-                    <div class="col-lg-6 order-lg-1">
-                        <span class="about-kicker text-main fw-semibold d-block mb-2">{{ t('about.story_kicker')
-                            }}</span>
-                        <h2 class="h3 fw-bold mb-3">{{ t('about.story_title') }}</h2>
-                        <p class="text-body-secondary mb-3">
-                            {{ t('about.story_p1', { name: AppName() }) }}
-                        </p>
+                </div>
+                <div class="col-lg-6 order-lg-1">
+                    <span class="about-kicker text-main fw-semibold d-block mb-2">{{ t('about.story_kicker')
+                        }}</span>
+                    <h2 class="h3 fw-bold mb-3">{{ t('about.story_title') }}</h2>
+                    <p class="text-body-secondary mb-3">
+                        {{ t('about.story_p1', { name: AppName() }) }}
+                    </p>
+                    <p class="text-body-secondary mb-0">
+                        {{ t('about.story_p2') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gray-simple py-5 py-lg-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="about-pillar card border-0 rounded-4 h-100 p-4 p-lg-5 shadow-sm">
+                        <div class="about-pillar__icon mb-3 text-main">
+                            <i class="fa-solid fa-bullseye fs-2" aria-hidden="true" />
+                        </div>
+                        <h3 class="h5 fw-bold mb-3">{{ t('about.mission_title') }}</h3>
                         <p class="text-body-secondary mb-0">
-                            {{ t('about.story_p2') }}
+                            {{ t('about.mission_body') }}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="about-pillar card border-0 rounded-4 h-100 p-4 p-lg-5 shadow-sm">
+                        <div class="about-pillar__icon mb-3 text-main">
+                            <i class="fa-solid fa-compass fs-2" aria-hidden="true" />
+                        </div>
+                        <h3 class="h5 fw-bold mb-3">{{ t('about.vision_title') }}</h3>
+                        <p class="text-body-secondary mb-0">
+                            {{ t('about.vision_body') }}
                         </p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="gray-simple py-5 py-lg-5">
-            <div class="container">
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="about-pillar card border-0 rounded-4 h-100 p-4 p-lg-5 shadow-sm">
-                            <div class="about-pillar__icon mb-3 text-main">
-                                <i class="fa-solid fa-bullseye fs-2" aria-hidden="true" />
-                            </div>
-                            <h3 class="h5 fw-bold mb-3">{{ t('about.mission_title') }}</h3>
-                            <p class="text-body-secondary mb-0">
-                                {{ t('about.mission_body') }}
-                            </p>
+    <section class="py-5 py-lg-5">
+        <div class="container">
+            <SectionHeading :title="t('about.values_heading_title')"
+                :description="t('about.values_heading_description')" />
+            <div class="row g-4 mt-1 justify-content-center">
+                <div v-for="item in values" :key="item.title" class="col-xl-3 col-lg-6 col-md-6">
+                    <div class="about-value card border-0 rounded-4 h-100 p-4 text-center">
+                        <div class="about-value__icon mx-auto mb-3">
+                            <i :class="item.icon" class="text-main fs-2" aria-hidden="true" />
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="about-pillar card border-0 rounded-4 h-100 p-4 p-lg-5 shadow-sm">
-                            <div class="about-pillar__icon mb-3 text-main">
-                                <i class="fa-solid fa-compass fs-2" aria-hidden="true" />
-                            </div>
-                            <h3 class="h5 fw-bold mb-3">{{ t('about.vision_title') }}</h3>
-                            <p class="text-body-secondary mb-0">
-                                {{ t('about.vision_body') }}
-                            </p>
-                        </div>
+                        <h3 class="h6 fw-bold mb-2">{{ item.title }}</h3>
+                        <p class="text-body-secondary small mb-0">{{ item.description }}</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="py-5 py-lg-5">
-            <div class="container">
-                <SectionHeading :title="t('about.values_heading_title')"
-                    :description="t('about.values_heading_description')" />
-                <div class="row g-4 mt-1 justify-content-center">
-                    <div v-for="item in values" :key="item.title" class="col-xl-3 col-lg-6 col-md-6">
-                        <div class="about-value card border-0 rounded-4 h-100 p-4 text-center">
-                            <div class="about-value__icon mx-auto mb-3">
-                                <i :class="item.icon" class="text-main fs-2" aria-hidden="true" />
-                            </div>
-                            <h3 class="h6 fw-bold mb-2">{{ item.title }}</h3>
-                            <p class="text-body-secondary small mb-0">{{ item.description }}</p>
-                        </div>
+    <section class="about-stats py-5 py-lg-5">
+        <div class="container">
+            <div class="row g-4 text-center align-items-stretch">
+                <div v-for="stat in stats" :key="stat.label" class="col-md-4">
+                    <div class="about-stats__item h-100">
+                        <p class="about-stats__value mb-1">{{ stat.value }}</p>
+                        <p class="about-stats__label mb-0">{{ stat.label }}</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="about-stats py-5 py-lg-5">
-            <div class="container">
-                <div class="row g-4 text-center align-items-stretch">
-                    <div v-for="stat in stats" :key="stat.label" class="col-md-4">
-                        <div class="about-stats__item h-100">
-                            <p class="about-stats__value mb-1">{{ stat.value }}</p>
-                            <p class="about-stats__label mb-0">{{ stat.label }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <section class="gray-simple py-4 py-lg-5">
+        <div class="container">
+            <CtaSection />
+        </div>
+    </section>
 
-        <section class="gray-simple py-4 py-lg-5">
-            <div class="container">
-                <CtaSection />
-            </div>
-        </section>
-    </AppLayout>
 </template>
 
 <style scoped>

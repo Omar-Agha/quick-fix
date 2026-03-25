@@ -40,7 +40,12 @@ const navigation = computed(() => [
                     <a class="nav-brand" href="#"><img src="@/assets/img/logo.png" class="logo" :alt="AppName()" /></a>
                     <div class="nav-toggle"></div>
                     <div class="mobile_nav">
+                        <ul>
+                            <li class="list-buttons">
+                                <LanguageSwitcher is_small />
 
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <div class="nav-menus-wrapper">
@@ -48,7 +53,7 @@ const navigation = computed(() => [
 
                         <li :class="urlIsActive(item.href, $page.url) ? 'active' : ''" v-for="item in navigation"
                             :key="item.href">
-                            <Link :href="item.href">{{ item.name }}<span class="submenu-indicator"></span></Link>
+                            <a :href="item.href" view-transition>{{ item.name }}</a>
                             <!-- <a :href="item.href">{{ item.name }}<span class="submenu-indicator"></span></a> -->
                         </li>
 
@@ -59,8 +64,8 @@ const navigation = computed(() => [
                             <LanguageSwitcher />
                         </li>
                         <li class="ms-2">
-                            <ActionLink :href="getDownloadAppLink()" icon="fas fa-download" :text="t('nav.download_app')"
-                                is_primary />
+                            <ActionLink :href="getDownloadAppLink()" icon="fas fa-download"
+                                :text="t('nav.download_app')" is_primary />
                         </li>
                     </ul>
                 </div>

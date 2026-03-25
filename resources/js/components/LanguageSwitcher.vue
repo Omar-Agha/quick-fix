@@ -10,6 +10,10 @@ type LocaleItem = {
 
 const { t } = useTranslations();
 
+defineProps<{
+    is_small?: boolean;
+}>();
+
 const page = usePage<{
     locale: string;
     availableLocales: LocaleItem[];
@@ -23,17 +27,11 @@ const availableLocales = computed(() => page.props.availableLocales ?? []);
     <div class="lang-switcher" role="navigation" :aria-label="t('language.nav_label')">
         <span class="lang-switcher__label text-muted small d-none d-md-inline">{{ t('language.short_label') }}</span>
         <div class="lang-switcher__group" role="group">
-            <Link
-                v-for="item in availableLocales"
-                :key="item.code"
-                :href="`/locale/${item.code}`"
+            <Link v-for="item in availableLocales" :key="item.code" :href="`/locale/${item.code}`"
                 class="lang-switcher__btn"
-                :class="{ 'lang-switcher__btn--active': item.code === locale }"
-                :title="item.label"
-                :aria-label="t('language.switch_to', { label: item.label })"
-                :aria-current="item.code === locale ? 'true' : undefined"
-                preserve-scroll
-            >
+                :class="{ 'lang-switcher__btn--active': item.code === locale, 'is-small': is_small }"
+                :title="item.label" :aria-label="t('language.switch_to', { label: item.label })"
+                :aria-current="item.code === locale ? 'true' : undefined" preserve-scroll>
                 <span class="lang-switcher__code">{{ item.code.toUpperCase() }}</span>
             </Link>
         </div>
@@ -41,6 +39,10 @@ const availableLocales = computed(() => page.props.availableLocales ?? []);
 </template>
 
 <style scoped>
+.lang-switcher .is-small {
+    height: 30px;
+}
+
 .lang-switcher {
     display: inline-flex;
     align-items: center;
