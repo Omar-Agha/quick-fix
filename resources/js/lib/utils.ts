@@ -174,3 +174,6 @@ export function downloadApp(): void {
 
 
 }
+export function appLogo() {
+    return '@/assets/img/logo.png';
+}

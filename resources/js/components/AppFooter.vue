@@ -92,7 +92,7 @@ const year = new Date().getFullYear();
                                 <i class="fa-solid fa-phone" />
                             </span>
                             <a :href="`tel:${contactInfo.phone}`" class="app-footer__link-inline">{{ contactInfo.phone
-                                }}</a>
+                            }}</a>
                         </li>
                     </ul>
                 </div>
