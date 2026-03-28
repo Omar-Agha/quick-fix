@@ -4,6 +4,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ServiceController;
 use App\Models\Offer;
+use App\Models\Service;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -19,9 +20,22 @@ Route::get('/', function () {
             'name' => $offer->name,
             'image' => $offer->image,
         ]);
+    $services = Service::query()
+        ->where('is_active', true)
+        ->orderBy('name')
+        ->get()
+        ->map(fn (Service $service): array => [
+            'id' => $service->id,
+            'name' => $service->name,
+            'description' => $service->description ?? '',
+            'image' => $service->image,
+            'cost' => $service->cost_per_worker,
+        ]);
 
     return Inertia::render('Welcome', [
         'offers' => $offers,
+        'services' => $services,
+
     ]);
 })->name('home');
 

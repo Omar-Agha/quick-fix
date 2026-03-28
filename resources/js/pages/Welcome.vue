@@ -11,9 +11,11 @@ import OffersTape from '@/components/OffersTape.vue';
 withDefaults(
     defineProps<{
         offers?: Array<{ id: number; name: string; image: string }>;
+        services?: Array<{ id: number; name: string; description: string; image: string; cost: number }>;
     }>(),
     {
         offers: () => [],
+        services: () => [],
     },
 );
 </script>
@@ -43,16 +45,16 @@ withDefaults(
         </section>
         <section class="gray-simple">
             <div class="container">
-                <OurServiceSection />
+                <OurServiceSection :services="services" />
             </div>
 
         </section>
-        <section>
+        <!-- <section>
             <div class="container py-4 py-lg-5">
                 <TestimonialsSection />
             </div>
-        </section>
-        <section class="gray-simple">
+        </section> -->
+        <section class="">
             <div class="container py-4 py-lg-5">
                 <CtaSection />
             </div>

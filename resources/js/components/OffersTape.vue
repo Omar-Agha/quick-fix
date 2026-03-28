@@ -41,14 +41,17 @@ const trackOffers = () => [...props.offers, ...props.offers];
 }
 
 .offers-tape__viewport {
+    width: 100%;
+    justify-content: end;
     overflow: hidden;
 }
 
 .offers-tape__track {
     display: flex;
-    width: max-content;
+    /* width: max-content; */
     gap: 1.25rem;
     align-items: center;
+    justify-content: end;
     animation: offers-tape-scroll 45s linear infinite;
 }
 

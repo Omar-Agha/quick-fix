@@ -73,11 +73,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | The application locale determines the default locale that will be used
-    | by Laravel's translation / localization methods. This option can be
-    | set to any locale for which you plan to have translation strings.
+    | by Laravel's translation / localization methods. Set APP_LOCALE in .env
+    | (e.g. id, en). It applies when there is no session preference and for
+    | Artisan / queue workers without an HTTP request.
     |
     */
-
     'locale' => env('APP_LOCALE', 'id'),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
@@ -142,7 +142,7 @@ return [
         'app_name' => env('APP_NAME', 'Laravel'),
         'supported_countries' => explode(',', env('SUPPORTED_PHONE_CODES')),
         'currency' => env('APP_CURRENCY', 'USD'),
-        'locale' => env('APP_LOCALE', 'en'),
+        'locale' => env('APP_LOCALE', 'id'),
         'devcoders_link' => env('DEVCODERS_LINK', 'https://thedevcoders.com'),
     ],
 
