@@ -117,4 +117,16 @@ return [
 
     'system_route_prefix' => 'filament',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Panel UI locale
+    |--------------------------------------------------------------------------
+    |
+    | Filament admin (dashboard, resources, etc.) uses this locale for labels
+    | and translations. The public site still follows APP_LOCALE / session.
+    |
+    */
+
+    'panel_locale' => env('FILAMENT_LOCALE', 'en'),
+
 ];
