@@ -37,7 +37,8 @@ const navigation = computed(() => [
         <div class="container">
             <nav id="navigation" class="navigation navigation-landscape">
                 <div class="nav-header">
-                    <a class="nav-brand" href="#"><img src="@/assets/img/logo.png" class="logo" :alt="AppName()" /></a>
+                    <a class="nav-brand" href="#"><img src="@/assets/img/logo-light.png" class="logo"
+                            :alt="AppName()" /></a>
                     <div class="nav-toggle"></div>
                     <div class="mobile_nav">
                         <ul>
