@@ -15,6 +15,12 @@ class MoceanSmsProvider implements ISmsProvider
 
     public function sendSms(string $to, string $message): bool
     {
+
+        Log::debug('MoceanSmsProvider: Attempting to send SMS', [
+            'to' => $to,
+            'message' => $message,
+        ]);
+
         $token = config('services.mocean.token');
 
         $from = config('services.mocean.from');
