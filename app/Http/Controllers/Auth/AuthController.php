@@ -10,7 +10,7 @@ use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-
+use function Pest\Laravel\json;
 
 class AuthController extends Controller
 {
@@ -41,6 +41,7 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
+
         $validated = $request->validated();
         $avatarPath = null;
         if (request()->hasFile('avatar')) {

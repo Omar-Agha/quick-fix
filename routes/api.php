@@ -1,5 +1,6 @@
 <?php
 
+use App\Core\SmsProviders\MoceanSmsProvider;
 use App\Http\Controllers\Api\MobileAppApiController;
 use App\Http\Controllers\Api\MobileUserApiController;
 use App\Http\Controllers\Api\OrderApiController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Settings\ContactInfoSettings;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 // swagger
@@ -104,6 +106,5 @@ Route::get('get-gg/{order_id}', function ($order_id) {
 });
 
 Route::get('cc', function () {
-
-    return config('app.app_config');
+    return route('horizon');
 });

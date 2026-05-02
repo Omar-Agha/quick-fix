@@ -34,5 +34,14 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'mocean' => [
+
+        'token' => env('MOCEAN_API_TOKEN'),
+
+        'from' => env('MOCEAN_FROM', 'MOCEAN'),
+
+        'endpoint' => env('MOCEAN_ENDPOINT', 'https://rest.moceanapi.com/rest/2/sms'),
+
+    ],
 
 ];

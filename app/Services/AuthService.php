@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Core\SmsProviders\MoceanSmsProvider;
 use App\Events\SendOtpToUser;
 use App\Models\MobileUser;
 use Illuminate\Http\UploadedFile;
@@ -174,6 +175,7 @@ class AuthService
 
         if (env('FAKE_OTP', false))
             $otp = "9999";
+
 
         return $otp;
     }

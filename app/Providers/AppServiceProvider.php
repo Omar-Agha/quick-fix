@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Enums\UserRole;
+use App\Models\User;
 use App\Payments\Contracts\PaymentGateway;
 use App\Payments\Dana\DanaClient;
 use App\Payments\Dana\DanaKeyHelper;
@@ -11,6 +13,7 @@ use App\Payments\Midtrans\MidtransClient;
 use App\Settings\ContactInfoSettings;
 use App\Settings\MobileApplicationLinkSettings;
 use App\Settings\SocialMediaLinksSettings;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
@@ -67,6 +70,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::define('viewPulse', function (User $user) {
+            return $user->role == UserRole::DEBUG_ADMIN;
+        });
+
+
+
+
         $settingsTable = config('settings.repositories.database.table') ?: 'settings';
 
         if (! Schema::hasTable($settingsTable)) {
