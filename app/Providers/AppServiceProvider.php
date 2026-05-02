@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Core\OtpCodeGenerator\FixedOtpGenerator;
+use App\Core\OtpCodeGenerator\IOtpGenerator;
+use App\Core\OtpCodeGenerator\RandomOtpGenerator;
+use App\Core\SmsProviders\FakeSmsProvider;
+use App\Core\SmsProviders\ISmsProvider;
+use App\Core\SmsProviders\MoceanSmsProvider;
 use App\Enums\UserRole;
 use App\Models\User;
 use App\Payments\Contracts\PaymentGateway;
@@ -25,6 +31,28 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+
+        // register classes 
+        $this->app->bind(IOtpGenerator::class, function ($app) {
+
+            return $app->environment('local')
+
+                ? $app->make(FixedOtpGenerator::class)
+
+                : $app->make(RandomOtpGenerator::class);
+        });
+
+        $this->app->bind(ISmsProvider::class, function ($app) {
+
+            return $app->environment('local')
+
+                ? $app->make(FakeSmsProvider::class)
+
+                : $app->make(MoceanSmsProvider::class);
+        });
+
+        // register classes 
+
         // Register payment gateway implementation
         $this->app->singleton(PaymentGateway::class, function ($app) {
             $config = config('payments.dana');

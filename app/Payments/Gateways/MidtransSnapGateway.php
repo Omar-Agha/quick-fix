@@ -227,7 +227,7 @@ class MidtransSnapGateway implements PaymentGateway
 
 
         $status = $this->mapTransactionStatusToWebhookStatus($transactionStatus, $fraudStatus, $statusCode);
-        Log::info('Midtrans: Webhook received: transaction_status is :', ['transaction_status' => $transactionStatus, 'fraud_status' => $fraudStatus, 'statusCode' => $statusCode, 'status' => $status]);
+        Log::debug('Midtrans: Webhook received: transaction_status is :', ['transaction_status' => $transactionStatus, 'fraud_status' => $fraudStatus, 'statusCode' => $statusCode, 'status' => $status]);
         $internalOrderId = $this->extractInternalOrderId($orderId);
 
         $payment = $internalOrderId !== null
@@ -259,7 +259,7 @@ class MidtransSnapGateway implements PaymentGateway
         ]);
 
         if ($payment->isFinal()) {
-            Log::info('Midtrans: Webhook idempotent skip (already processed)', ['order_id' => $orderId, 'payment_status' => $payment->status->value]);
+            Log::debug('Midtrans: Webhook idempotent skip (already processed)', ['order_id' => $orderId, 'payment_status' => $payment->status->value]);
 
             return WebhookResult::verified(
                 status: $status,
@@ -277,7 +277,7 @@ class MidtransSnapGateway implements PaymentGateway
             WebhookStatus::EXPIRED => PaymentStatus::EXPIRED,
             default => PaymentStatus::FAILED,
         };
-        Log::info('Midtrans: Webhook received: payment status is :', ['payment_status' => $paymentStatus]);
+        Log::debug('Midtrans: Webhook received: payment status is :', ['payment_status' => $paymentStatus]);
 
         $payment->update([
             'status' => $paymentStatus,
@@ -288,7 +288,7 @@ class MidtransSnapGateway implements PaymentGateway
 
 
 
-        Log::info('Midtrans: Webhook processed', [
+        Log::debug('Midtrans: Webhook processed', [
             'order_id' => $orderId,
             'internal_order_id' => $internalOrderId,
             'transaction_status' => $transactionStatus,

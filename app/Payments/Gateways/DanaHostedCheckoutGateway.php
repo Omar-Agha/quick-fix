@@ -290,7 +290,7 @@ class DanaHostedCheckoutGateway implements PaymentGateway
         }
 
         if ($payment->isFinal()) {
-            Log::info('DANA: Webhook idempotent skip (already processed)', ['order_id' => $orderId, 'payment_status' => $payment->status->value]);
+            Log::debug('DANA: Webhook idempotent skip (already processed)', ['order_id' => $orderId, 'payment_status' => $payment->status->value]);
 
             return WebhookResult::verified(
                 status: $status,
@@ -319,7 +319,7 @@ class DanaHostedCheckoutGateway implements PaymentGateway
             'status' => $status === WebhookStatus::SUCCESS ? OrderStatusEnum::CONFIRMED : OrderStatusEnum::CANCELLED,
         ]);
 
-        Log::info('DANA: Webhook processed successfully', [
+        Log::debug('DANA: Webhook processed successfully', [
             'order_id' => $orderId,
             'status' => $status->value,
             'reference_no' => $payload['referenceNo'] ?? null,

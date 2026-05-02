@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Core\OtpCodeGenerator\IOtpGenerator;
 use App\Core\SmsProviders\MoceanSmsProvider;
 use App\Events\SendOtpToUser;
 use App\Models\MobileUser;
@@ -11,6 +12,8 @@ use Illuminate\Validation\ValidationException;
 
 class AuthService
 {
+
+    public function __construct(public IOtpGenerator $otpGenerator) {}
     /**
      * Register a new mobile user and generate OTP.
      */
@@ -171,12 +174,6 @@ class AuthService
 
     private function generateOtp()
     {
-        $otp = random_int(1000, 9999);
-
-        if (env('FAKE_OTP', false))
-            $otp = "9999";
-
-
-        return $otp;
+        return $this->otpGenerator->generate();
     }
 }
